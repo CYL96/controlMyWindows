@@ -1,0 +1,731 @@
+definitions:
+  config.ControlDetailExt:
+    properties:
+      control_type:
+        allOf:
+        - $ref: '#/definitions/control.ControlType'
+        default: 0
+        description: 1:快捷键，2：脚本 3：打开文件夹目录  4:打开网页
+        example: 0
+      detail_color:
+        example: ""
+        type: string
+      detail_id:
+        default: 0
+        example: 0
+        type: integer
+      detail_key:
+        items:
+          $ref: '#/definitions/control.ControlKeyList'
+        type: array
+      detail_name:
+        example: ""
+        type: string
+      run_state:
+        allOf:
+        - $ref: '#/definitions/config.RunState'
+        default: 0
+        description: 1:空闲 2：运行中
+        example: 0
+    type: object
+  config.ControlDetailIdExt:
+    properties:
+      detail_id:
+        default: 0
+        example: 0
+        type: integer
+    type: object
+  config.ControlListExt:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+      control_name:
+        example: ""
+        type: string
+      control_order:
+        default: 0
+        example: 0
+        type: integer
+      detail_list:
+        items:
+          $ref: '#/definitions/config.ControlDetailExt'
+        type: array
+      key_height:
+        type: string
+      key_width:
+        type: string
+    type: object
+  config.ControlListIdT:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+    type: object
+  config.RunState:
+    enum:
+    - 1
+    - 2
+    type: integer
+    x-enum-comments:
+      RunStateFree: 空闲
+      RunStateRunning: 运行中
+    x-enum-varnames:
+    - RunStateFree
+    - RunStateRunning
+  control.ControlKeyList:
+    properties:
+      delay:
+        default: 0
+        description: 当KeyType == 99时 使用 ms
+        example: 0
+        type: integer
+      id:
+        default: 0
+        example: 0
+        type: integer
+      input:
+        description: 当KeyType == 2时 输入文本
+        example: ""
+        type: string
+      key:
+        example: ""
+        type: string
+      key_list:
+        description: 当KeyType == 3时
+        items:
+          $ref: '#/definitions/control.KeyListT'
+        type: array
+      key_press:
+        allOf:
+        - $ref: '#/definitions/control.PressType'
+        default: 0
+        description: 当KeyType == 1时 1：单击 2：双击 3：按下 4：抬起
+        example: 0
+      key_type:
+        allOf:
+        - $ref: '#/definitions/control.KeyType'
+        default: 0
+        description: 1 ：单键 2 ：文本 3 ：快捷键 99：延迟
+        example: 0
+    type: object
+  control.ControlType:
+    enum:
+    - 1
+    - 2
+    - 3
+    - 4
+    type: integer
+    x-enum-comments:
+      ControlTypeExplorer: 3：打开文件夹目录
+      ControlTypeNormal: 1:快捷键
+      ControlTypeScript: 2：脚本
+      ControlTypeWebsite: 4:打开网页
+    x-enum-varnames:
+    - ControlTypeNormal
+    - ControlTypeScript
+    - ControlTypeExplorer
+    - ControlTypeWebsite
+  control.KeyListT:
+    properties:
+      id:
+        default: 0
+        example: 0
+        type: integer
+      key:
+        example: ""
+        type: string
+    type: object
+  control.KeyType:
+    enum:
+    - 1
+    - 2
+    - 3
+    - 99
+    type: integer
+    x-enum-comments:
+      KeyTypeDefault: 单键
+      KeyTypeDelay: 延迟
+      KeyTypeShortcutKey: 快捷键
+      KeyTypeText: 文本
+    x-enum-varnames:
+    - KeyTypeDefault
+    - KeyTypeText
+    - KeyTypeShortcutKey
+    - KeyTypeDelay
+  control.PressType:
+    enum:
+    - 1
+    - 2
+    - 3
+    - 4
+    type: integer
+    x-enum-comments:
+      PressTypeClick: 单击
+      PressTypeDoubleClick: 双击
+      PressTypePressDown: 按下
+      PressTypePressUp: 抬起
+    x-enum-varnames:
+    - PressTypeClick
+    - PressTypeDoubleClick
+    - PressTypePressDown
+    - PressTypePressUp
+  hd.AddControlClassReq:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+      control_name:
+        example: ""
+        type: string
+      control_order:
+        default: 0
+        example: 0
+        type: integer
+      key_height:
+        type: string
+      key_width:
+        type: string
+    type: object
+  hd.AddControlClassResp:
+    type: object
+  hd.AddControlDetailReq:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+      detail:
+        $ref: '#/definitions/config.ControlDetailExt'
+    type: object
+  hd.AddControlDetailResp:
+    type: object
+  hd.DeleteControlClassReq:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+    type: object
+  hd.DeleteControlClassResp:
+    type: object
+  hd.DeleteControlDetailReq:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+      detail_id:
+        default: 0
+        example: 0
+        type: integer
+    type: object
+  hd.DeleteControlDetailResp:
+    type: object
+  hd.ExecControlDetailReq:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+      detail_id:
+        default: 0
+        example: 0
+        type: integer
+    type: object
+  hd.ExecControlDetailResp:
+    type: object
+  hd.GetControlClassInfoReq:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+    type: object
+  hd.GetControlClassInfoResp:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+      control_name:
+        example: ""
+        type: string
+      control_order:
+        default: 0
+        example: 0
+        type: integer
+      key_height:
+        type: string
+      key_width:
+        type: string
+    type: object
+  hd.GetControlClassListReq:
+    type: object
+  hd.GetControlClassListResp:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/config.ControlListExt'
+        type: array
+    type: object
+  hd.GetControlDetailListReq:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+    type: object
+  hd.GetControlDetailListResp:
+    properties:
+      detail:
+        items:
+          $ref: '#/definitions/config.ControlDetailExt'
+        type: array
+    type: object
+  hd.GinResponse:
+    properties:
+      data: {}
+      msg:
+        type: string
+      state:
+        $ref: '#/definitions/hd.STATE_CODE'
+    type: object
+  hd.STATE_CODE:
+    enum:
+    - 9999
+    - 0
+    - 1
+    type: integer
+    x-enum-comments:
+      StateFailed: 失败
+      StateOk: 成功
+      StatePanic: 服务器崩溃
+    x-enum-varnames:
+    - StatePanic
+    - StateOk
+    - StateFailed
+  hd.StopControlDetailReq:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+      detail_id:
+        default: 0
+        example: 0
+        type: integer
+    type: object
+  hd.StopControlDetailResp:
+    type: object
+  hd.UpdateControlClassOrderReq:
+    properties:
+      order_list:
+        items:
+          $ref: '#/definitions/config.ControlListIdT'
+        type: array
+    type: object
+  hd.UpdateControlClassOrderResp:
+    type: object
+  hd.UpdateControlClassReq:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+      control_name:
+        example: ""
+        type: string
+      control_order:
+        default: 0
+        example: 0
+        type: integer
+      key_height:
+        type: string
+      key_width:
+        type: string
+    type: object
+  hd.UpdateControlClassResp:
+    type: object
+  hd.UpdateControlDetailOrderReq:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+      detail:
+        items:
+          $ref: '#/definitions/config.ControlDetailIdExt'
+        type: array
+    type: object
+  hd.UpdateControlDetailOrderResp:
+    type: object
+  hd.UpdateControlDetailReq:
+    properties:
+      control_id:
+        default: 0
+        example: 0
+        type: integer
+      detail:
+        $ref: '#/definitions/config.ControlDetailExt'
+    type: object
+  hd.UpdateControlDetailResp:
+    type: object
+info:
+  contact: {}
+paths:
+  /api/AddControlClass:
+    post:
+      consumes:
+      - application/json
+      description: 添加一个控制模块
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.AddControlClassReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.AddControlClassResp'
+              type: object
+      summary: 添加一个控制模块
+      tags:
+      - Control
+  /api/AddControlDetail:
+    post:
+      consumes:
+      - application/json
+      description: 控制模块-键
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.AddControlDetailReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.AddControlDetailResp'
+              type: object
+      summary: 添加一个控制模块-键
+      tags:
+      - 控制模块-键
+  /api/DeleteControlClass:
+    post:
+      consumes:
+      - application/json
+      description: 删除控制模块
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.DeleteControlClassReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.DeleteControlClassResp'
+              type: object
+      summary: 删除控制模块
+      tags:
+      - Control
+  /api/DeleteControlDetail:
+    post:
+      consumes:
+      - application/json
+      description: 删除控制模块
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.DeleteControlDetailReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.DeleteControlDetailResp'
+              type: object
+      summary: 删除控制模块
+      tags:
+      - 控制模块-键
+  /api/ExecControlDetail:
+    post:
+      consumes:
+      - application/json
+      description: 执行key
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.ExecControlDetailReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.ExecControlDetailResp'
+              type: object
+      summary: 执行key
+      tags:
+      - 控制模块-键
+  /api/GetControlClassInfo:
+    post:
+      consumes:
+      - application/json
+      description: 获取控制模块详情
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.GetControlClassInfoReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.GetControlClassInfoResp'
+              type: object
+      summary: 获取控制模块详情
+      tags:
+      - Control
+  /api/GetControlClassList:
+    post:
+      consumes:
+      - application/json
+      description: 获取控制模块列表
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.GetControlClassListReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.GetControlClassListResp'
+              type: object
+      summary: 获取控制模块列表
+      tags:
+      - Control
+  /api/GetControlDetailList:
+    post:
+      consumes:
+      - application/json
+      description: 获取键列表
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.GetControlDetailListReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.GetControlDetailListResp'
+              type: object
+      summary: 获取键列表
+      tags:
+      - 控制模块-键
+  /api/StopControlDetail:
+    post:
+      consumes:
+      - application/json
+      description: 执行key
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.StopControlDetailReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.StopControlDetailResp'
+              type: object
+      summary: 停止执行key
+      tags:
+      - 控制模块-键
+  /api/UpdateControlClass:
+    post:
+      consumes:
+      - application/json
+      description: 更新控制模块
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.UpdateControlClassReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.UpdateControlClassResp'
+              type: object
+      summary: 更新控制模块
+      tags:
+      - Control
+  /api/UpdateControlClassOrder:
+    post:
+      consumes:
+      - application/json
+      description: 更新控制顺序
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.UpdateControlClassOrderReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.UpdateControlClassOrderResp'
+              type: object
+      summary: 更新控制顺序
+      tags:
+      - Control
+  /api/UpdateControlDetail:
+    post:
+      consumes:
+      - application/json
+      description: 更新控制模块
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.UpdateControlDetailReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.UpdateControlDetailResp'
+              type: object
+      summary: 更新控制模块
+      tags:
+      - 控制模块-键
+  /api/UpdateControlDetailOrder:
+    post:
+      consumes:
+      - application/json
+      description: 更新控制顺序
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.UpdateControlDetailOrderReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.UpdateControlDetailOrderResp'
+              type: object
+      summary: 更新控制顺序
+      tags:
+      - 控制模块-键
+swagger: "2.0"

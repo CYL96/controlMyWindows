@@ -1,0 +1,146 @@
+.detail-key-id {
+    margin-left: 0px;
+}
+
+.detail-cm-border {
+    background: #f4f4f4;
+    border: #b4b4b4 solid 1px;
+}
+
+.detail-key-press {
+    background: aquamarine;
+}
+
+.detail-key-item {
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.detail-item {
+    /*height: 80px;*/
+    /*width: 80px;*/
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 1px;
+}
+
+
+.detail-edit-btn-001 {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    /*margin-left: 5px;*/
+    /*margin-right: 5px;*/
+    margin-bottom: 2px;
+}
+
+.detail-list-view {
+    height: 85vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: center;
+
+}
+
+.detail-list-scrollbar-view {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.detail-list-script-view {
+    height: 90%;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.detail-list-item-view {
+    height: 40px;
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1px;
+    /*background: #97d562;*/
+    border: #b4b4b4 solid 1px;
+}
+
+.detail-item-icon-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /*background: #97d562;*/
+    /*border: #b4b4b4 solid 1px;*/
+    /*border-radius: 10px;*/
+}
+
+.detail-item-desc-view {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    padding-right: 10px;
+    padding-left: 10px;
+    /*background: #97d562;*/
+    /*border: #b4b4b4 solid 1px;*/
+    /*border-radius: 10px;*/
+}
+
+.detail-list-item-ctrl-view {
+    margin-left: 5px;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    background: #ced5cc;
+    border: #b4b4b4 solid 1px;
+}
+
+.detail-list-item-ctrl-btn-view {
+    margin: 1px !important;
+    width: 24px;
+    /*height: 24px;*/
+}
+
+.detail-list-item-ShortcutKey-view {
+    min-width: 32px;
+    min-height: 32px;
+    padding-left: 1px;
+    padding-right: 1px;
+    margin-left: 2px;
+    border-radius: 2px;
+    background: #409eff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detail-color-picker {
+    /*position: fixed !important;*/
+    /* 将弹窗的尺寸设置为屏幕的宽度和高度 */
+    /*top: 0 !important;*/
+    /*left: 0 !important;*/
+    /*margin-top: 1px !important;*/
+    /*inset: 1px 1px 1px 1px !important;*/
+    /*z-index: 2000 !important;*/
+    /*transform: scale(0.7);*/
+    /*height: 300px;*/
+    /*width: 100px!important;*/
+    /*height: 100px!important;*/
+    /*width: 80vw;*/
+    /*height: 50vh;*/
+}
