@@ -29,6 +29,7 @@ func Serve(ctx *runCtx.RunCtx) (err error) {
 	ctx.Info("swagger:", fmt.Sprintf("http://%s/swagger/index.html", host))
 
 	r.Static("/assets", "dist/assets")
+	r.StaticFile("/touch_001.mp3", "dist/touch_001.mp3")
 	r.GET("/", func(c *gin.Context) {
 		c.File("dist/index.html")
 	})

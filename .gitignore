@@ -8,3 +8,4 @@
 /server/dist
 /server/config/control.json
 /ui/.vscode
+/release
