@@ -85,6 +85,12 @@ func FromContext(ctx context.Context) *RunCtx {
 	}
 }
 
+func WithCancel(ctx *RunCtx) (newCtx *RunCtx, cancelFunc context.CancelFunc) {
+	newCtx = &RunCtx{}
+	newCtx.Context, cancelFunc = context.WithCancel(ctx.Context)
+	return
+}
+
 // SetSSID
 // Description: 设置ssid
 // Author: CYL96

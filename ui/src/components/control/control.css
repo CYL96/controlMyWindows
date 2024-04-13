@@ -8,8 +8,9 @@
     align-items: center;
 }
 .control-cm-border{
-    background: #f4f4f4;
-    border: #b4b4b4 solid 1px;
+    background: #ecf5ff;
+    border: #a0cfff solid 2px;
+    border-radius: 2px;
 }
 
 .control-btn-001{
@@ -21,7 +22,7 @@
     display: flex;
     justify-content:center;
     align-items: center;
-    background: antiquewhite;
+    background: #d1edc4;
     width: 8vw;
     height: 100%;
 }

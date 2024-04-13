@@ -1,21 +1,27 @@
 <template>
   <header>
     <div style="display: flex;align-items: center;justify-content: center">
-      <el-button @click="ClickAddClassBtn" style="width: 30vw">
-        <el-icon>
-          <CirclePlus/>
-        </el-icon>
-      </el-button>
-      <el-button @click="GetControlClassListFromServer" style="width: 30vw">
+      <el-button @click="GetControlClassListFromServer" style="width: 30vw;background: #d1edc4">
         <el-icon>
           <Refresh/>
         </el-icon>
       </el-button>
-      <el-button @click="exitDialogVisible=true" style="width: 10vw;background: red">
+      <el-button @click="ClickAddClassBtn" style="width: 30vw;background: #79bbff">
         <el-icon>
-          <CircleClose/>
+          <CirclePlus/>
         </el-icon>
       </el-button>
+      <el-button @click="ClickEditSystemBtn" style="width: 10vw;background: #c8c9cc">
+        <Icon.SettingConfig/>
+      </el-button>
+
+      <el-button @click="exitDialogVisible=true" style="width: 10vw;background: #e72222">
+        <el-icon>
+          <Icon.Power/>
+        </el-icon>
+      </el-button>
+
+
     </div>
   </header>
   <main style="margin-top: 1vh">
@@ -120,14 +126,39 @@
     </template>
   </el-dialog>
 
+  <!-- 系统设置 弹框 -->
+  <el-dialog align-center
+             v-model="editSystemDialogVisible"
+             width="80vw">
+    <el-form label-width="auto">
+      <el-form-item label="端口">
+        <el-input-number v-model="editSystemItem.run_port"></el-input-number>
+      </el-form-item>
+      <el-form-item label="点击音效">
+        <el-switch
+            v-model="editSystemItem.sound_open"
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+        />
+      </el-form-item>
+    </el-form>
+
+    <template #footer>
+      <div class="works-dialog-footer">
+        <el-button @click="editSystemDialogVisible = false">取消</el-button>
+        <el-button type="primary"
+                   @click="ClickEditSystemSubBtn">
+          确认
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
 import "./control.css"
-import {CircleClose, CirclePlus, Delete, Edit, Refresh, Sort} from "@element-plus/icons-vue";
+import * as Icon from "@icon-park/vue-next"
 import {defineComponent, onMounted, ref} from "vue";
 import {
-
   ControlClass, ControlClassId, DeleteControlClass, EditControlClass,
   GetControlClassList,
   GetControlClassListResp, NewControlClass, NewControlClassId,
@@ -136,17 +167,21 @@ import {
 import {VueDraggable} from "vue-draggable-plus";
 import {GotoDetail, NewDetailQuery} from "@/components/router/define";
 import {ApiExitControl} from "@/components/api/sys";
+import {GetSystemConfig, NewSystemSetting, SetSystemConfig, SystemSetting} from "@/components/api/set";
+import {CirclePlus, Delete, Edit, Refresh, Sort} from "@element-plus/icons-vue";
 
-let list = ref(NewControlClassList())
+const list = ref(NewControlClassList())
 
-let delDialogVisible = ref(false)
-let delId = ref(0)
+const delDialogVisible = ref(false)
+const delId = ref(0)
 
-let editDialogVisible = ref(false)
-let editItem = ref(NewControlClass())
+const editDialogVisible = ref(false)
+const editItem = ref(NewControlClass())
 
-let exitDialogVisible = ref(false)
+const exitDialogVisible = ref(false)
 
+const editSystemDialogVisible = ref(false)
+const editSystemItem = ref(NewSystemSetting())
 
 onMounted(() => {
   GetControlClassListFromServer()
@@ -160,11 +195,32 @@ const GetControlClassListFromServer = () => {
   GetControlClassList(NewGetControlClassListReq()).then(
       res => {
         if (res.state !== 0) {
-          alert(res.msg)
         } else {
           let data = res.data as GetControlClassListResp
           list.value = data.list
         }
+      }
+  )
+}
+
+const ClickEditSystemBtn = () => {
+  editSystemDialogVisible.value = true
+  editSystemItem.value = NewSystemSetting()
+  GetSystemConfig().then(
+      res => {
+        if (res.state !== 0) {
+        } else {
+          editSystemItem.value = res.data as SystemSetting
+        }
+      }
+  )
+}
+const ClickEditSystemSubBtn = () => {
+  SetSystemConfig(editSystemItem.value).then(
+      res => {
+        if (res.state !== 0) {
+        }
+        editSystemDialogVisible.value = false
       }
   )
 }
@@ -188,7 +244,6 @@ const ClickEditClassSubBtn = () => {
   EditControlClass(editItem.value).then(
       res => {
         if (res.state !== 0) {
-          alert(res.msg)
         } else {
           GetControlClassListFromServer()
         }
@@ -199,7 +254,6 @@ const ClickDeleteBtn = () => {
   DeleteControlClass(delId.value).then(
       res => {
         if (res.state !== 0) {
-          alert(res.msg)
         } else {
           GetControlClassListFromServer()
         }
@@ -219,7 +273,6 @@ const OnClassListOrderChange = () => {
   UpdateControlClassOrder(para).then(
       res => {
         if (res.state !== 0) {
-          alert(res.msg)
         }
       }
   )

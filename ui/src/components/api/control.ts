@@ -1,4 +1,4 @@
-import {httpPostReq} from "../mod/http";
+import {httpPostReq, httpPostReqCommonNotify} from "../mod/http";
 
 export const ApiAddControlClass = "/api/AddControlClass"
 export const ApiUpdateControlClass = "/api/UpdateControlClass"
@@ -40,20 +40,20 @@ export function NewControlClassList(): ControlClass[] {
 
 // 新增coco
 export async function AddControlClass(item: ControlClass) {
-    return httpPostReq(ApiAddControlClass, item)
+    return httpPostReqCommonNotify(ApiAddControlClass, item)
 }
 
 
 
 // 删除coco
 export async function DeleteControlClass(id: number) {
-    return httpPostReq(ApiDeleteControlClass, {control_id: id})
+    return httpPostReqCommonNotify(ApiDeleteControlClass, {control_id: id})
 }
 
 
 // 于服务器读取token
 export async function GetControlClassList(req: GetControlClassListReq) {
-    return httpPostReq(ApiGetControlClassList, req)
+    return httpPostReqCommonNotify(ApiGetControlClassList, req)
 }
 
 export interface GetControlClassListReq extends ControlClassId {

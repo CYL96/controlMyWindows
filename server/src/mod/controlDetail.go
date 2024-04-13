@@ -8,7 +8,6 @@ author CYL96 创建 2024/3/28
 package mod
 
 import (
-	"context"
 	"strconv"
 
 	"server/src/common"
@@ -190,7 +189,7 @@ func ExecControlDetail(ctx *runCtx.RunCtx, para ExecControlDetailPara) (err erro
 			}
 			config.SetControlDetailState(config.RunStateRunning, para.ControlId, para.DetailId)
 
-			cctx, cancel := context.WithCancel(ctx)
+			cctx, cancel := runCtx.WithCancel(ctx)
 
 			AddControlRunner(strconv.FormatInt(detail.DetailId, 10), cancel)
 			go func() {
@@ -249,5 +248,19 @@ type (
 	StopControlDetailPara struct {
 		config.ControlListIdT
 		config.ControlDetailIdExt
+	}
+)
+
+func GetNowMousePosition(ctx *runCtx.RunCtx, para GetNowMousePositionPara) (result GetNowMousePositionResult, err error) {
+	result.X, result.Y = control.GetNowMousePosition()
+	return
+}
+
+type (
+	GetNowMousePositionPara struct {
+	}
+	GetNowMousePositionResult struct {
+		X int `json:"x" default:"0" example:"0"` //
+		Y int `json:"y" default:"0"`
 	}
 )

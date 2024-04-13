@@ -11,18 +11,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sync"
 
 	"server/src/runCtx"
 )
 
 type (
 	SystemExt struct {
-		RunIp   string `json:"run_ip" default:"" example:""`           // 运行ip地址
-		RunPort int    `json:"run_port" default:"8080" example:"8080"` // 运行端口
+		SoundOpen bool   `json:"sound_open"`
+		RunIp     string `json:"run_ip" default:"" example:""`           // 运行ip地址
+		RunPort   int    `json:"run_port" default:"8080" example:"8080"` // 运行端口
 	}
 )
 
 var SystemConfig SystemExt
+var systemLk sync.RWMutex
 
 func readSystemConfig(ctx *runCtx.RunCtx) (err error) {
 	file, err := os.ReadFile("./config/system.json")
@@ -37,6 +40,26 @@ func readSystemConfig(ctx *runCtx.RunCtx) (err error) {
 		return
 	}
 
+	return nil
+}
+
+func saveSystemConfig(ctx *runCtx.RunCtx) (err error) {
+	create, err := os.Create("./config/system.json")
+	if err != nil {
+		ctx.Warn(err)
+		return
+	}
+	defer create.Close()
+	marshal, err := json.Marshal(SystemConfig)
+	if err != nil {
+		ctx.Warn(err)
+		return
+	}
+	_, err = create.Write(marshal)
+	if err != nil {
+		ctx.Warn(err)
+		return
+	}
 	return nil
 }
 
@@ -89,3 +112,31 @@ func CreateNormalSystemConfig(ctx *runCtx.RunCtx) {
 		return
 	}
 }
+
+func GetSystemConfig(ctx *runCtx.RunCtx) GetSystemConfigResult {
+	systemLk.RLock()
+	defer systemLk.RUnlock()
+	return GetSystemConfigResult{SystemConfig}
+}
+
+type (
+	GetSystemConfigResult struct {
+		SystemExt
+	}
+)
+
+func UpdateSystemConfig(ctx *runCtx.RunCtx, para UpdateSystemConfigPara) (err error) {
+	systemLk.RLock()
+	defer systemLk.RUnlock()
+	SystemConfig.SoundOpen = para.SoundOpen
+	SystemConfig.RunPort = para.RunPort
+
+	return saveSystemConfig(ctx)
+}
+
+type (
+	UpdateSystemConfigPara struct {
+		SoundOpen bool `json:"sound_open"` // 开启按键音
+		RunPort   int  `json:"run_port"`   // 运行端口
+	}
+)

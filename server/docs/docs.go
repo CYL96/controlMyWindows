@@ -383,6 +383,144 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/GetNowMousePosition": {
+            "post": {
+                "description": "执行key",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "控制模块-键"
+                ],
+                "summary": "获取当前鼠标位置",
+                "parameters": [
+                    {
+                        "description": "请求",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/hd.GetNowMousePositionReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "desc",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/hd.GinResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/hd.GetNowMousePositionResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/GetSystemConfig": {
+            "post": {
+                "description": "获取当前系统设置",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统设置"
+                ],
+                "summary": "获取当前系统设置",
+                "parameters": [
+                    {
+                        "description": "请求",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/hd.GetSystemConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "desc",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/hd.GinResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/hd.GetSystemConfigResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/SetSystemConfig": {
+            "post": {
+                "description": "设置当前系统设置",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统设置"
+                ],
+                "summary": "设置当前系统设置",
+                "parameters": [
+                    {
+                        "description": "请求",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/hd.SetSystemConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "desc",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/hd.GinResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/hd.SetSystemConfigResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/StopControlDetail": {
             "post": {
                 "description": "执行key",
@@ -647,6 +785,11 @@ const docTemplate = `{
                     "type": "string",
                     "example": ""
                 },
+                "path": {
+                    "description": "目录或网页",
+                    "type": "string",
+                    "example": ""
+                },
                 "run_state": {
                     "description": "1:空闲 2：运行中",
                     "default": 0,
@@ -745,7 +888,11 @@ const docTemplate = `{
                     "example": ""
                 },
                 "key": {
-                    "type": "string",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/control.KKey"
+                        }
+                    ],
                     "example": ""
                 },
                 "key_list": {
@@ -766,11 +913,37 @@ const docTemplate = `{
                     "example": 0
                 },
                 "key_type": {
-                    "description": "1 ：单键 2 ：文本 3 ：快捷键 99：延迟",
+                    "description": "1 ：单键 2 ：文本 3 ：快捷键 4 :鼠标点击 5 :鼠标移动 6:鼠标滚轮 99：延迟",
                     "default": 0,
                     "allOf": [
                         {
                             "$ref": "#/definitions/control.KeyType"
+                        }
+                    ],
+                    "example": 0
+                },
+                "point_x": {
+                    "description": "当KeyType == 5时 使用 X",
+                    "type": "integer",
+                    "default": 0,
+                    "example": 0
+                },
+                "point_y": {
+                    "description": "当KeyType == 5时 使用 Y",
+                    "type": "integer",
+                    "default": 0,
+                    "example": 0
+                },
+                "scroll": {
+                    "type": "integer",
+                    "default": 0,
+                    "example": 0
+                },
+                "scroll_dir": {
+                    "default": 0,
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/control.KMouseScrollDir"
                         }
                     ],
                     "example": 0
@@ -783,11 +956,15 @@ const docTemplate = `{
                 1,
                 2,
                 3,
-                4
+                4,
+                5,
+                6
             ],
             "x-enum-comments": {
                 "ControlTypeExplorer": "3：打开文件夹目录",
                 "ControlTypeNormal": "1:快捷键",
+                "ControlTypeRunCmd": "4:打开cmd",
+                "ControlTypeRunExe": "4:打开exe",
                 "ControlTypeScript": "2：脚本",
                 "ControlTypeWebsite": "4:打开网页"
             },
@@ -795,7 +972,376 @@ const docTemplate = `{
                 "ControlTypeNormal",
                 "ControlTypeScript",
                 "ControlTypeExplorer",
-                "ControlTypeWebsite"
+                "ControlTypeWebsite",
+                "ControlTypeRunExe",
+                "ControlTypeRunCmd"
+            ]
+        },
+        "control.KKey": {
+            "type": "string",
+            "enum": [
+                "a",
+                "b",
+                "c",
+                "d",
+                "e",
+                "f",
+                "g",
+                "h",
+                "i",
+                "j",
+                "k",
+                "l",
+                "m",
+                "n",
+                "o",
+                "p",
+                "q",
+                "r",
+                "s",
+                "t",
+                "u",
+                "v",
+                "w",
+                "x",
+                "y",
+                "z",
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F",
+                "G",
+                "H",
+                "I",
+                "J",
+                "K",
+                "L",
+                "M",
+                "N",
+                "O",
+                "P",
+                "Q",
+                "R",
+                "S",
+                "U",
+                "V",
+                "W",
+                "X",
+                "Y",
+                "Z",
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "backspace",
+                "delete",
+                "enter",
+                "tab",
+                "esc",
+                "escape",
+                "up",
+                "down",
+                "right",
+                "left",
+                "home",
+                "end",
+                "pageup",
+                "pagedown",
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6",
+                "f7",
+                "f8",
+                "f9",
+                "f10",
+                "f11",
+                "f12",
+                "f13",
+                "f14",
+                "f15",
+                "f16",
+                "f17",
+                "f18",
+                "f19",
+                "f20",
+                "f21",
+                "f22",
+                "f23",
+                "f24",
+                "cmd",
+                "lcmd",
+                "rcmd",
+                "alt",
+                "lalt",
+                "ralt",
+                "ctrl",
+                "lctrl",
+                "rctrl",
+                "control",
+                "shift",
+                "lshift",
+                "rshift",
+                "capslock",
+                "space",
+                "print",
+                "printscreen",
+                "insert",
+                "menu",
+                "audio_mute",
+                "audio_vol_down",
+                "audio_vol_up",
+                "audio_play",
+                "audio_stop",
+                "audio_pause",
+                "audio_prev",
+                "audio_next",
+                "audio_rewind",
+                "audio_forward",
+                "audio_repeat",
+                "audio_random",
+                "num0",
+                "num1",
+                "num2",
+                "num3",
+                "num4",
+                "num5",
+                "num6",
+                "num7",
+                "num8",
+                "num9",
+                "num_lock",
+                "num.",
+                "num+",
+                "num-",
+                "num*",
+                "num/",
+                "num_clear",
+                "num_enter",
+                "num_equal",
+                "lights_mon_up",
+                "lights_mon_down",
+                "lights_kbd_toggle",
+                "lights_kbd_up",
+                "lights_kbd_down",
+                "left",
+                "right",
+                "wheel"
+            ],
+            "x-enum-comments": {
+                "AudioForward": "Linux only",
+                "AudioMute": "Mute the volume",
+                "AudioNext": "Next Track",
+                "AudioPrev": "Previous Track",
+                "AudioRandom": "Linux only",
+                "AudioRepeat": "Linux only",
+                "AudioRewind": "Linux only",
+                "AudioVolDown": "Lower the volume",
+                "AudioVolUp": "Increase the volume",
+                "Cmd": "is the \"win\" key for windows",
+                "Down": "Down arrow key",
+                "Lalt": "left alt",
+                "Lcmd": "left command",
+                "Lctrl": "left ctrl",
+                "Left": "Left arrow key",
+                "LightsKbdToggle": "Toggle keyboard backlight on/off\t\tNo Windows support",
+                "LightsKbdUp": "Turn up keyboard backlight brightness\tNo Windows support",
+                "LightsMonDown": "Turn down monitor brightness\t\tNo Windows support",
+                "LightsMonUp": "Turn up monitor brightness\t\t\tNo Windows support",
+                "Lshift": "left shift",
+                "Menu": "Windows only",
+                "Num0": "numpad 0",
+                "Printscreen": "No Mac support",
+                "Ralt": "right alt",
+                "Rcmd": "right command",
+                "Rctrl": "right ctrl",
+                "Right": "Right arrow key",
+                "Rshift": "right shift",
+                "Up": "Up arrow key"
+            },
+            "x-enum-varnames": [
+                "KeyA",
+                "KeyB",
+                "KeyC",
+                "KeyD",
+                "KeyE",
+                "KeyF",
+                "KeyG",
+                "KeyH",
+                "KeyI",
+                "KeyJ",
+                "KeyK",
+                "KeyL",
+                "KeyM",
+                "KeyN",
+                "KeyO",
+                "KeyP",
+                "KeyQ",
+                "KeyR",
+                "KeyS",
+                "KeyT",
+                "KeyU",
+                "KeyV",
+                "KeyW",
+                "KeyX",
+                "KeyY",
+                "KeyZ",
+                "CapA",
+                "CapB",
+                "CapC",
+                "CapD",
+                "CapE",
+                "CapF",
+                "CapG",
+                "CapH",
+                "CapI",
+                "CapJ",
+                "CapK",
+                "CapL",
+                "CapM",
+                "CapN",
+                "CapO",
+                "CapP",
+                "CapQ",
+                "CapR",
+                "CapS",
+                "CapU",
+                "CapV",
+                "CapW",
+                "CapX",
+                "CapY",
+                "CapZ",
+                "Key0",
+                "Key1",
+                "Key2",
+                "Key3",
+                "Key4",
+                "Key5",
+                "Key6",
+                "Key7",
+                "Key8",
+                "Key9",
+                "Backspace",
+                "Delete",
+                "Enter",
+                "Tab",
+                "Esc",
+                "Escape",
+                "Up",
+                "Down",
+                "Right",
+                "Left",
+                "Home",
+                "End",
+                "Pageup",
+                "Pagedown",
+                "F1",
+                "F2",
+                "F3",
+                "F4",
+                "F5",
+                "F6",
+                "F7",
+                "F8",
+                "F9",
+                "F10",
+                "F11",
+                "F12",
+                "F13",
+                "F14",
+                "F15",
+                "F16",
+                "F17",
+                "F18",
+                "F19",
+                "F20",
+                "F21",
+                "F22",
+                "F23",
+                "F24",
+                "Cmd",
+                "Lcmd",
+                "Rcmd",
+                "Alt",
+                "Lalt",
+                "Ralt",
+                "Ctrl",
+                "Lctrl",
+                "Rctrl",
+                "Control",
+                "Shift",
+                "Lshift",
+                "Rshift",
+                "Capslock",
+                "Space",
+                "Print",
+                "Printscreen",
+                "Insert",
+                "Menu",
+                "AudioMute",
+                "AudioVolDown",
+                "AudioVolUp",
+                "AudioPlay",
+                "AudioStop",
+                "AudioPause",
+                "AudioPrev",
+                "AudioNext",
+                "AudioRewind",
+                "AudioForward",
+                "AudioRepeat",
+                "AudioRandom",
+                "Num0",
+                "Num1",
+                "Num2",
+                "Num3",
+                "Num4",
+                "Num5",
+                "Num6",
+                "Num7",
+                "Num8",
+                "Num9",
+                "NumLock",
+                "NumDecimal",
+                "NumPlus",
+                "NumMinus",
+                "NumMul",
+                "NumDiv",
+                "NumClear",
+                "NumEnter",
+                "NumEqual",
+                "LightsMonUp",
+                "LightsMonDown",
+                "LightsKbdToggle",
+                "LightsKbdUp",
+                "LightsKbdDown",
+                "MouseLeft",
+                "MouseRight",
+                "MouseWheel"
+            ]
+        },
+        "control.KMouseScrollDir": {
+            "type": "integer",
+            "enum": [
+                1,
+                2,
+                3,
+                4
+            ],
+            "x-enum-varnames": [
+                "MouseScrollUp",
+                "MouseScrollDown",
+                "MouseScrollLeft",
+                "MouseScrollRight"
             ]
         },
         "control.KeyListT": {
@@ -807,7 +1353,11 @@ const docTemplate = `{
                     "example": 0
                 },
                 "key": {
-                    "type": "string",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/control.KKey"
+                        }
+                    ],
                     "example": ""
                 }
             }
@@ -818,11 +1368,17 @@ const docTemplate = `{
                 1,
                 2,
                 3,
+                4,
+                5,
+                6,
                 99
             ],
             "x-enum-comments": {
                 "KeyTypeDefault": "单键",
                 "KeyTypeDelay": "延迟",
+                "KeyTypeMouse": "鼠标点击",
+                "KeyTypeMouseMove": "鼠标移动",
+                "KeyTypeMouseScroll": "鼠标滚轮",
                 "KeyTypeShortcutKey": "快捷键",
                 "KeyTypeText": "文本"
             },
@@ -830,6 +1386,9 @@ const docTemplate = `{
                 "KeyTypeDefault",
                 "KeyTypeText",
                 "KeyTypeShortcutKey",
+                "KeyTypeMouse",
+                "KeyTypeMouseMove",
+                "KeyTypeMouseScroll",
                 "KeyTypeDelay"
             ]
         },
@@ -1017,6 +1576,45 @@ const docTemplate = `{
                 }
             }
         },
+        "hd.GetNowMousePositionReq": {
+            "type": "object"
+        },
+        "hd.GetNowMousePositionResp": {
+            "type": "object",
+            "properties": {
+                "x": {
+                    "type": "integer",
+                    "default": 0,
+                    "example": 0
+                },
+                "y": {
+                    "type": "integer",
+                    "default": 0
+                }
+            }
+        },
+        "hd.GetSystemConfigReq": {
+            "type": "object"
+        },
+        "hd.GetSystemConfigResp": {
+            "type": "object",
+            "properties": {
+                "run_ip": {
+                    "description": "运行ip地址",
+                    "type": "string",
+                    "example": ""
+                },
+                "run_port": {
+                    "description": "运行端口",
+                    "type": "integer",
+                    "default": 8080,
+                    "example": 8080
+                },
+                "sound_open": {
+                    "type": "boolean"
+                }
+            }
+        },
         "hd.GinResponse": {
             "type": "object",
             "properties": {
@@ -1046,6 +1644,22 @@ const docTemplate = `{
                 "StateOk",
                 "StateFailed"
             ]
+        },
+        "hd.SetSystemConfigReq": {
+            "type": "object",
+            "properties": {
+                "run_port": {
+                    "description": "运行端口",
+                    "type": "integer"
+                },
+                "sound_open": {
+                    "description": "开启按键音",
+                    "type": "boolean"
+                }
+            }
+        },
+        "hd.SetSystemConfigResp": {
+            "type": "object"
         },
         "hd.StopControlDetailReq": {
             "type": "object",

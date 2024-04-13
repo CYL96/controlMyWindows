@@ -8,24 +8,31 @@ export const ApiUpdateControlDetailOrder = "/api/UpdateControlDetailOrder"
 export const ApiGetControlDetailList = "/api/GetControlDetailList"
 export const ApiExecControlDetail = "/api/ExecControlDetail"
 export const ApiStopControlDetail = "/api/StopControlDetail"
+export const ApiGetNowMousePosition = "/api/GetNowMousePosition"
 
 export const ControlType = {
     Normal: 1,// 1:快捷键
     Script: 2,// 2：脚本
     Explorer: 3,// 3：打开文件夹目录
     Website: 4,// 4:打开网页
+    RunExe: 5,// 4:打开exe
+    RunCmd: 6,// 4:打开cmd
 }
 
 export const KeyType = {
     Default: 1,// 单键
     Text: 2,// 文本
     ShortcutKey: 3,// 快捷键
+    Mouse: 4, // 鼠标按键
+    MouseMove: 5, // 鼠标移动
+    MouseScroll: 6, // 鼠标移动
     Delay: 99,// 延迟
 }
 
+
 export const RunState = {
-    Free:1, // 空闲
-    Running:2 // 运行中
+    Free: 1, // 空闲
+    Running: 2 // 运行中
 }
 
 export const PressType = {
@@ -39,8 +46,8 @@ export interface ControlDetail extends ControlDetailId {
     detail_name: string
     detail_color: string
     control_type: number // 1:快捷键，2：脚本 3：打开文件夹目录  4:打开网页
-    path :string
-    run_state:number
+    path: string
+    run_state: number
     detail_key: ControlKeyList[]
 }
 
@@ -54,6 +61,10 @@ export interface ControlKeyList extends ControlDetailKey {
     input: string
     key_list: ControlDetailKey[]
     delay: number
+    point_x: number
+    point_y: number
+    scroll: number
+    scroll_dir: number
 }
 
 export interface ControlDetailKey {
@@ -108,6 +119,10 @@ export function CopyControlKeyList(item: ControlKeyList): ControlKeyList {
     tmp.key_type = item.key_type
     tmp.id = item.id
     tmp.key = item.key
+    tmp.point_x = item.point_x
+    tmp.point_y = item.point_y
+    tmp.scroll = item.scroll
+    tmp.scroll_dir = item.scroll_dir
     return tmp
 }
 
@@ -152,7 +167,8 @@ export function NewControlKeyList(): ControlKeyList {
         key_press: 0,
         input: '',
         key_list: [] as ControlDetailKey[],
-        delay: 0
+        delay: 0,
+        point_x: 0, point_y: 0, scroll: 0, scroll_dir: 0,
     }
 }
 
@@ -163,7 +179,8 @@ export function NewControlKeyListNormal(): ControlKeyList {
         key_press: PressType.Click,
         input: '',
         key_list: [] as ControlDetailKey[],
-        delay: 0
+        delay: 0,
+        point_x: 0, point_y: 0, scroll: 0, scroll_dir: 0,
     }
 
 }
@@ -276,9 +293,19 @@ export async function ExecStopControlDetail(req: StopControlDetailReq) {
 
 export interface StopControlDetailReq extends ControlClassId, ControlDetailId {
 }
+
 export function NewStopControlDetailReq(): ExecControlDetailReq {
     return {
         control_id: 0,
         detail_id: 0
     }
+}
+
+export async function GetNowMousePosition() {
+    return httpPostReq(ApiGetNowMousePosition, {})
+}
+
+export interface GetNowMousePositionResp {
+    x: number
+    y: number
 }

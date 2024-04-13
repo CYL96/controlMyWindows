@@ -28,7 +28,7 @@ func AddControlClass(c *gin.Context) {
 	ctx := runCtx.FromContext(c)
 	defer func() {
 		if err != nil {
-			GinResponseWithStateAndMsg(c, StateFailed, "")
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
 		} else {
 			GinResponseOk(c, result)
 		}
@@ -66,7 +66,7 @@ func UpdateControlClass(c *gin.Context) {
 	ctx := runCtx.FromContext(c)
 	defer func() {
 		if err != nil {
-			GinResponseWithStateAndMsg(c, StateFailed, "")
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
 		} else {
 			GinResponseOk(c, result)
 		}
@@ -104,7 +104,7 @@ func DeleteControlClass(c *gin.Context) {
 	ctx := runCtx.FromContext(c)
 	defer func() {
 		if err != nil {
-			GinResponseWithStateAndMsg(c, StateFailed, "")
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
 		} else {
 			GinResponseOk(c, result)
 		}
@@ -142,7 +142,7 @@ func UpdateControlClassOrder(c *gin.Context) {
 	ctx := runCtx.FromContext(c)
 	defer func() {
 		if err != nil {
-			GinResponseWithStateAndMsg(c, StateFailed, "")
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
 		} else {
 			GinResponseOk(c, result)
 		}
@@ -180,7 +180,7 @@ func GetControlClassList(c *gin.Context) {
 	ctx := runCtx.FromContext(c)
 	defer func() {
 		if err != nil {
-			GinResponseWithStateAndMsg(c, StateFailed, "")
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
 		} else {
 			GinResponseOk(c, result)
 		}
@@ -258,7 +258,7 @@ func AddControlDetail(c *gin.Context) {
 	ctx := runCtx.FromContext(c)
 	defer func() {
 		if err != nil {
-			GinResponseWithStateAndMsg(c, StateFailed, "")
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
 		} else {
 			GinResponseOk(c, result)
 		}
@@ -296,7 +296,7 @@ func UpdateControlDetail(c *gin.Context) {
 	ctx := runCtx.FromContext(c)
 	defer func() {
 		if err != nil {
-			GinResponseWithStateAndMsg(c, StateFailed, "")
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
 		} else {
 			GinResponseOk(c, result)
 		}
@@ -334,7 +334,7 @@ func DeleteControlDetail(c *gin.Context) {
 	ctx := runCtx.FromContext(c)
 	defer func() {
 		if err != nil {
-			GinResponseWithStateAndMsg(c, StateFailed, "")
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
 		} else {
 			GinResponseOk(c, result)
 		}
@@ -372,7 +372,7 @@ func UpdateControlDetailOrder(c *gin.Context) {
 	ctx := runCtx.FromContext(c)
 	defer func() {
 		if err != nil {
-			GinResponseWithStateAndMsg(c, StateFailed, "")
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
 		} else {
 			GinResponseOk(c, result)
 		}
@@ -410,7 +410,7 @@ func GetControlDetailList(c *gin.Context) {
 	ctx := runCtx.FromContext(c)
 	defer func() {
 		if err != nil {
-			GinResponseWithStateAndMsg(c, StateFailed, "")
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
 		} else {
 			GinResponseOk(c, result)
 		}
@@ -486,7 +486,7 @@ func StopControlDetail(c *gin.Context) {
 	ctx := runCtx.FromContext(c)
 	defer func() {
 		if err != nil {
-			GinResponseWithStateAndMsg(c, StateFailed, "")
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
 		} else {
 			GinResponseOk(c, result)
 		}
@@ -506,5 +506,122 @@ type (
 		mod.StopControlDetailPara
 	}
 	StopControlDetailResp struct {
+	}
+)
+
+// GetNowMousePosition
+// @Summary	获取当前鼠标位置
+// @Accept        json
+// @Produce       json
+// @Description	执行key
+// @Tags			控制模块-键
+// @param body body GetNowMousePositionReq true "请求"
+// @success 200 {object} GinResponse{data=GetNowMousePositionResp} "desc"
+// @Router			/api/GetNowMousePosition [post]
+func GetNowMousePosition(c *gin.Context) {
+	var err error
+	var result GetNowMousePositionResp
+	ctx := runCtx.FromContext(c)
+	defer func() {
+		if err != nil {
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
+		} else {
+			GinResponseOk(c, result)
+		}
+	}()
+	var req GetNowMousePositionReq
+	err = c.BindJSON(&req)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	result.GetNowMousePositionResult, err = mod.GetNowMousePosition(ctx, req.GetNowMousePositionPara)
+	return
+}
+
+type (
+	GetNowMousePositionReq struct {
+		mod.GetNowMousePositionPara
+	}
+	GetNowMousePositionResp struct {
+		mod.GetNowMousePositionResult
+	}
+)
+
+// GetSystemConfig
+// @Summary	获取当前系统设置
+// @Accept        json
+// @Produce       json
+// @Description	获取当前系统设置
+// @Tags			系统设置
+// @param body body GetSystemConfigReq true "请求"
+// @success 200 {object} GinResponse{data=GetSystemConfigResp} "desc"
+// @Router			/api/GetSystemConfig [post]
+func GetSystemConfig(c *gin.Context) {
+	var err error
+	var result GetSystemConfigResp
+	ctx := runCtx.FromContext(c)
+	defer func() {
+		if err != nil {
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
+		} else {
+			GinResponseOk(c, result)
+		}
+	}()
+	var req GetSystemConfigReq
+	err = c.BindJSON(&req)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	result.GetNowSystemConfigResp, err = mod.GetNowSystemConfig(ctx)
+	return
+}
+
+type (
+	GetSystemConfigReq struct {
+	}
+	GetSystemConfigResp struct {
+		mod.GetNowSystemConfigResp
+	}
+)
+
+// SetSystemConfig
+// @Summary	设置当前系统设置
+// @Accept        json
+// @Produce       json
+// @Description	设置当前系统设置
+// @Tags			系统设置
+// @param body body SetSystemConfigReq true "请求"
+// @success 200 {object} GinResponse{data=SetSystemConfigResp} "desc"
+// @Router			/api/SetSystemConfig [post]
+func SetSystemConfig(c *gin.Context) {
+	var err error
+	var result SetSystemConfigResp
+	ctx := runCtx.FromContext(c)
+	defer func() {
+		if err != nil {
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
+		} else {
+			GinResponseOk(c, result)
+		}
+	}()
+	var req SetSystemConfigReq
+	err = c.BindJSON(&req)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	err = mod.EditSystemConfig(ctx, req.EditSystemConfigPara)
+	return
+}
+
+type (
+	SetSystemConfigReq struct {
+		mod.EditSystemConfigPara
+	}
+	SetSystemConfigResp struct {
 	}
 )

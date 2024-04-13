@@ -33,5 +33,9 @@ func GinRouter(e *gin.Engine) {
 	api.POST("/GetControlDetailList", GetControlDetailList)
 	api.POST("/ExecControlDetail", ExecControlDetail)
 	api.POST("/StopControlDetail", StopControlDetail)
+	api.POST("/GetNowMousePosition", GetNowMousePosition)
+
+	api.POST("/GetSystemConfig", GetSystemConfig)
+	api.POST("/SetSystemConfig", SetSystemConfig)
 
 }
