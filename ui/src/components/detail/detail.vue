@@ -305,6 +305,7 @@ import {onUnmounted, onUpdated} from "@vue/runtime-core";
 import {ElColorPicker, ElMessage} from "element-plus";
 import {GetSystemConfig, NewSystemSetting, SystemSetting} from "@/components/api/set";
 import {MessageErr} from "@/components/mod/msg";
+import {GetNewId} from "@/components/common/id";
 
 const detailListContainer = ref(null)
 
@@ -453,7 +454,7 @@ const ClickEditSizeBtn = () => {
   sizeEdit.value.key_width = parseInt(controlInfo.value.key_width)
   isEditSize.value = true
 }
-const audio = new Audio('/touch_001.mp3'); // 替换成你音频文件的路径
+const audio = new Audio('/touch_001.mp3?ts='+GetNewId()); // 替换成你音频文件的路径
 
 const ExecDetail = (item: ControlDetail) => {
   if ((item.control_type != ControlType.Normal) && (isEditMod.value || item.run_state == RunState.Running)) {
