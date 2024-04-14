@@ -44,10 +44,10 @@
 
     </div>
   </header>
-  <main style="margin-top: 1vh;display: flex;align-items: center;justify-content: center">
+  <main style="margin-top: 1vh;display: flex;align-items: center;justify-content: center;">
     <!-- 左边的列表 -->
-    <div v-if="isControlInfoGet" ref="detailListContainer" style="width: auto">
-      <el-scrollbar style="display: flex;">
+    <div v-if="isControlInfoGet">
+      <el-scrollbar style="display: flex">
         <VueDraggable
             v-model="detailList"
             :animation="150"
@@ -455,15 +455,12 @@ const GetColorByRGB = (r: number, g: number, b: number) => {
 const GetAutoColor = (num: number) => {
   let color = []
   const colorSpace = Math.floor(256 / (num / 6)+1)
-  console.log(num)
-  console.log(colorSpace)
   let now = "r"
   let add = true
   let r = 0
   let g = 0
   let b = 0
   for (let i = 0; i < 6; i++) {
-    console.log(now, add)
     for (let j = 0; j < num / 6; j++) {
       switch (now) {
         case 'r':
@@ -500,7 +497,6 @@ const GetAutoColor = (num: number) => {
           }
           break
       }
-      console.log(r, g, b)
       color.push(GetColorByRGB(r, g, b))
     }
     add = !add
@@ -516,7 +512,6 @@ const GetAutoColor = (num: number) => {
           now = 'r'
           break
       }
-      console.log(1112313, now)
     }
   }
   return color
