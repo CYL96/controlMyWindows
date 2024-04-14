@@ -8,6 +8,7 @@ author CYL96 创建 2024/4/11
 package control
 
 import (
+	. "server/src/config"
 	"server/src/runCtx"
 )
 

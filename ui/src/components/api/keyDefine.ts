@@ -278,7 +278,7 @@ export function GetShowComponents(key: string) {
             return '🅻-SHIFT'
         case KeyDefine.Lctrl:
             return '🅻-CTRL'
-        case KeyDefine.Ralt:
+        case KeyDefine.Lalt:
             return '🅻-ALT'
         case KeyDefine.Backspace:
             return 'BACK'

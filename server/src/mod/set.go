@@ -9,11 +9,18 @@ package mod
 
 import (
 	"server/src/config"
+	"server/src/control"
 	"server/src/runCtx"
 )
 
 func EditSystemConfig(ctx *runCtx.RunCtx, para EditSystemConfigPara) (err error) {
-	return config.UpdateSystemConfig(ctx, para.UpdateSystemConfigPara)
+	err = config.UpdateSystemConfig(ctx, para.UpdateSystemConfigPara)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	control.ReUpdateRobotGo(para.IsScale)
+	return
 
 }
 

@@ -21,6 +21,7 @@ type (
 		SoundOpen bool   `json:"sound_open"`
 		RunIp     string `json:"run_ip" default:"" example:""`           // 运行ip地址
 		RunPort   int    `json:"run_port" default:"8080" example:"8080"` // 运行端口
+		IsScale   bool   `json:"is_scale"`                               // 屏幕是否缩放
 	}
 )
 
@@ -130,13 +131,13 @@ func UpdateSystemConfig(ctx *runCtx.RunCtx, para UpdateSystemConfigPara) (err er
 	defer systemLk.RUnlock()
 	SystemConfig.SoundOpen = para.SoundOpen
 	SystemConfig.RunPort = para.RunPort
+	SystemConfig.IsScale = para.IsScale
 
 	return saveSystemConfig(ctx)
 }
 
 type (
 	UpdateSystemConfigPara struct {
-		SoundOpen bool `json:"sound_open"` // 开启按键音
-		RunPort   int  `json:"run_port"`   // 运行端口
+		SystemExt
 	}
 )

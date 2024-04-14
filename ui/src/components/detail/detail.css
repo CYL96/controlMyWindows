@@ -36,14 +36,15 @@
 }
 
 .detail-list-view {
-    max-height: 90vh;
-    max-width: 95vw;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-content: flex-start;
     justify-content: flex-start;
-
+    /*margin-right: 6px;*/
+}
+.detail-color-picker{
+    height: 200vh;
 }
 
 .detail-list-scrollbar-view {

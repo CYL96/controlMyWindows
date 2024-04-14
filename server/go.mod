@@ -3,10 +3,13 @@ module server
 go 1.21.6
 
 require (
+	github.com/getlantern/systray v1.2.2
 	github.com/gin-gonic/gin v1.9.1
+	github.com/go-vgo/robotgo v0.110.0
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.3
+	golang.org/x/sys v0.18.0
 )
 
 require (
@@ -24,7 +27,6 @@ require (
 	github.com/getlantern/hex v0.0.0-20190417191902-c6586a6fe0b7 // indirect
 	github.com/getlantern/hidden v0.0.0-20190325191715-f02dbb02be55 // indirect
 	github.com/getlantern/ops v0.0.0-20190325191751-d70cb0d6f85f // indirect
-	github.com/getlantern/systray v1.2.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
@@ -35,7 +37,6 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.19.0 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
-	github.com/go-vgo/robotgo v0.110.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/jezek/xgb v1.1.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
@@ -70,7 +71,6 @@ require (
 	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/image v0.15.0 // indirect
 	golang.org/x/net v0.22.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/tools v0.7.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect

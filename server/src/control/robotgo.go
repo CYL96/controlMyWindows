@@ -9,43 +9,65 @@ package control
 
 import (
 	"github.com/go-vgo/robotgo"
+	"server/src/config"
 )
 
 type (
-	robotGo struct {
+	RobotGo struct {
 	}
 )
 
-func (r *robotGo) MouseScroll(num int, direction KMouseScrollDir) (err error) {
+func NewRobotGo(isScale bool) *RobotGo {
+	robotgo.Scale = isScale
+	CheckZero()
+	return &RobotGo{}
+}
+func ReUpdateRobotGo(isScale bool) {
+	robotgo.Scale = isScale
+	CheckZero()
+	return
+}
+
+var ZeroX, ZeroY = 0, 0
+
+func CheckZero() {
+	nowX, NowY := robotgo.Location()
+	robotgo.Move(0, 0)
+	ZeroX, ZeroY = robotgo.Location()
+
+	robotgo.Move(nowX-ZeroX, NowY-ZeroY)
+}
+
+func (r *RobotGo) MouseScroll(num int, direction config.KMouseScrollDir) (err error) {
 	dir := ""
 	switch direction {
-	case MouseScrollUp:
+	case config.MouseScrollUp:
 		dir = "up"
-	case MouseScrollDown:
+	case config.MouseScrollDown:
 		dir = "down"
-	case MouseScrollLeft:
+	case config.MouseScrollLeft:
 		dir = "left"
-	case MouseScrollRight:
+	case config.MouseScrollRight:
 		dir = "right"
 	}
 	robotgo.ScrollDir(num, dir)
 	return
 }
 
-func (r *robotGo) TouchNormal(key KKey) (err error) {
+func (r *RobotGo) TouchNormal(key config.KKey) (err error) {
 	return robotgo.KeyTap(key.Str())
 }
 
-func (r *robotGo) TouchNormalDown(key KKey) (err error) {
+func (r *RobotGo) TouchNormalDown(key config.KKey) (err error) {
 	return robotgo.KeyDown(key.Str())
 
 }
 
-func (r *robotGo) TouchNormalUp(key KKey) (err error) {
+func (r *RobotGo) TouchNormalUp(key config.KKey) (err error) {
 	return robotgo.KeyUp(key.Str())
 }
 
-func (r *robotGo) TouchNormalDouble(key KKey) (err error) {
+func (r *RobotGo) TouchNormalDouble(key config.KKey) (err error) {
 	err = robotgo.KeyTap(key.Str())
 	if err != nil {
 		return err
@@ -56,12 +78,12 @@ func (r *robotGo) TouchNormalDouble(key KKey) (err error) {
 
 }
 
-func (r *robotGo) Input(str string) (err error) {
+func (r *RobotGo) Input(str string) (err error) {
 	robotgo.TypeStr(str)
 	return nil
 }
 
-func (r *robotGo) TouchCombinationKey(key []KKey) (err error) {
+func (r *RobotGo) TouchCombinationKey(key []config.KKey) (err error) {
 	if len(key) == 0 {
 		return
 	}
@@ -75,40 +97,38 @@ func (r *robotGo) TouchCombinationKey(key []KKey) (err error) {
 	return robotgo.KeyTap(keyStr, ketaddr...)
 }
 
-func (r *robotGo) Sleep(ms int) error {
+func (r *RobotGo) Sleep(ms int) error {
 	robotgo.MilliSleep(ms)
 	return nil
 }
 
-func (r *robotGo) MouseClick(key KKey) (err error) {
+func (r *RobotGo) MouseClick(key config.KKey) (err error) {
 	robotgo.Click(key.Str())
 	return nil
 }
 
-func (r *robotGo) MouseMove(x int, y int) (err error) {
-	robotgo.Move(0, 0)
-	x_r, y_r := robotgo.Location()
-	robotgo.Move(x-x_r, y-y_r)
+func (r *RobotGo) MouseMove(x int, y int) (err error) {
+	robotgo.MoveSmooth(x-ZeroX, y-ZeroY, 0.01, 0.01)
 	return
 }
 
-func (r *robotGo) MouseDoubleClick(key KKey) (err error) {
+func (r *RobotGo) MouseDoubleClick(key config.KKey) (err error) {
 	robotgo.Click(key.Str(), true)
 	return nil
 }
 
-func (r *robotGo) MouseUp(key KKey) (err error) {
+func (r *RobotGo) MouseUp(key config.KKey) (err error) {
 	return robotgo.MouseUp(key.Str())
 }
 
-func (r *robotGo) MouseDown(key KKey) (err error) {
+func (r *RobotGo) MouseDown(key config.KKey) (err error) {
 	return robotgo.MouseDown(key.Str())
 }
 
-func (r *robotGo) DriverName() KKey {
+func (r *RobotGo) DriverName() config.KKey {
 	return "robotgo"
 }
 
-func (r *robotGo) GetNowMousePosition() (x, y int) {
+func (r *RobotGo) GetNowMousePosition() (x, y int) {
 	return robotgo.Location()
 }

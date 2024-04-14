@@ -140,6 +140,12 @@
             style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
         />
       </el-form-item>
+      <el-form-item label="屏幕是否设置缩放">
+        <el-switch
+            v-model="editSystemItem.is_scale"
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+        />
+      </el-form-item>
     </el-form>
 
     <template #footer>

@@ -3,6 +3,7 @@ import {httpPostReq} from "../mod/http";
 export interface SystemSetting {
     run_port: number,
     sound_open: boolean,
+    is_scale:boolean,
 }
 
 
@@ -10,6 +11,7 @@ export const NewSystemSetting = (): SystemSetting => {
     return {
         run_port: 0,
         sound_open: false,
+        is_scale:false,
     }
 }
 

@@ -9,6 +9,7 @@ package main
 
 import (
 	"os"
+	"server/src/control"
 
 	"server/src/config"
 	"server/src/hd"
@@ -22,6 +23,9 @@ func main() {
 
 	ctx.Info("读取配置...")
 	err := config.InitConfig(ctx)
+
+	ctx.Info("初始化控制器...")
+	control.InitControl(ctx)
 
 	if err != nil {
 		return

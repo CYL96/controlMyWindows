@@ -10,73 +10,11 @@ package control
 import (
 	"errors"
 	"os/exec"
+	. "server/src/config"
 
 	"golang.org/x/sys/execabs"
 	"server/src/runCtx"
 )
-
-type (
-	ControlType int
-	KeyType     int
-	PressType   int
-)
-
-const (
-	ControlTypeNormal   ControlType = 1 // 1:快捷键
-	ControlTypeScript   ControlType = 2 // 2：脚本
-	ControlTypeExplorer ControlType = 3 // 3：打开文件夹目录
-	ControlTypeWebsite  ControlType = 4 // 4:打开网页
-	ControlTypeRunExe   ControlType = 5 // 4:打开exe
-	ControlTypeRunCmd   ControlType = 6 // 4:打开cmd
-
-	KeyTypeDefault     KeyType = 1  // 单键
-	KeyTypeText        KeyType = 2  // 文本
-	KeyTypeShortcutKey KeyType = 3  // 快捷键
-	KeyTypeMouse       KeyType = 4  // 鼠标点击
-	KeyTypeMouseMove   KeyType = 5  // 鼠标移动
-	KeyTypeMouseScroll KeyType = 6  // 鼠标滚轮
-	KeyTypeDelay       KeyType = 99 // 延迟
-
-	PressTypeClick       PressType = 1 // 单击
-	PressTypeDoubleClick PressType = 2 // 双击
-	PressTypePressDown   PressType = 3 // 按下
-	PressTypePressUp     PressType = 4 // 抬起
-)
-
-type (
-	ControlT struct {
-		ControlType ControlType      `json:"control_type" default:"0" example:"0"` // 1:快捷键，2：脚本 3：打开文件夹目录  4:打开网页
-		Path        string           `json:"path" default:"" example:""`           // 目录或网页
-		DetailKey   []ControlKeyList `json:"detail_key"`
-	}
-	ControlKeyList struct {
-		KeyListT
-		KeyType  KeyType    `json:"key_type" default:"0" example:"0"`  // 1 ：单键 2 ：文本 3 ：快捷键 4 :鼠标点击 5 :鼠标移动 6:鼠标滚轮 99：延迟
-		KeyPress PressType  `json:"key_press" default:"0" example:"0"` // 当KeyType == 1时 1：单击 2：双击 3：按下 4：抬起
-		Input    string     `json:"input" default:"" example:""`       // 当KeyType == 2时 输入文本
-		KeyList  []KeyListT `json:"key_list"`                          // 当KeyType == 3时
-		ControlKeyMouse
-		Delay int `json:"delay" default:"0" example:"0"` // 当KeyType == 99时 使用 ms
-	}
-	ControlKeyMouse struct {
-		PointX    int             `json:"point_x" default:"0" example:"0"` // 当KeyType == 5时 使用 X
-		PointY    int             `json:"point_y" default:"0" example:"0"` // 当KeyType == 5时 使用 Y
-		Scroll    int             `json:"scroll" default:"0" example:"0"`  //
-		ScrollDir KMouseScrollDir `json:"scroll_dir" default:"0" example:"0"`
-	}
-	KeyListT struct {
-		Id  int  `json:"id" default:"0" example:"0"` //
-		Key KKey `json:"key" default:"" example:""`  //
-	}
-)
-
-func KeyListToKKeyList(data []KeyListT) (list []KKey) {
-	list = make([]KKey, 0, len(data))
-	for _, key := range data {
-		list = append(list, key.Key)
-	}
-	return
-}
 
 // left
 // right
@@ -135,8 +73,8 @@ func TouchKey(ctx *runCtx.RunCtx, script ControlT) (err error) {
 	return
 }
 
-func init() {
-	control = new(robotGo)
+func InitControl(ctx *runCtx.RunCtx) {
+	control = NewRobotGo(GetSystemConfig(ctx).IsScale)
 }
 
 func OpenExplorer(ctx *runCtx.RunCtx, path string) {
