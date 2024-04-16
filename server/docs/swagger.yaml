@@ -3,7 +3,7 @@ definitions:
     properties:
       control_type:
         allOf:
-        - $ref: '#/definitions/control.ControlType'
+        - $ref: '#/definitions/config.ControlType'
         default: 0
         description: 1:快捷键，2：脚本 3：打开文件夹目录  4:打开网页
         example: 0
@@ -16,11 +16,24 @@ definitions:
         type: integer
       detail_key:
         items:
-          $ref: '#/definitions/control.ControlKeyList'
+          $ref: '#/definitions/config.ControlKeyList'
         type: array
       detail_name:
         example: ""
         type: string
+      detail_pic:
+        description: 图片
+        example: ""
+        type: string
+      detail_show_name:
+        description: 是否显示名称
+        type: boolean
+      detail_show_type:
+        allOf:
+        - $ref: '#/definitions/config.ShowType'
+        default: 0
+        description: 1:color 2:图片
+        example: 0
       path:
         description: 目录或网页
         example: ""
@@ -38,6 +51,62 @@ definitions:
         default: 0
         example: 0
         type: integer
+    type: object
+  config.ControlKeyList:
+    properties:
+      delay:
+        default: 0
+        description: 当KeyType == 99时 使用 ms
+        example: 0
+        type: integer
+      id:
+        default: 0
+        example: 0
+        type: integer
+      input:
+        description: 当KeyType == 2时 输入文本
+        example: ""
+        type: string
+      key:
+        allOf:
+        - $ref: '#/definitions/config.KKey'
+        example: ""
+      key_list:
+        description: 当KeyType == 3时
+        items:
+          $ref: '#/definitions/config.KeyListT'
+        type: array
+      key_press:
+        allOf:
+        - $ref: '#/definitions/config.PressType'
+        default: 0
+        description: 当KeyType == 1时 1：单击 2：双击 3：按下 4：抬起
+        example: 0
+      key_type:
+        allOf:
+        - $ref: '#/definitions/config.KeyType'
+        default: 0
+        description: 1 ：单键 2 ：文本 3 ：快捷键 4 :鼠标点击 5 :鼠标移动 6:鼠标滚轮 99：延迟
+        example: 0
+      point_x:
+        default: 0
+        description: 当KeyType == 5时 使用 X
+        example: 0
+        type: integer
+      point_y:
+        default: 0
+        description: 当KeyType == 5时 使用 Y
+        example: 0
+        type: integer
+      scroll:
+        default: 0
+        example: 0
+        type: integer
+      scroll_dir:
+        allOf:
+        - $ref: '#/definitions/config.KMouseScrollDir'
+        default: 0
+        example: 0
     type: object
   config.ControlListExt:
     properties:
@@ -68,74 +137,7 @@ definitions:
         example: 0
         type: integer
     type: object
-  config.RunState:
-    enum:
-    - 1
-    - 2
-    type: integer
-    x-enum-comments:
-      RunStateFree: 空闲
-      RunStateRunning: 运行中
-    x-enum-varnames:
-    - RunStateFree
-    - RunStateRunning
-  control.ControlKeyList:
-    properties:
-      delay:
-        default: 0
-        description: 当KeyType == 99时 使用 ms
-        example: 0
-        type: integer
-      id:
-        default: 0
-        example: 0
-        type: integer
-      input:
-        description: 当KeyType == 2时 输入文本
-        example: ""
-        type: string
-      key:
-        allOf:
-        - $ref: '#/definitions/control.KKey'
-        example: ""
-      key_list:
-        description: 当KeyType == 3时
-        items:
-          $ref: '#/definitions/control.KeyListT'
-        type: array
-      key_press:
-        allOf:
-        - $ref: '#/definitions/control.PressType'
-        default: 0
-        description: 当KeyType == 1时 1：单击 2：双击 3：按下 4：抬起
-        example: 0
-      key_type:
-        allOf:
-        - $ref: '#/definitions/control.KeyType'
-        default: 0
-        description: 1 ：单键 2 ：文本 3 ：快捷键 4 :鼠标点击 5 :鼠标移动 6:鼠标滚轮 99：延迟
-        example: 0
-      point_x:
-        default: 0
-        description: 当KeyType == 5时 使用 X
-        example: 0
-        type: integer
-      point_y:
-        default: 0
-        description: 当KeyType == 5时 使用 Y
-        example: 0
-        type: integer
-      scroll:
-        default: 0
-        example: 0
-        type: integer
-      scroll_dir:
-        allOf:
-        - $ref: '#/definitions/control.KMouseScrollDir'
-        default: 0
-        example: 0
-    type: object
-  control.ControlType:
+  config.ControlType:
     enum:
     - 1
     - 2
@@ -158,8 +160,19 @@ definitions:
     - ControlTypeWebsite
     - ControlTypeRunExe
     - ControlTypeRunCmd
-  control.KKey:
+  config.KKey:
     enum:
+    - '`'
+    - '-'
+    - =
+    - '['
+    - ']'
+    - \
+    - ;
+    - ''''
+    - ','
+    - .
+    - /
     - a
     - b
     - c
@@ -349,6 +362,17 @@ definitions:
       Rshift: right shift
       Up: Up arrow key
     x-enum-varnames:
+    - Spec0
+    - Spec1
+    - Spec2
+    - Spec3
+    - Spec4
+    - Spec5
+    - Spec6
+    - Spec7
+    - Spec8
+    - Spec9
+    - Spec10
     - KeyA
     - KeyB
     - KeyC
@@ -506,7 +530,7 @@ definitions:
     - MouseLeft
     - MouseRight
     - MouseWheel
-  control.KMouseScrollDir:
+  config.KMouseScrollDir:
     enum:
     - 1
     - 2
@@ -518,7 +542,7 @@ definitions:
     - MouseScrollDown
     - MouseScrollLeft
     - MouseScrollRight
-  control.KeyListT:
+  config.KeyListT:
     properties:
       id:
         default: 0
@@ -526,10 +550,10 @@ definitions:
         type: integer
       key:
         allOf:
-        - $ref: '#/definitions/control.KKey'
+        - $ref: '#/definitions/config.KKey'
         example: ""
     type: object
-  control.KeyType:
+  config.KeyType:
     enum:
     - 1
     - 2
@@ -555,7 +579,7 @@ definitions:
     - KeyTypeMouseMove
     - KeyTypeMouseScroll
     - KeyTypeDelay
-  control.PressType:
+  config.PressType:
     enum:
     - 1
     - 2
@@ -572,6 +596,25 @@ definitions:
     - PressTypeDoubleClick
     - PressTypePressDown
     - PressTypePressUp
+  config.RunState:
+    enum:
+    - 1
+    - 2
+    type: integer
+    x-enum-comments:
+      RunStateFree: 空闲
+      RunStateRunning: 运行中
+    x-enum-varnames:
+    - RunStateFree
+    - RunStateRunning
+  config.ShowType:
+    enum:
+    - 1
+    - 2
+    type: integer
+    x-enum-varnames:
+    - ShowTypeColor
+    - ShowTypePic
   hd.AddControlClassReq:
     properties:
       control_id:
@@ -686,6 +729,15 @@ definitions:
           $ref: '#/definitions/config.ControlDetailExt'
         type: array
     type: object
+  hd.GetNowIconListReq:
+    type: object
+  hd.GetNowIconListResp:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/module.IconT'
+        type: array
+    type: object
   hd.GetNowMousePositionReq:
     type: object
   hd.GetNowMousePositionResp:
@@ -702,6 +754,9 @@ definitions:
     type: object
   hd.GetSystemConfigResp:
     properties:
+      is_scale:
+        description: 屏幕是否缩放
+        type: boolean
       run_ip:
         description: 运行ip地址
         example: ""
@@ -738,11 +793,19 @@ definitions:
     - StateFailed
   hd.SetSystemConfigReq:
     properties:
+      is_scale:
+        description: 屏幕是否缩放
+        type: boolean
+      run_ip:
+        description: 运行ip地址
+        example: ""
+        type: string
       run_port:
+        default: 8080
         description: 运行端口
+        example: 8080
         type: integer
       sound_open:
-        description: 开启按键音
         type: boolean
     type: object
   hd.SetSystemConfigResp:
@@ -812,6 +875,13 @@ definitions:
         $ref: '#/definitions/config.ControlDetailExt'
     type: object
   hd.UpdateControlDetailResp:
+    type: object
+  module.IconT:
+    properties:
+      icon_name:
+        type: string
+      icon_path:
+        type: string
     type: object
 info:
   contact: {}
@@ -1032,6 +1102,33 @@ paths:
       summary: 获取键列表
       tags:
       - 控制模块-键
+  /api/GetNowIconList:
+    post:
+      consumes:
+      - application/json
+      description: 获取当前图标列表
+      parameters:
+      - description: 请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/hd.GetNowIconListReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/hd.GinResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/hd.GetNowIconListResp'
+              type: object
+      summary: 获取当前图标列表
+      tags:
+      - 系统设置
   /api/GetNowMousePosition:
     post:
       consumes:

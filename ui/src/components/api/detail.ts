@@ -41,9 +41,16 @@ export const PressType = {
     PressDown: 3,// 按下
     PressUp: 4,// 抬起
 }
+export const ShowType = {
+    Color:1,
+    Pic:2
+}
 
 export interface ControlDetail extends ControlDetailId {
     detail_name: string
+    detail_show_name: boolean
+    detail_show_type: number
+    detail_pic: string
     detail_color: string
     control_type: number // 1:快捷键，2：脚本 3：打开文件夹目录  4:打开网页
     path: string
@@ -74,6 +81,8 @@ export interface ControlDetailKey {
 
 export function NewControlDetail(): ControlDetail {
     return {
+        detail_show_name: false,
+        detail_pic: "", detail_show_type: 0,
         path: "",
         run_state: 0,
         control_type: 0,
@@ -87,7 +96,10 @@ export function NewControlDetail(): ControlDetail {
 
 export function CopyControlDetail(item: ControlDetail): ControlDetail {
     return {
-        path: "",
+        detail_pic: item.detail_pic,
+        detail_show_type: item.detail_show_type,
+        detail_show_name:item.detail_show_name,
+        path: item.path,
         run_state: 0,
         control_type: item.control_type,
         detail_color: item.detail_color,

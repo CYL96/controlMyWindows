@@ -10,6 +10,7 @@ package hd
 import (
 	"github.com/gin-gonic/gin"
 	"server/src/mod"
+	"server/src/module"
 	"server/src/runCtx"
 )
 
@@ -623,5 +624,44 @@ type (
 		mod.EditSystemConfigPara
 	}
 	SetSystemConfigResp struct {
+	}
+)
+
+// GetNowIconList
+// @Summary	获取当前图标列表
+// @Accept        json
+// @Produce       json
+// @Description	获取当前图标列表
+// @Tags			系统设置
+// @param body body GetNowIconListReq true "请求"
+// @success 200 {object} GinResponse{data=GetNowIconListResp} "desc"
+// @Router			/api/GetNowIconList [post]
+func GetNowIconList(c *gin.Context) {
+	var err error
+	var result GetNowIconListResp
+	ctx := runCtx.FromContext(c)
+	defer func() {
+		if err != nil {
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
+		} else {
+			GinResponseOk(c, result)
+		}
+	}()
+	var req GetNowIconListReq
+	err = c.BindJSON(&req)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	result.List, err = module.GetNowIcon(ctx, "icon")
+	return
+}
+
+type (
+	GetNowIconListReq struct {
+	}
+	GetNowIconListResp struct {
+		List []module.IconT
 	}
 )

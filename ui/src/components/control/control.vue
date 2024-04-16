@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header style="margin-top: 10px">
     <div style="display: flex;align-items: center;justify-content: center">
       <el-button @click="GetControlClassListFromServer" style="width: 30vw;background: #d1edc4">
         <el-icon>

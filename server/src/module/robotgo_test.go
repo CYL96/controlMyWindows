@@ -1,8 +1,9 @@
-package control
+package module
 
 import (
-	"github.com/go-vgo/robotgo"
 	"testing"
+
+	"github.com/go-vgo/robotgo"
 )
 
 func Test_robotGo_MouseMove(t *testing.T) {

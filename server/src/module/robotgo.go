@@ -5,7 +5,7 @@
 author CYL96 创建 2024/3/28
 **************************************************/
 
-package control
+package module
 
 import (
 	"github.com/go-vgo/robotgo"

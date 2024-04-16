@@ -38,4 +38,6 @@ func GinRouter(e *gin.Engine) {
 	api.POST("/GetSystemConfig", GetSystemConfig)
 	api.POST("/SetSystemConfig", SetSystemConfig)
 
+	api.POST("/GetNowIconList", GetNowIconList)
+
 }

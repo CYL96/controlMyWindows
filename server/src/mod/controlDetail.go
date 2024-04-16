@@ -12,7 +12,7 @@ import (
 
 	"server/src/common"
 	"server/src/config"
-	"server/src/control"
+	"server/src/module"
 	"server/src/runCtx"
 )
 
@@ -200,7 +200,7 @@ func ExecControlDetail(ctx *runCtx.RunCtx, para ExecControlDetailPara) (err erro
 						DeleteControlRunner(strconv.FormatInt(detail.DetailId, 10))
 					}
 				}()
-				err = control.TouchKey(cctx, detail.ControlT)
+				err = module.TouchKey(cctx, detail.ControlT)
 			}()
 			break
 		}
@@ -252,7 +252,7 @@ type (
 )
 
 func GetNowMousePosition(ctx *runCtx.RunCtx, para GetNowMousePositionPara) (result GetNowMousePositionResult, err error) {
-	result.X, result.Y = control.GetNowMousePosition()
+	result.X, result.Y = module.GetNowMousePosition()
 	return
 }
 

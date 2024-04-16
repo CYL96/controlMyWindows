@@ -1,125 +1,136 @@
 <template>
-  <header style="height: 10%">
-    <div style="display: flex;align-items: center;justify-content: center">
-      <el-button @click="GotoHome" style="width: 10vw">
-        <el-icon>
-          <Back/>
-        </el-icon>
-      </el-button>
-
-
-      <el-button @click="GetDetailList" style="width: 30vw">
-        <el-icon>
-          <Refresh/>
-        </el-icon>
-      </el-button>
-
-      <div style="width: 45vw;margin-left: 12px;display: flex;align-items: center;justify-content: center">
-        <el-button v-show="!isEditMod" @click="isEditMod= true" style="width: 100%">
+  <div style="display: flex;flex-direction: column">
+    <header style="height: 10%;margin-top: 10px">
+      <div style="display: flex;align-items: center;justify-content: center">
+        <el-button @click="GotoHome" style="width: 10vw">
           <el-icon>
-            <Edit/>
+            <Back/>
           </el-icon>
         </el-button>
 
-        <el-button v-show="isEditMod" @click="selectDialogVisible=true;"
-                   style="width: 40%;background:deepskyblue">
+
+        <el-button @click="GetDetailList" style="width: 30vw">
           <el-icon>
-            <CirclePlus/>
+            <Refresh/>
           </el-icon>
         </el-button>
 
-        <el-button v-show="isEditMod" @click="isEditMod=false" style="width: 40%;background: greenyellow">
-          <el-icon>
-            <Check/>
-          </el-icon>
-        </el-button>
+        <div style="width: 45vw;margin-left: 12px;display: flex;align-items: center;justify-content: center">
+          <el-button v-show="!isEditMod" @click="isEditMod= true" style="width: 100%">
+            <el-icon>
+              <Edit/>
+            </el-icon>
+          </el-button>
 
-        <el-button v-show="isEditMod" @click="ClickEditSizeBtn" style="width: 10%;background: #ffce2f">
-          <el-icon>
-            <FullScreen/>
-          </el-icon>
-        </el-button>
+          <el-button v-show="isEditMod" @click="selectDialogVisible=true;"
+                     style="width: 40%;background:deepskyblue">
+            <el-icon>
+              <CirclePlus/>
+            </el-icon>
+          </el-button>
+
+          <el-button v-show="isEditMod" @click="isEditMod=false" style="width: 40%;background: greenyellow">
+            <el-icon>
+              <Check/>
+            </el-icon>
+          </el-button>
+
+          <el-button v-show="isEditMod" @click="ClickEditSizeBtn" style="width: 10%;background: #ffce2f">
+            <el-icon>
+              <FullScreen/>
+            </el-icon>
+          </el-button>
+        </div>
+
+
       </div>
+    </header>
+    <main style="margin-top: 1vh;display: flex;align-items: center;justify-content: center;flex-grow: 1">
+      <!-- 左边的列表 -->
+      <div v-if="isControlInfoGet" style="display: flex;justify-content: center;">
+        <el-scrollbar>
+          <VueDraggable
+              v-model="detailList"
+              :animation="150"
+              @update="OnDetailListOrderChange()"
+              :disabled="!isEditMod"
+              handle=".sort_detail_key_list"
+              class="detail-list-view"
+              id="LabelList"
+          >
+            <div :id="item.detail_id" v-for="item in detailList" :key="item.detail_id"
+                 class="detail-item ">
+              <div v-if="isEditMod" class="sort_detail_key_list"
+                   style="width: 95%;height: 30px;display: flex;border-radius: 2px;align-content: center;justify-content: center;background: #13ce66">
+                <el-icon size="16" style="height: 100%;width: 100%">
+                  <Sort/>
+                </el-icon>
+              </div>
+              <div class="" :style="KeySizeStyle(0,0)">
+                <div style=" width:100%;height:100%;display: flex;flex-direction: column">
+                  <el-button style="flex-grow: 1;position: relative"
+                             :style=" item.detail_show_type==ShowType.Color?{background:item.detail_color}:{}"
+                             :disabled="item.run_state==RunState.Running"
+                             @click="ExecDetail(item)">
+                    <div class="detail-item-control-icon" :style="GetControlTypeStyle(item.control_type)">
+                      <Icon.KeyboardOne size="18" v-show="item.control_type==ControlType.Normal"/>
+                      <Icon.RobotOne size="18" v-show="item.control_type==ControlType.Script"/>
+                      <Icon.FolderOpen size="18" v-show="item.control_type==ControlType.Explorer"/>
+                      <Icon.BrowserChrome size="18" v-show="item.control_type==ControlType.Website"/>
+                      <Icon.Application size="18" v-show="item.control_type==ControlType.RunExe"/>
+                      <Icon.Terminal size="18" v-show="item.control_type==ControlType.RunCmd"/>
+                    </div>
+                    <el-image
+                        v-if="item.detail_show_type==ShowType.Pic"
+                        class="detail-item-control-back-pic"
+                        :src="GetIconSrc(item.detail_pic,nowTs)"
+                        fit="fill" :style="KeySizeStyle(-4,-4)"
+                    ></el-image>
 
-
-    </div>
-  </header>
-  <main style="margin-top: 1vh;display: flex;align-items: center;justify-content: center;">
-    <!-- 左边的列表 -->
-    <div v-if="isControlInfoGet">
-      <el-scrollbar style="display: flex">
-        <VueDraggable
-            v-model="detailList"
-            :animation="150"
-            @update="OnDetailListOrderChange()"
-            :disabled="!isEditMod"
-            handle=".sort_detail_key_list"
-            id="LabelList"
-            class="detail-list-view"
-        >
-          <div :id="item.detail_id" v-for="item in detailList" :key="item.detail_id"
-               class="detail-item ">
-            <div v-if="isEditMod" class="sort_detail_key_list"
-                 style="width: 95%;height: 20px;display: flex;border-radius: 2px;align-content: center;justify-content: center;background: #13ce66">
-              <el-icon size="16" style="height: 100%">
-                <Sort/>
-              </el-icon>
-            </div>
-            <div class="" :style="KeySizeStyle()">
-              <div style=" width:100%;height:100%;display: flex;flex-direction: column">
-                <el-button style="flex-grow: 1;position: relative" :style="{background:item.detail_color}"
-                           :disabled="item.run_state==RunState.Running"
-                           @click="ExecDetail(item)">
-
-                  <div class="detail-item-control-icon" :style="GetControlTypeStyle(item.control_type)">
-                    <Icon.KeyboardOne size="18" v-show="item.control_type==ControlType.Normal"/>
-                    <Icon.RobotOne size="18" v-show="item.control_type==ControlType.Script"/>
-                    <Icon.FolderOpen size="18" v-show="item.control_type==ControlType.Explorer"/>
-                    <Icon.BrowserChrome size="18" v-show="item.control_type==ControlType.Website"/>
-                    <Icon.Application size="18" v-show="item.control_type==ControlType.RunExe"/>
-                    <Icon.Terminal size="18" v-show="item.control_type==ControlType.RunCmd"/>
-                  </div>
-                  <el-text line-clamp="2" style="text-align: center;white-space: normal;font-weight: bold;"
-                           :style="{width:(GetKeyWidth()-10)+'px'}">{{
-                      item.detail_name
-                    }}
-                  </el-text>
-                </el-button>
-
-                <div v-if="item.run_state==RunState.Running && item.control_type== ControlType.Script"
-                     style="height: 30%">
-                  <el-button style="width: 100%;height: 100%" :style="runStateLight(item)"
-                             @click="ClickStopDetailBtn(item)">
-                    <el-icon>
-                      <SwitchButton/>
-                    </el-icon>
+                    <el-text line-clamp="2" v-show="item.detail_show_name"
+                             style="text-align: center;white-space: normal;font-weight: bold;z-index: 500"
+                             :style="{width:(GetKeyWidth()-10)+'px'}">{{
+                        item.detail_name
+                      }}
+                    </el-text>
                   </el-button>
+
+                  <div v-if="item.run_state==RunState.Running && item.control_type== ControlType.Script"
+                       style="height: 30%">
+                    <el-button style="width: 100%;height: 100%" :style="runStateLight(item)"
+                               @click="ClickStopDetailBtn(item)">
+                      <el-icon>
+                        <SwitchButton/>
+                      </el-icon>
+                    </el-button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div v-show="isEditMod" class="detail-edit-btn-001"
-                 style="background: #e3dddd;border: #b4b4b4 solid 1px;" :style="{width:GetKeyWidth()-4+'px'}">
-              <!--                编辑按钮-->
-              <el-button size="small" style="width: 50%;background: #dea942"
-                         @click="ClickEditKeyBtn(item)">
-                <el-icon>
-                  <Edit/>
-                </el-icon>
-              </el-button>
-              <!--                删除按钮-->
-              <el-button size="small" style="width: 50%;margin-left: 0px;background: #d75555"
-                         @click="delDialogVisible=true;delId=item.detail_id">
-                <el-icon>
-                  <Delete/>
-                </el-icon>
-              </el-button>
-            </div>
+              <div v-show="isEditMod" class="detail-edit-btn-001"
+                   style="background: #e3dddd;border: #b4b4b4 solid 1px;" :style="{width:GetKeyWidth()-4+'px'}">
+                <!--                编辑按钮-->
+                <el-button size="small" style="width: 50%;background: #dea942"
+                           @click="ClickEditKeyBtn(item)">
+                  <el-icon>
+                    <Edit/>
+                  </el-icon>
+                </el-button>
+                <!--                删除按钮-->
+                <el-button size="small" style="width: 50%;margin-left: 0px;background: #d75555"
+                           @click="delDialogVisible=true;delId=item.detail_id">
+                  <el-icon>
+                    <Delete/>
+                  </el-icon>
+                </el-button>
+              </div>
 
-          </div>
-        </VueDraggable>
-      </el-scrollbar>
-    </div>
-  </main>
+            </div>
+          </VueDraggable>
+        </el-scrollbar>
+      </div>
+    </main>
+
+  </div>
 
 
   <!-- 删除 弹框 -->
@@ -219,8 +230,19 @@
       <el-form label-position="right" label-width="auto">
         <el-form-item label="名称">
           <el-input v-model="editItem.detail_name"></el-input>
+
         </el-form-item>
-        <el-form-item label="背景色">
+        <el-form-item label="是否显示名称">
+          <el-switch
+              v-model="editItem.detail_show_name"
+              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+          />
+        </el-form-item>
+        <el-radio-group v-model="editItem.detail_show_type" class="ml-4">
+          <el-radio :value="1" size="large">背景色</el-radio>
+          <el-radio :value="2" size="large">图片</el-radio>
+        </el-radio-group>
+        <el-form-item label="背景色" v-if="editItem.detail_show_type==ShowType.Color">
           <div style="display: flex;flex-direction: row">
             <el-color-picker @active-change="event => {editItem.detail_color = event}"
                              popper-class="hex"
@@ -230,6 +252,15 @@
                          v-for="item in predefineColorListAuto" @click="editItem.detail_color=item"></el-button>
 
             </div>
+          </div>
+
+        </el-form-item>
+        <el-form-item label="图片" v-if="editItem.detail_show_type==ShowType.Pic">
+          <div style="border: #72767b solid 1px;width: 40px;height: 40px;display: flex;justify-content: center"
+               @click="selectIconVisible=true">
+            <el-image v-if="editItem.detail_pic!=''" style="width: 40px;height: 40px;"
+                      :src="GetIconSrc(editItem.detail_pic,nowTs)"
+                      fit="fill"></el-image>
           </div>
 
         </el-form-item>
@@ -262,6 +293,26 @@
         <el-button @click="editDialogVisible = false">取消</el-button>
         <el-button type="primary"
                    @click="ClickEditSubBtn()">
+          确认
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
+
+  <!-- 图片 选择弹框 -->
+  <el-dialog
+      v-model="selectIconVisible"
+      align-center
+      :fullscreen="true">
+    <div style="width: 100%;display: flex;align-items: center;margin-bottom: 5px">
+      <el-text style="width: 100%;text-align: center">图片选择</el-text>
+    </div>
+    <DetailIcon :pic="selectIcon" :OnPicUpdate="pic => {selectIcon=pic}"></DetailIcon>
+    <template #footer>
+      <div class="works-dialog-footer">
+        <el-button @click="selectIconVisible = false">取消</el-button>
+        <el-button type="primary"
+                   @click="ClickSubPicSelectBtn">
           确认
         </el-button>
       </div>
@@ -310,7 +361,7 @@ import {
   ControlDetailKey,
   ControlKeyList,
   NewControlKeyListNormal,
-  RunState, ExecStopControlDetail, NewStopControlDetailReq
+  RunState, ExecStopControlDetail, NewStopControlDetailReq, ShowType
 } from "@/components/api/detail";
 import DetailEdit from "@/components/detail/detailEdit.vue";
 import {onMounted, ref} from "vue";
@@ -321,14 +372,16 @@ import {ElColorPicker, ElMessage} from "element-plus";
 import {GetSystemConfig, NewSystemSetting, SystemSetting} from "@/components/api/set";
 import {MessageErr} from "@/components/mod/msg";
 import {GetNewId} from "@/components/common/id";
+import DetailIcon from "@/components/detail/detailIcon.vue";
+import {GetIconSrc} from "@/components/api/sys";
 
 const detailListContainer = ref(null)
 
 
-const KeySizeStyle = () => {
+const KeySizeStyle = (hOff: number, wOff: number) => {
   return {
-    height: controlInfo.value.key_height + 'px',
-    width: controlInfo.value.key_width + 'px',
+    height: (parseInt(controlInfo.value.key_height) + hOff) + 'px',
+    width: (parseInt(controlInfo.value.key_width) + wOff) + 'px',
   }
 }
 
@@ -372,6 +425,9 @@ const isControlInfoGet = ref(false)
 
 const tk = ref(0)
 const lastColor = ref('')
+
+const selectIconVisible = ref(false)
+const selectIcon = ref('')
 
 
 const predefineColors = ref([])
@@ -439,6 +495,12 @@ onUnmounted(
     }
 )
 
+const ClickSubPicSelectBtn = () => {
+  editItem.value.detail_show_type = ShowType.Pic
+  editItem.value.detail_pic = selectIcon.value
+  selectIconVisible.value = false
+}
+
 const GetColorByInt = (num: number) => {
   let b = Math.floor(num % 256)
   num = num / 256
@@ -454,7 +516,7 @@ const GetColorByRGB = (r: number, g: number, b: number) => {
 }
 const GetAutoColor = (num: number) => {
   let color = []
-  const colorSpace = Math.floor(256 / (num / 6)+1)
+  const colorSpace = Math.floor(256 / (num / 6) + 1)
   let now = "r"
   let add = true
   let r = 0
@@ -517,6 +579,7 @@ const GetAutoColor = (num: number) => {
   return color
 }
 
+const nowTs = GetNewId()
 
 let predefineColorListAuto = GetAutoColor(60)
 
@@ -529,10 +592,13 @@ const ClickEditSizeBtn = () => {
   sizeEdit.value.key_width = parseInt(controlInfo.value.key_width)
   isEditSize.value = true
 }
-const audio = new Audio('/touch_001.mp3?ts=' + GetNewId()); // 替换成你音频文件的路径
+const audio = new Audio('/touch_001.mp3?ts=' + nowTs); // 替换成你音频文件的路径
 
 const ExecDetail = (item: ControlDetail) => {
-  if ((item.control_type != ControlType.Normal) && (isEditMod.value || item.run_state == RunState.Running)) {
+  if (isEditMod.value) {
+    return;
+  }
+  if (item.control_type != ControlType.Normal && item.run_state == RunState.Running) {
     return
   }
   if (nowSystemConfig.value.sound_open) {
@@ -549,8 +615,10 @@ const ExecDetail = (item: ControlDetail) => {
   req.control_id = controlInfo.value.control_id
   ExecControlDetail(req).then(resp => {
     if (resp.state != 0) {
-      item.run_state = RunState.Free
+
     }
+    item.run_state = RunState.Free
+
   })
 }
 const ClickStopDetailBtn = (item: ControlDetail) => {
@@ -673,6 +741,8 @@ const OnDetailListOrderChange = () => {
 const ClickAddKeyBtn = () => {
   selectDialogVisible.value = false
   editItem.value = NewControlDetail()
+  editItem.value.detail_show_name = true
+  editItem.value.detail_show_type = ShowType.Color
   editItem.value.control_type = addControlType.value
   editDialogVisible.value = true
 }

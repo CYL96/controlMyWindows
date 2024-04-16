@@ -247,6 +247,30 @@ export function GetShowComponents(key: string) {
             return 'F11'
         case KeyDefine.F12:
             return 'F12'
+        case KeyDefine.F13:
+            return 'F13'
+        case KeyDefine.F14:
+            return 'F14'
+        case KeyDefine.F15:
+            return 'F15'
+        case KeyDefine.F16:
+            return 'F16'
+        case KeyDefine.F17:
+            return 'F17'
+        case KeyDefine.F18:
+            return 'F18'
+        case KeyDefine.F19:
+            return 'F19'
+        case KeyDefine.F20:
+            return 'F20'
+        case KeyDefine.F21:
+            return 'F21'
+        case KeyDefine.F22:
+            return 'F22'
+        case KeyDefine.F23:
+            return 'F23'
+        case KeyDefine.F24:
+            return 'F24'
 
         case KeyDefine.Up:
             return '↑'

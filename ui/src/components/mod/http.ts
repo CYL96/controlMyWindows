@@ -10,13 +10,11 @@ export interface ServerResponse {
 }
 
 export async function httpPostReq(api: string, para: any) {
-    const data = JSON.stringify(para);
     return httpPostReqByHost(runConfig.server, api, para)
 }
 
 
 export async function httpPostReqCommonNotify(api: string, para: any) {
-    const data = JSON.stringify(para);
     return httpPostReqByHost(runConfig.server, api, para).then(
         res => {
             if (res.state != 0) {

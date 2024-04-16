@@ -5,11 +5,12 @@
 author CYL96 创建 2024/3/28
 **************************************************/
 
-package control
+package module
 
 import (
 	"errors"
 	"os/exec"
+
 	. "server/src/config"
 
 	"golang.org/x/sys/execabs"

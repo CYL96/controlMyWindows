@@ -28,7 +28,7 @@
     </div>
   </div>
   <div style="background: #e9e9eb;padding: 3px;margin-top: 3px">
-    <div style="display: flex;flex-direction: row;align-items: center;justify-content: center;">
+    <div style="display: flex;flex-direction: row;align-items: center;justify-content: center;flex-wrap:wrap">
       <div style="margin-top: 1px">
 
         <el-button size="small" :class="CheckKeyHas(KeyDefine.AudioVolDown)" @click="ClickKey(KeyDefine.AudioVolDown)"
@@ -72,6 +72,69 @@
                    :style="{ width: 2*baseKeySize + 'px' }">
           {{ GetShowComponents(KeyDefine.AudioNext) }}
         </el-button>
+      </div>
+      <div style="margin-top: 1px">
+        <el-button size="small" :class="CheckKeyHas(KeyDefine.F13)" @click="ClickKey(KeyDefine.F13)"
+                   style="margin-left: 1px;width: 24px"
+                   :style="{ width: 2*baseKeySize + 'px' }">
+          {{ GetShowComponents(KeyDefine.F13) }}
+        </el-button>
+        <el-button size="small" :class="CheckKeyHas(KeyDefine.F14)" @click="ClickKey(KeyDefine.F14)"
+                   style="margin-left: 1px;width: 24px"
+                   :style="{ width: 2*baseKeySize + 'px' }">
+          {{ GetShowComponents(KeyDefine.F14) }}
+        </el-button>
+        <el-button size="small" :class="CheckKeyHas(KeyDefine.F15)" @click="ClickKey(KeyDefine.F15)"
+                   style="margin-left: 1px;width: 24px"
+                   :style="{ width: 2*baseKeySize + 'px' }">
+          {{ GetShowComponents(KeyDefine.F15) }}
+        </el-button>
+        <el-button size="small" :class="CheckKeyHas(KeyDefine.F16)" @click="ClickKey(KeyDefine.F16)"
+                   style="margin-left: 1px;width: 24px"
+                   :style="{ width: 2*baseKeySize + 'px' }">
+          {{ GetShowComponents(KeyDefine.F16) }}
+        </el-button>
+        <el-button size="small" :class="CheckKeyHas(KeyDefine.F17)" @click="ClickKey(KeyDefine.F17)"
+                   style="margin-left: 1px;width: 24px"
+                   :style="{ width: 2*baseKeySize + 'px' }">
+          {{ GetShowComponents(KeyDefine.F17) }}
+        </el-button>
+        <el-button size="small" :class="CheckKeyHas(KeyDefine.F18)" @click="ClickKey(KeyDefine.F18)"
+                   style="margin-left: 1px;width: 24px"
+                   :style="{ width: 2*baseKeySize + 'px' }">
+          {{ GetShowComponents(KeyDefine.F18) }}
+        </el-button>
+        <el-button size="small" :class="CheckKeyHas(KeyDefine.F19)" @click="ClickKey(KeyDefine.F19)"
+                   style="margin-left: 1px;width: 24px"
+                   :style="{ width: 2*baseKeySize + 'px' }">
+          {{ GetShowComponents(KeyDefine.F19) }}
+        </el-button>
+        <el-button size="small" :class="CheckKeyHas(KeyDefine.F20)" @click="ClickKey(KeyDefine.F20)"
+                   style="margin-left: 1px;width: 24px"
+                   :style="{ width: 2*baseKeySize + 'px' }">
+          {{ GetShowComponents(KeyDefine.F20) }}
+        </el-button>
+        <el-button size="small" :class="CheckKeyHas(KeyDefine.F21)" @click="ClickKey(KeyDefine.F21)"
+                   style="margin-left: 1px;width: 24px"
+                   :style="{ width: 2*baseKeySize + 'px' }">
+          {{ GetShowComponents(KeyDefine.F21) }}
+        </el-button>
+        <el-button size="small" :class="CheckKeyHas(KeyDefine.F22)" @click="ClickKey(KeyDefine.F22)"
+                   style="margin-left: 1px;width: 24px"
+                   :style="{ width: 2*baseKeySize + 'px' }">
+          {{ GetShowComponents(KeyDefine.F22) }}
+        </el-button>
+        <el-button size="small" :class="CheckKeyHas(KeyDefine.F23)" @click="ClickKey(KeyDefine.F23)"
+                   style="margin-left: 1px;width: 24px"
+                   :style="{ width: 2*baseKeySize + 'px' }">
+          {{ GetShowComponents(KeyDefine.F23) }}
+        </el-button>
+        <el-button size="small" :class="CheckKeyHas(KeyDefine.F24)" @click="ClickKey(KeyDefine.F24)"
+                   style="margin-left: 1px;width: 24px"
+                   :style="{ width: 2*baseKeySize + 'px' }">
+          {{ GetShowComponents(KeyDefine.F24) }}
+        </el-button>
+
       </div>
     </div>
     <div style="display: flex;flex-direction: row;align-items: center;justify-content: center;flex-wrap:wrap">
@@ -579,6 +642,7 @@ const props = withDefaults(defineProps<Prop>(), {
   updateList: (showList) => {
   },
 })
+
 OneKey.value = props.onlyOne
 showList.value = CopyControlDetailKeyList(props.setList)
 

@@ -26,6 +26,15 @@ const (
 )
 
 type (
+	ShowType int
+)
+
+const (
+	ShowTypeColor ShowType = 1
+	ShowTypePic   ShowType = 2
+)
+
+type (
 	ControlListExt struct {
 		ControlListBase
 		DetailList []ControlDetailExt `json:"detail_list"`
@@ -43,9 +52,12 @@ type (
 	}
 	ControlDetailExt struct {
 		ControlDetailIdExt
-		RunState    RunState `json:"run_state" default:"0" example:"0"`  // 1:空闲 2：运行中
-		DetailName  string   `json:"detail_name" default:"" example:""`  //
-		DetailColor string   `json:"detail_color" default:"" example:""` //
+		RunState       RunState `json:"run_state" default:"0" example:"0"`        // 1:空闲 2：运行中
+		DetailName     string   `json:"detail_name" default:"" example:""`        //
+		DetailShowName bool     `json:"detail_show_name"`                         // 是否显示名称
+		DetailShowType ShowType `json:"detail_show_type" default:"0" example:"0"` // 1:color 2:图片
+		DetailColor    string   `json:"detail_color" default:"" example:""`       //
+		DetailPic      string   `json:"detail_pic" default:"" example:""`         // 图片
 		ControlT
 	}
 	ControlDetailIdExt struct {
@@ -125,6 +137,13 @@ func ReadControlConfig(ctx *runCtx.RunCtx) (err error) {
 	for i := range controlList {
 		for i2 := range controlList[i].DetailList {
 			controlList[i].DetailList[i2].RunState = RunStateFree
+
+			switch controlList[i].DetailList[i2].DetailShowType {
+			default:
+				controlList[i].DetailList[i2].DetailShowType = ShowTypeColor
+			case ShowTypePic:
+
+			}
 		}
 	}
 	return

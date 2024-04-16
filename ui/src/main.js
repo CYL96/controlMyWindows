@@ -23,7 +23,7 @@ app.use(router)
 
 app.mount('#app')
 
-export  let baseUrl = "http://192.168.31.39:55001"
+export  let baseUrl = "http://10.5.10.87:55001"
 if (import.meta.env.PROD){
     runConfig.server =  window.location.origin
 }else {

@@ -9,10 +9,10 @@ package main
 
 import (
 	"os"
-	"server/src/control"
 
 	"server/src/config"
 	"server/src/hd"
+	"server/src/module"
 	"server/src/runCtx"
 	"server/src/systray"
 )
@@ -25,7 +25,7 @@ func main() {
 	err := config.InitConfig(ctx)
 
 	ctx.Info("初始化控制器...")
-	control.InitControl(ctx)
+	module.InitControl(ctx)
 
 	if err != nil {
 		return

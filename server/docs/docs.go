@@ -383,6 +383,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/GetNowIconList": {
+            "post": {
+                "description": "获取当前图标列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "系统设置"
+                ],
+                "summary": "获取当前图标列表",
+                "parameters": [
+                    {
+                        "description": "请求",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/hd.GetNowIconListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "desc",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/hd.GinResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/hd.GetNowIconListResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/GetNowMousePosition": {
             "post": {
                 "description": "执行key",
@@ -761,7 +807,7 @@ const docTemplate = `{
                     "default": 0,
                     "allOf": [
                         {
-                            "$ref": "#/definitions/control.ControlType"
+                            "$ref": "#/definitions/config.ControlType"
                         }
                     ],
                     "example": 0
@@ -778,12 +824,31 @@ const docTemplate = `{
                 "detail_key": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/control.ControlKeyList"
+                        "$ref": "#/definitions/config.ControlKeyList"
                     }
                 },
                 "detail_name": {
                     "type": "string",
                     "example": ""
+                },
+                "detail_pic": {
+                    "description": "图片",
+                    "type": "string",
+                    "example": ""
+                },
+                "detail_show_name": {
+                    "description": "是否显示名称",
+                    "type": "boolean"
+                },
+                "detail_show_type": {
+                    "description": "1:color 2:图片",
+                    "default": 0,
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/config.ShowType"
+                        }
+                    ],
+                    "example": 0
                 },
                 "path": {
                     "description": "目录或网页",
@@ -808,6 +873,88 @@ const docTemplate = `{
                 "detail_id": {
                     "type": "integer",
                     "default": 0,
+                    "example": 0
+                }
+            }
+        },
+        "config.ControlKeyList": {
+            "type": "object",
+            "properties": {
+                "delay": {
+                    "description": "当KeyType == 99时 使用 ms",
+                    "type": "integer",
+                    "default": 0,
+                    "example": 0
+                },
+                "id": {
+                    "type": "integer",
+                    "default": 0,
+                    "example": 0
+                },
+                "input": {
+                    "description": "当KeyType == 2时 输入文本",
+                    "type": "string",
+                    "example": ""
+                },
+                "key": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/config.KKey"
+                        }
+                    ],
+                    "example": ""
+                },
+                "key_list": {
+                    "description": "当KeyType == 3时",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/config.KeyListT"
+                    }
+                },
+                "key_press": {
+                    "description": "当KeyType == 1时 1：单击 2：双击 3：按下 4：抬起",
+                    "default": 0,
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/config.PressType"
+                        }
+                    ],
+                    "example": 0
+                },
+                "key_type": {
+                    "description": "1 ：单键 2 ：文本 3 ：快捷键 4 :鼠标点击 5 :鼠标移动 6:鼠标滚轮 99：延迟",
+                    "default": 0,
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/config.KeyType"
+                        }
+                    ],
+                    "example": 0
+                },
+                "point_x": {
+                    "description": "当KeyType == 5时 使用 X",
+                    "type": "integer",
+                    "default": 0,
+                    "example": 0
+                },
+                "point_y": {
+                    "description": "当KeyType == 5时 使用 Y",
+                    "type": "integer",
+                    "default": 0,
+                    "example": 0
+                },
+                "scroll": {
+                    "type": "integer",
+                    "default": 0,
+                    "example": 0
+                },
+                "scroll_dir": {
+                    "default": 0,
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/config.KMouseScrollDir"
+                        }
+                    ],
                     "example": 0
                 }
             }
@@ -853,104 +1000,7 @@ const docTemplate = `{
                 }
             }
         },
-        "config.RunState": {
-            "type": "integer",
-            "enum": [
-                1,
-                2
-            ],
-            "x-enum-comments": {
-                "RunStateFree": "空闲",
-                "RunStateRunning": "运行中"
-            },
-            "x-enum-varnames": [
-                "RunStateFree",
-                "RunStateRunning"
-            ]
-        },
-        "control.ControlKeyList": {
-            "type": "object",
-            "properties": {
-                "delay": {
-                    "description": "当KeyType == 99时 使用 ms",
-                    "type": "integer",
-                    "default": 0,
-                    "example": 0
-                },
-                "id": {
-                    "type": "integer",
-                    "default": 0,
-                    "example": 0
-                },
-                "input": {
-                    "description": "当KeyType == 2时 输入文本",
-                    "type": "string",
-                    "example": ""
-                },
-                "key": {
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/control.KKey"
-                        }
-                    ],
-                    "example": ""
-                },
-                "key_list": {
-                    "description": "当KeyType == 3时",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/control.KeyListT"
-                    }
-                },
-                "key_press": {
-                    "description": "当KeyType == 1时 1：单击 2：双击 3：按下 4：抬起",
-                    "default": 0,
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/control.PressType"
-                        }
-                    ],
-                    "example": 0
-                },
-                "key_type": {
-                    "description": "1 ：单键 2 ：文本 3 ：快捷键 4 :鼠标点击 5 :鼠标移动 6:鼠标滚轮 99：延迟",
-                    "default": 0,
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/control.KeyType"
-                        }
-                    ],
-                    "example": 0
-                },
-                "point_x": {
-                    "description": "当KeyType == 5时 使用 X",
-                    "type": "integer",
-                    "default": 0,
-                    "example": 0
-                },
-                "point_y": {
-                    "description": "当KeyType == 5时 使用 Y",
-                    "type": "integer",
-                    "default": 0,
-                    "example": 0
-                },
-                "scroll": {
-                    "type": "integer",
-                    "default": 0,
-                    "example": 0
-                },
-                "scroll_dir": {
-                    "default": 0,
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/control.KMouseScrollDir"
-                        }
-                    ],
-                    "example": 0
-                }
-            }
-        },
-        "control.ControlType": {
+        "config.ControlType": {
             "type": "integer",
             "enum": [
                 1,
@@ -977,9 +1027,20 @@ const docTemplate = `{
                 "ControlTypeRunCmd"
             ]
         },
-        "control.KKey": {
+        "config.KKey": {
             "type": "string",
             "enum": [
+                "` + "`" + `",
+                "-",
+                "=",
+                "[",
+                "]",
+                "\\",
+                ";",
+                "'",
+                ",",
+                ".",
+                "/",
                 "a",
                 "b",
                 "c",
@@ -1170,6 +1231,17 @@ const docTemplate = `{
                 "Up": "Up arrow key"
             },
             "x-enum-varnames": [
+                "Spec0",
+                "Spec1",
+                "Spec2",
+                "Spec3",
+                "Spec4",
+                "Spec5",
+                "Spec6",
+                "Spec7",
+                "Spec8",
+                "Spec9",
+                "Spec10",
                 "KeyA",
                 "KeyB",
                 "KeyC",
@@ -1329,7 +1401,7 @@ const docTemplate = `{
                 "MouseWheel"
             ]
         },
-        "control.KMouseScrollDir": {
+        "config.KMouseScrollDir": {
             "type": "integer",
             "enum": [
                 1,
@@ -1344,7 +1416,7 @@ const docTemplate = `{
                 "MouseScrollRight"
             ]
         },
-        "control.KeyListT": {
+        "config.KeyListT": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1355,14 +1427,14 @@ const docTemplate = `{
                 "key": {
                     "allOf": [
                         {
-                            "$ref": "#/definitions/control.KKey"
+                            "$ref": "#/definitions/config.KKey"
                         }
                     ],
                     "example": ""
                 }
             }
         },
-        "control.KeyType": {
+        "config.KeyType": {
             "type": "integer",
             "enum": [
                 1,
@@ -1392,7 +1464,7 @@ const docTemplate = `{
                 "KeyTypeDelay"
             ]
         },
-        "control.PressType": {
+        "config.PressType": {
             "type": "integer",
             "enum": [
                 1,
@@ -1411,6 +1483,32 @@ const docTemplate = `{
                 "PressTypeDoubleClick",
                 "PressTypePressDown",
                 "PressTypePressUp"
+            ]
+        },
+        "config.RunState": {
+            "type": "integer",
+            "enum": [
+                1,
+                2
+            ],
+            "x-enum-comments": {
+                "RunStateFree": "空闲",
+                "RunStateRunning": "运行中"
+            },
+            "x-enum-varnames": [
+                "RunStateFree",
+                "RunStateRunning"
+            ]
+        },
+        "config.ShowType": {
+            "type": "integer",
+            "enum": [
+                1,
+                2
+            ],
+            "x-enum-varnames": [
+                "ShowTypeColor",
+                "ShowTypePic"
             ]
         },
         "hd.AddControlClassReq": {
@@ -1576,6 +1674,20 @@ const docTemplate = `{
                 }
             }
         },
+        "hd.GetNowIconListReq": {
+            "type": "object"
+        },
+        "hd.GetNowIconListResp": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/module.IconT"
+                    }
+                }
+            }
+        },
         "hd.GetNowMousePositionReq": {
             "type": "object"
         },
@@ -1599,6 +1711,10 @@ const docTemplate = `{
         "hd.GetSystemConfigResp": {
             "type": "object",
             "properties": {
+                "is_scale": {
+                    "description": "屏幕是否缩放",
+                    "type": "boolean"
+                },
                 "run_ip": {
                     "description": "运行ip地址",
                     "type": "string",
@@ -1648,12 +1764,22 @@ const docTemplate = `{
         "hd.SetSystemConfigReq": {
             "type": "object",
             "properties": {
+                "is_scale": {
+                    "description": "屏幕是否缩放",
+                    "type": "boolean"
+                },
+                "run_ip": {
+                    "description": "运行ip地址",
+                    "type": "string",
+                    "example": ""
+                },
                 "run_port": {
                     "description": "运行端口",
-                    "type": "integer"
+                    "type": "integer",
+                    "default": 8080,
+                    "example": 8080
                 },
                 "sound_open": {
-                    "description": "开启按键音",
                     "type": "boolean"
                 }
             }
@@ -1755,6 +1881,17 @@ const docTemplate = `{
         },
         "hd.UpdateControlDetailResp": {
             "type": "object"
+        },
+        "module.IconT": {
+            "type": "object",
+            "properties": {
+                "icon_name": {
+                    "type": "string"
+                },
+                "icon_path": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`
