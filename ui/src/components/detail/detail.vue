@@ -1,6 +1,6 @@
 <template>
-  <div style="display: flex;flex-direction: column">
-    <header style="height: 10%;margin-top: 10px">
+  <div style="display: flex;flex-direction: column;height: 100%;width: 100%">
+    <header style="height: 4%;padding: 10px 0 10px 0">
       <div style="display: flex;align-items: center;justify-content: center">
         <el-button @click="GotoHome" style="width: 10vw">
           <el-icon>
@@ -45,10 +45,10 @@
 
       </div>
     </header>
-    <main style="margin-top: 1vh;display: flex;align-items: center;justify-content: center;flex-grow: 1">
+    <main style="display: flex;overflow-y: scroll;height: 96%">
       <!-- 左边的列表 -->
-      <div v-if="isControlInfoGet" style="display: flex;justify-content: center;">
-        <el-scrollbar>
+      <div style="width: 100%;height: 100%;display: flex;flex-direction: column;align-items: center;">
+        <div v-if="isControlInfoGet" style="display: flex;  width: 96%">
           <VueDraggable
               v-model="detailList"
               :animation="150"
@@ -126,10 +126,10 @@
 
             </div>
           </VueDraggable>
-        </el-scrollbar>
+        </div>
+
       </div>
     </main>
-
   </div>
 
 

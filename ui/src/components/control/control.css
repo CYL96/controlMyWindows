@@ -1,26 +1,33 @@
-.control-item{
+.control-item {
     display: flex;
+    height: 100%;
+    width: 100%;
     flex-direction: row;
-    width: 90vw;
-    height: 10vh;
-    padding: 5px;
-    margin: 2px;
     align-items: center;
 }
-.control-cm-border{
+.control-for-list{
+    width: 95vw;
+    height: 15vmax;
+    max-height: 100px;
+    padding: 5px;
+}
+
+.control-cm-border {
     background: #ecf5ff;
     border: #a0cfff solid 2px;
     border-radius: 2px;
 }
 
-.control-btn-001{
-    width: 5vw;
-    height: 5vh;
+.control-btn-001 {
+    width: 7vmax;
+    max-width: 45px;
+    height: 7vmax;
+    max-height: 45px;
 }
 
-.copilot-sort-icon{
+.copilot-sort-icon {
     display: flex;
-    justify-content:center;
+    justify-content: center;
     align-items: center;
     background: #d1edc4;
     width: 8vw;

@@ -1,75 +1,77 @@
 <template>
-  <header style="margin-top: 10px">
-    <div style="display: flex;align-items: center;justify-content: center">
-      <el-button @click="GetControlClassListFromServer" style="width: 30vw;background: #d1edc4">
-        <el-icon>
-          <Refresh/>
-        </el-icon>
-      </el-button>
-      <el-button @click="ClickAddClassBtn" style="width: 30vw;background: #79bbff">
-        <el-icon>
-          <CirclePlus/>
-        </el-icon>
-      </el-button>
-      <el-button @click="ClickEditSystemBtn" style="width: 10vw;background: #c8c9cc">
-        <Icon.SettingConfig/>
-      </el-button>
+  <div id="control_div" style="width: 100%;height: 100%;display: flex;flex-direction: column">
+    <header id="control_header_div" style="padding: 10px 0 10px 0;height: 5%">
+      <div style="display: flex;align-items: center;justify-content: center">
+        <el-button @click="GetControlClassListFromServer" style="width: 30vw;background: #d1edc4">
+          <el-icon>
+            <Refresh/>
+          </el-icon>
+        </el-button>
+        <el-button @click="ClickAddClassBtn" style="width: 30vw;background: #79bbff">
+          <el-icon>
+            <CirclePlus/>
+          </el-icon>
+        </el-button>
+        <el-button @click="ClickEditSystemBtn" style="width: 10vw;background: #c8c9cc">
+          <Icon.SettingConfig/>
+        </el-button>
 
-      <el-button @click="exitDialogVisible=true" style="width: 10vw;background: #e72222">
-        <el-icon>
-          <Icon.Power/>
-        </el-icon>
-      </el-button>
+        <el-button @click="exitDialogVisible=true" style="width: 10vw;background: #e72222">
+          <el-icon>
+            <Icon.Power/>
+          </el-icon>
+        </el-button>
 
 
-    </div>
-  </header>
-  <main style="margin-top: 1vh">
-    <!-- 左边的列表 -->
-    <div style="display: flex;width: 98vw;align-items: center;justify-content: center">
-      <el-scrollbar style="height: 85vh">
-        <VueDraggable
-            handle=".copilot-sort-icon"
-            v-model="list"
-            :animation="150"
-            @update="OnClassListOrderChange()"
-            id="LabelList"
-        >
-          <div :id="item.control_id" v-for="item in list" :key="item.control_id"
+      </div>
+    </header>
+    <main id="control_main_div" style="display: flex;height: 95%">
+      <!-- 左边的列表 -->
+      <div style="display: flex;flex: 1;align-items: flex-start;justify-content: center;padding:0 0 20px 0; overflow-y: scroll;">
+          <VueDraggable
+              handle=".copilot-sort-icon"
+              v-model="list"
+              :animation="150"
+              @update="OnClassListOrderChange()"
+              id="LabelList"
+          >
+            <div :id="item.control_id" v-for="item in list" :key="item.control_id"
+                 class="control-for-list">
+              <div  class="control-item control-cm-border">
+                <div class="copilot-sort-icon">
+                  <el-icon>
+                    <Sort/>
+                  </el-icon>
+                </div>
 
-               class="control-item control-cm-border">
-            <div class="copilot-sort-icon">
-              <el-icon>
-                <Sort/>
-              </el-icon>
+                <div @click="ClickControlDetail(item)"
+                     style="display: flex;flex-grow: 1;margin-left: 1vw;text-align: center;justify-content: center;height: 100%">
+                  <el-text style="width: 100%;">{{ item.control_name }}</el-text>
+                </div>
+                <div style="display: flex;flex-direction: column; align-items: flex-end;padding-right: 2px">
+                  <!--              排序按钮-->
+                  <!--                编辑按钮-->
+                  <el-button class="control-btn-001" @click="ClickEditClassBtn(item)">
+                    <el-icon>
+                      <Edit/>
+                    </el-icon>
+                  </el-button>
+                  <!--                删除按钮-->
+                  <el-button class="control-btn-001" style="margin-top: 3px"
+                             @click="delDialogVisible=true;delId=item.control_id">
+                    <el-icon>
+                      <Delete/>
+                    </el-icon>
+                  </el-button>
+                </div>
+
+              </div>
+
             </div>
-
-            <div @click="ClickControlDetail(item)"
-                 style="display: flex;flex-grow: 1;margin-left: 1vw;text-align: center;justify-content: center;height: 100%">
-              <el-text style="width: 100%;">{{ item.control_name }}</el-text>
-            </div>
-            <div style="display: flex;flex-direction: column; align-items: flex-end">
-              <!--              排序按钮-->
-              <!--                编辑按钮-->
-              <el-button class="control-btn-001" @click="ClickEditClassBtn(item)">
-                <el-icon>
-                  <Edit/>
-                </el-icon>
-              </el-button>
-              <!--                删除按钮-->
-              <el-button class="control-btn-001" style="margin-top: 3px"
-                         @click="delDialogVisible=true;delId=item.control_id">
-                <el-icon>
-                  <Delete/>
-                </el-icon>
-              </el-button>
-            </div>
-
-          </div>
-        </VueDraggable>
-      </el-scrollbar>
-    </div>
-  </main>
+          </VueDraggable>
+      </div>
+    </main>
+  </div>
 
   <!-- 新增copilot 弹框 -->
   <el-dialog align-center
@@ -175,11 +177,17 @@ import {GotoDetail, NewDetailQuery} from "@/components/router/define";
 import {ApiExitControl} from "@/components/api/sys";
 import {GetSystemConfig, NewSystemSetting, SetSystemConfig, SystemSetting} from "@/components/api/set";
 import {CirclePlus, Delete, Edit, Refresh, Sort} from "@element-plus/icons-vue";
+import {onUpdated} from "@vue/runtime-core";
+import {MessageErr} from "@/components/mod/msg";
 
 const list = ref(NewControlClassList())
 
 const delDialogVisible = ref(false)
 const delId = ref(0)
+
+const control_div = ref()
+
+const control_header_div = ref()
 
 const editDialogVisible = ref(false)
 const editItem = ref(NewControlClass())
@@ -191,7 +199,9 @@ const editSystemItem = ref(NewSystemSetting())
 
 onMounted(() => {
   GetControlClassListFromServer()
+  // SetMainHeight()
 })
+
 const ClickControlDetail = (item: ControlClass) => {
   let query = NewDetailQuery()
   query.control_id = String(item.control_id)
@@ -207,6 +217,20 @@ const GetControlClassListFromServer = () => {
         }
       }
   )
+}
+
+const SetMainHeight = () => {
+  var ctl = document.getElementById("control_div");
+  var head = document.getElementById("control_header_div");
+  var main = document.getElementById("control_main_div");
+  if (main){
+    // main.style.height='800px'
+    main.style.height=ctl.offsetHeight - head.offsetHeight+"px"
+  }
+  MessageErr("ctl:"+ctl.offsetHeight)
+  MessageErr("head:"+head.offsetHeight)
+  MessageErr("main:"+main.offsetHeight)
+  MessageErr("main:"+window.innerHeight+","+window.innerWidth)
 }
 
 const ClickEditSystemBtn = () => {
