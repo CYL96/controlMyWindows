@@ -56,7 +56,7 @@ func TouchKey(ctx *runCtx.RunCtx, script ControlT) (err error) {
 		return control.TouchCombinationKey(keyList)
 	case ControlTypeScript:
 		// 脚本
-		return ExecScript(ctx, script.DetailKey)
+		return ExecScript(ctx, script.MouseBackToOrigin, script.DetailKey)
 	case ControlTypeExplorer:
 		// 打开文件夹目录
 		OpenExplorer(ctx, script.Path)

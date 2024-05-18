@@ -5,7 +5,7 @@
           v-model="showList"
           :animation="150"
           @update="OnKeyListOrderUpdate"
-          handle=".sort_my_key_list"
+          handle=".sort_detail_script_list"
           id="LabelList"
           class="detail-list-script-view"
       >
@@ -13,9 +13,16 @@
              class="detail-list-item-view"
         >
           <div style="display: flex;height: 40px">
-            <div style="height: 100%;">
+            <div style="height: 100%;display: flex">
+              <div class="sort_detail_script_list"
+                   style="width: 40px;height: 100%;display: flex;border-radius: 2px;align-content: center;justify-content: center;background: #13ce66">
+                <el-icon size="16" style="height: 100%;width: 100%">
+                  <Sort/>
+                </el-icon>
+              </div>
+
               <el-button @click="ClickItemAddBtn(item,index)" size="small"
-                         style="background: #b2caf5; width:25px;height: 100%;">
+                         style="background: #b2caf5; width:40px;height: 100%;margin-left: 3px">
                 <el-icon>
                   <plus/>
                 </el-icon>
@@ -65,7 +72,7 @@
 
               <div v-show="item.key_type==KeyType.MouseMove" style="display: flex;height: 100%">
                 <el-text>
-                  (X:{{ item.point_x }} Y:{{ item.point_y }})
+                  {{ item.point_x }},{{ item.point_y }}
                 </el-text>
               </div>
 

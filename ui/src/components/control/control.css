@@ -5,9 +5,16 @@
     flex-direction: row;
     align-items: center;
 }
+
+.control-for-list-div{
+    width: 100%;
+    height: 100%;
+    flex: 1;
+}
 .control-for-list{
-    width: 95vw;
-    height: 15vmax;
+    width: 95%;
+    height: 10%;
+    min-height: 50px;
     max-height: 100px;
     padding: 5px;
 }
@@ -19,10 +26,8 @@
 }
 
 .control-btn-001 {
-    width: 7vmax;
-    max-width: 45px;
-    height: 7vmax;
-    max-height: 45px;
+    width: 100%;
+    height:49%;
 }
 
 .copilot-sort-icon {
@@ -30,6 +35,6 @@
     justify-content: center;
     align-items: center;
     background: #d1edc4;
-    width: 8vw;
+    width: 8%;
     height: 100%;
 }

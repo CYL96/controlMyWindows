@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex;flex-direction: column;height: 100%;width: 100%">
-    <header style="height: 4%;padding: 10px 0 10px 0">
-      <div style="display: flex;align-items: center;justify-content: center">
+    <header style="height: 5%;padding: 1% 0 1% 0;min-height: 30px;width: 100%">
+      <div style="display: flex;align-items: center;justify-content: center;height: 100%">
         <el-button @click="GotoHome" style="width: 10vw">
           <el-icon>
             <Back/>
@@ -45,7 +45,7 @@
 
       </div>
     </header>
-    <main style="display: flex;overflow-y: scroll;height: 96%">
+    <main style="display: flex;overflow-y: scroll;height: 95%;width: 100%">
       <!-- 左边的列表 -->
       <div style="width: 100%;height: 100%;display: flex;flex-direction: column;align-items: center;">
         <div v-if="isControlInfoGet" style="display: flex;  width: 96%">
@@ -137,7 +137,8 @@
   <el-dialog
       v-model="delDialogVisible"
       align-center
-      width="auto">
+      style="width: 80%;max-width: 400px"
+  >
     <el-text>确认删除？</el-text>
     <template #footer>
       <div class="works-dialog-footer">
@@ -227,10 +228,9 @@
              width="90vw">
     <div
         style="width: 100%;display: flex;flex-direction: column;align-items: center;justify-content: center;margin-top: 30px;">
-      <el-form label-position="right" label-width="auto">
+      <el-form label-position="right" label-width="auto" style="width: 100%;">
         <el-form-item label="名称">
           <el-input v-model="editItem.detail_name"></el-input>
-
         </el-form-item>
         <el-form-item label="是否显示名称">
           <el-switch
@@ -238,23 +238,30 @@
               style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
           />
         </el-form-item>
-        <el-radio-group v-model="editItem.detail_show_type" class="ml-4">
-          <el-radio :value="1" size="large">背景色</el-radio>
-          <el-radio :value="2" size="large">图片</el-radio>
-        </el-radio-group>
+        <el-form-item v-if="editItem.control_type=ControlType.Script" label="鼠标是否回原点">
+          <el-switch
+              v-model="editItem.mouse_back_to_origin"
+              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+          />
+        </el-form-item>
+        <el-form-item label="显示样式" style="display: flex;align-items: center;">
+          <el-radio-group v-model="editItem.detail_show_type" class="ml-4">
+            <el-radio :value="1" size="large">背景色</el-radio>
+            <el-radio :value="2" size="large">图片</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="背景色" v-if="editItem.detail_show_type==ShowType.Color">
           <div style="display: flex;flex-direction: row">
             <el-color-picker @active-change="event => {editItem.detail_color = event}"
                              popper-class="hex"
                              v-model="editItem.detail_color" show-alpha :predefine="predefineColors"/>
-            <div style="display: flex;flex-grow: 1;margin-left: 5px;flex-wrap: wrap">
-              <el-button style="margin: 1px" :style="{background:item}" size="small"
-                         v-for="item in predefineColorListAuto" @click="editItem.detail_color=item"></el-button>
 
-            </div>
           </div>
-
         </el-form-item>
+        <div style="display: flex;flex-grow: 1;margin-left: 5px;flex-wrap: wrap"  v-if="editItem.detail_show_type==ShowType.Color">
+          <el-button style="margin: 1px" :style="{background:item}" size="small"
+                     v-for="item in predefineColorListAuto" @click="editItem.detail_color=item"></el-button>
+        </div>
         <el-form-item label="图片" v-if="editItem.detail_show_type==ShowType.Pic">
           <div style="border: #72767b solid 1px;width: 40px;height: 40px;display: flex;justify-content: center"
                @click="selectIconVisible=true">
@@ -516,6 +523,11 @@ const GetColorByRGB = (r: number, g: number, b: number) => {
 }
 const GetAutoColor = (num: number) => {
   let color = []
+  for(let i = 0; i < 10; i++) {
+    var c = 256/10*i
+    color.push(GetColorByRGB(c,c,c))
+  }
+
   const colorSpace = Math.floor(256 / (num / 6) + 1)
   let now = "r"
   let add = true
@@ -581,7 +593,7 @@ const GetAutoColor = (num: number) => {
 
 const nowTs = GetNewId()
 
-let predefineColorListAuto = GetAutoColor(60)
+let predefineColorListAuto = GetAutoColor(80)
 
 
 const GetKeyWidth = (): number => {
@@ -744,6 +756,11 @@ const ClickAddKeyBtn = () => {
   editItem.value.detail_show_name = true
   editItem.value.detail_show_type = ShowType.Color
   editItem.value.control_type = addControlType.value
+
+  switch (editItem.value.control_type) {
+    case ControlType.Script:
+      editItem.value.mouse_back_to_origin = true
+  }
   editDialogVisible.value = true
 }
 const ClickEditKeyBtn = (item: ControlDetail) => {

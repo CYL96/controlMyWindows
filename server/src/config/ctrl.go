@@ -64,9 +64,10 @@ type (
 		DetailId int64 `json:"detail_id" default:"0" example:"0"` //
 	}
 	ControlT struct {
-		ControlType ControlType      `json:"control_type" default:"0" example:"0"` // 1:快捷键，2：脚本 3：打开文件夹目录  4:打开网页
-		Path        string           `json:"path" default:"" example:""`           // 目录或网页
-		DetailKey   []ControlKeyList `json:"detail_key"`
+		ControlType       ControlType      `json:"control_type" default:"0" example:"0"` // 1:快捷键，2：脚本 3：打开文件夹目录  4:打开网页
+		MouseBackToOrigin bool             `json:"mouse_back_to_origin"`                 // 在脚本中，如果鼠标移动，是否返回原点
+		Path              string           `json:"path" default:"" example:""`           // 目录或网页
+		DetailKey         []ControlKeyList `json:"detail_key"`
 	}
 )
 

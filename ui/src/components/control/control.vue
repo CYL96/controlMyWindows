@@ -1,22 +1,22 @@
 <template>
-  <div id="control_div" style="width: 100%;height: 100%;display: flex;flex-direction: column">
-    <header id="control_header_div" style="padding: 10px 0 10px 0;height: 5%">
-      <div style="display: flex;align-items: center;justify-content: center">
-        <el-button @click="GetControlClassListFromServer" style="width: 30vw;background: #d1edc4">
+  <div id="control_div" style="width: 100%;height: 100%;display: flex;flex-direction: column;">
+    <header id="control_header_div" style="padding: 1% 0 1% 0;height: 5%;min-height: 30px;width: 100%">
+      <div style="display: flex;align-items: center;justify-content: center;height: 100%">
+        <el-button @click="GetControlClassListFromServer" style="width: 30%;background: #d1edc4">
           <el-icon>
             <Refresh/>
           </el-icon>
         </el-button>
-        <el-button @click="ClickAddClassBtn" style="width: 30vw;background: #79bbff">
+        <el-button @click="ClickAddClassBtn" style="width: 30%;background: #79bbff">
           <el-icon>
             <CirclePlus/>
           </el-icon>
         </el-button>
-        <el-button @click="ClickEditSystemBtn" style="width: 10vw;background: #c8c9cc">
+        <el-button @click="ClickEditSystemBtn" style="width: 10%;background: #c8c9cc">
           <Icon.SettingConfig/>
         </el-button>
 
-        <el-button @click="exitDialogVisible=true" style="width: 10vw;background: #e72222">
+        <el-button @click="exitDialogVisible=true" style="width: 10%;background: #e72222">
           <el-icon>
             <Icon.Power/>
           </el-icon>
@@ -25,7 +25,7 @@
 
       </div>
     </header>
-    <main id="control_main_div" style="display: flex;height: 95%">
+    <main id="control_main_div" style="display: flex;height: 95%;width: 100%">
       <!-- 左边的列表 -->
       <div style="display: flex;flex: 1;align-items: flex-start;justify-content: center;padding:0 0 20px 0; overflow-y: scroll;">
           <VueDraggable
@@ -34,6 +34,7 @@
               :animation="150"
               @update="OnClassListOrderChange()"
               id="LabelList"
+              class="control-for-list-div"
           >
             <div :id="item.control_id" v-for="item in list" :key="item.control_id"
                  class="control-for-list">
@@ -48,16 +49,16 @@
                      style="display: flex;flex-grow: 1;margin-left: 1vw;text-align: center;justify-content: center;height: 100%">
                   <el-text style="width: 100%;">{{ item.control_name }}</el-text>
                 </div>
-                <div style="display: flex;flex-direction: column; align-items: flex-end;padding-right: 2px">
+                <div style="display: flex;flex-direction: column; justify-content: space-around;align-items: flex-end;padding-right: 1%;height: 100%">
                   <!--              排序按钮-->
                   <!--                编辑按钮-->
-                  <el-button class="control-btn-001" @click="ClickEditClassBtn(item)">
+                  <el-button class="control-btn-001" style="background: #dea942" @click="ClickEditClassBtn(item)">
                     <el-icon>
                       <Edit/>
                     </el-icon>
                   </el-button>
                   <!--                删除按钮-->
-                  <el-button class="control-btn-001" style="margin-top: 3px"
+                  <el-button class="control-btn-001" style="background: #d75555"
                              @click="delDialogVisible=true;delId=item.control_id">
                     <el-icon>
                       <Delete/>
@@ -76,7 +77,8 @@
   <!-- 新增copilot 弹框 -->
   <el-dialog align-center
              v-model="editDialogVisible"
-             width="80vw">
+
+             width="80%">
     <el-form label-width="auto">
       <el-form-item label="名称">
         <el-input v-model="editItem.control_name" style="width:90%"></el-input>
@@ -98,7 +100,8 @@
   <el-dialog
       v-model="delDialogVisible"
       align-center
-      width="40vh">
+      style="width: 80%;max-width: 400px"
+     >
     <el-text>确认删除？</el-text>
     <template #footer>
       <div class="works-dialog-footer">

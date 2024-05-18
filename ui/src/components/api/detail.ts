@@ -55,6 +55,7 @@ export interface ControlDetail extends ControlDetailId {
     control_type: number // 1:快捷键，2：脚本 3：打开文件夹目录  4:打开网页
     path: string
     run_state: number
+    mouse_back_to_origin:boolean,//鼠标是否回原点
     detail_key: ControlKeyList[]
 }
 
@@ -81,6 +82,7 @@ export interface ControlDetailKey {
 
 export function NewControlDetail(): ControlDetail {
     return {
+        mouse_back_to_origin: false,
         detail_show_name: false,
         detail_pic: "", detail_show_type: 0,
         path: "",
@@ -96,6 +98,7 @@ export function NewControlDetail(): ControlDetail {
 
 export function CopyControlDetail(item: ControlDetail): ControlDetail {
     return {
+        mouse_back_to_origin: false,
         detail_pic: item.detail_pic,
         detail_show_type: item.detail_show_type,
         detail_show_name:item.detail_show_name,

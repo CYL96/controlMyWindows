@@ -12,10 +12,17 @@ import (
 	"server/src/runCtx"
 )
 
-func ExecScript(ctx *runCtx.RunCtx, details []ControlKeyList) (err error) {
+func ExecScript(ctx *runCtx.RunCtx, mouseBackOrigin bool, details []ControlKeyList) (err error) {
 	if len(details) == 0 {
 		return
 	}
+	var x, y = control.GetNowMousePosition()
+	defer func() {
+		if mouseBackOrigin {
+			control.MouseMove(x, y)
+		}
+	}()
+
 	for _, key := range details {
 		select {
 		case <-ctx.Done():
