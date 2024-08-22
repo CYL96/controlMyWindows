@@ -13,6 +13,7 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@icon-park/vue-next": "^1.4.2",
     "axios": "^1.6.8",
+    "core-js": "^3.38.1",
     "element-plus": "^2.6.2",
     "vue": "^3.4.15",
     "vue-draggable-plus": "^0.4.0",

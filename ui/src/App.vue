@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted} from "vue";
 
-
 onMounted(() => {
   var bd = document.getElementById("my-body")
   bd.style.width = window.innerWidth + 'px'
@@ -11,6 +10,7 @@ onMounted(() => {
 
 <template>
   <div id="my-body">
+<!--    123123-->
     <router-view/>
   </div>
 </template>

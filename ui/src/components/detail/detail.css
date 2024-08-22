@@ -47,7 +47,7 @@
     /*margin-right: 6px;*/
 }
 .detail-color-picker{
-    height: 200vh;
+    height: 200%;
 }
 
 .detail-list-scrollbar-view {
@@ -60,7 +60,7 @@
 
 .detail-list-script-view {
     height: 90%;
-    max-width: 95vw;
+    max-width: 95%;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;

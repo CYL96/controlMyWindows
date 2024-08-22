@@ -8,9 +8,13 @@ package systray
 
 import (
 	"encoding/base64"
+	"fmt"
 	"log"
 
 	"github.com/getlantern/systray"
+	"server/src/common"
+	"server/src/config"
+	"server/src/runCtx"
 )
 
 func RunSystray() {
@@ -25,11 +29,34 @@ func onReady() {
 		log.Println(err)
 	}
 	systray.SetTitle("Control My Windows")
+
+	cfg := config.GetSystemConfig(runCtx.DefaultContext())
+	var urlOpen = func(url string) {
+		ch := systray.AddMenuItem(url, url)
+		go func() {
+			<-ch.ClickedCh
+			common.OpenUrl(url)
+		}()
+	}
+
+	if cfg.RunIp == "0.0.0.0" {
+		ips := common.GetAllIp()
+		for _, ip := range ips {
+			url := fmt.Sprintf("http://%s:%d", ip, cfg.RunPort)
+			urlOpen(url)
+		}
+	} else {
+		url := fmt.Sprintf("http://%s:%d", cfg.RunIp, cfg.RunPort)
+		urlOpen(url)
+	}
+
+	systray.AddSeparator()
 	mQuit := systray.AddMenuItem("Quit", "Quit the whole app")
 	go func() {
 		<-mQuit.ClickedCh
 		systray.Quit()
 	}()
+
 }
 
 func onExit() {

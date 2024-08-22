@@ -1,6 +1,6 @@
 <template>
   <div >
-    <div style="display: flex;height: 90%;max-width: 90vw;align-items: center;justify-content: center;">
+    <div style="display: flex;height: 90%;max-width: 90%;align-items: center;justify-content: center;">
         <VueDraggable
             v-model="showList"
             :animation="150"

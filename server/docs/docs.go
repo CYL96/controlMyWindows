@@ -850,6 +850,10 @@ const docTemplate = `{
                     ],
                     "example": 0
                 },
+                "mouse_back_to_origin": {
+                    "description": "在脚本中，如果鼠标移动，是否返回原点",
+                    "type": "boolean"
+                },
                 "path": {
                     "description": "目录或网页",
                     "type": "string",

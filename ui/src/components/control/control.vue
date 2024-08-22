@@ -46,7 +46,7 @@
                 </div>
 
                 <div @click="ClickControlDetail(item)"
-                     style="display: flex;flex-grow: 1;margin-left: 1vw;text-align: center;justify-content: center;height: 100%">
+                     style="display: flex;flex-grow: 1;margin-left: 1%;text-align: center;justify-content: center;height: 100%">
                   <el-text style="width: 100%;">{{ item.control_name }}</el-text>
                 </div>
                 <div style="display: flex;flex-direction: column; justify-content: space-around;align-items: flex-end;padding-right: 1%;height: 100%">
@@ -118,7 +118,7 @@
   <el-dialog
       v-model="exitDialogVisible"
       align-center
-      width="40vh">
+      width="40%">
     <el-text>退出程序？</el-text>
     <template #footer>
       <div class="works-dialog-footer">
@@ -134,7 +134,7 @@
   <!-- 系统设置 弹框 -->
   <el-dialog align-center
              v-model="editSystemDialogVisible"
-             width="80vw">
+             width="80%">
     <el-form label-width="auto">
       <el-form-item label="端口">
         <el-input-number v-model="editSystemItem.run_port"></el-input-number>

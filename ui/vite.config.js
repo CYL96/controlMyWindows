@@ -10,7 +10,8 @@ export default defineConfig({
     vue(),
   ],
   build:{
-    target:['edge90','chrome90','firefox90','safari14','safari15','es2015'],
+    cssTarget: 'chrome83',
+    target:['edge83','chrome83','firefox83','safari14','safari15','es2015'],
   },
   resolve: {
     alias: {

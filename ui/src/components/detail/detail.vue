@@ -2,20 +2,20 @@
   <div style="display: flex;flex-direction: column;height: 100%;width: 100%">
     <header style="height: 5%;padding: 1% 0 1% 0;min-height: 30px;width: 100%">
       <div style="display: flex;align-items: center;justify-content: center;height: 100%">
-        <el-button @click="GotoHome" style="width: 10vw">
+        <el-button @click="GotoHome" style="width: 10%">
           <el-icon>
             <Back/>
           </el-icon>
         </el-button>
 
 
-        <el-button @click="GetDetailList" style="width: 30vw">
+        <el-button @click="GetDetailList" style="width: 30%">
           <el-icon>
             <Refresh/>
           </el-icon>
         </el-button>
 
-        <div style="width: 45vw;margin-left: 12px;display: flex;align-items: center;justify-content: center">
+        <div style="width: 45%;margin-left: 12px;display: flex;align-items: center;justify-content: center">
           <el-button v-show="!isEditMod" @click="isEditMod= true" style="width: 100%">
             <el-icon>
               <Edit/>
@@ -225,7 +225,7 @@
   <el-dialog align-center
              v-model="editDialogVisible"
              :fullscreen="true"
-             width="90vw">
+             width="90%">
     <div
         style="width: 100%;display: flex;flex-direction: column;align-items: center;justify-content: center;margin-top: 30px;">
       <el-form label-position="right" label-width="auto" style="width: 100%;">

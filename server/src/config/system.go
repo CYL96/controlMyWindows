@@ -40,7 +40,9 @@ func readSystemConfig(ctx *runCtx.RunCtx) (err error) {
 	if err != nil {
 		return
 	}
-
+	if len(SystemConfig.RunIp) == 0 {
+		SystemConfig.RunIp = "0.0.0.0"
+	}
 	return nil
 }
 

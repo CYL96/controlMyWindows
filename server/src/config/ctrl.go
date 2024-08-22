@@ -85,8 +85,9 @@ const (
 	ControlTypeRunExe   ControlType = 5 // 4:打开exe
 	ControlTypeRunCmd   ControlType = 6 // 4:打开cmd
 
-	KeyTypeDefault     KeyType = 1  // 单键
-	KeyTypeText        KeyType = 2  // 文本
+	KeyTypeDefault KeyType = 1 // 单键
+	KeyTypeText    KeyType = 2 // 文本
+
 	KeyTypeShortcutKey KeyType = 3  // 快捷键
 	KeyTypeMouse       KeyType = 4  // 鼠标点击
 	KeyTypeMouseMove   KeyType = 5  // 鼠标移动
