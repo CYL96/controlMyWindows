@@ -161,18 +161,37 @@
     </div>
 
     <el-form>
+      <el-form-item label="同步修改">
+        <el-switch v-model="sizeEdit.sync_edit"/>
+      </el-form-item>
+      <el-form-item label="步进">
+        <el-button @click="sizeEdit.add_step=1" :style="sizeEdit.add_step==1?'background: #79bbff':''">1</el-button>
+        <el-button @click="sizeEdit.add_step=5" :style="sizeEdit.add_step==5?'background: #79bbff':''">5</el-button>
+        <el-button @click="sizeEdit.add_step=10" :style="sizeEdit.add_step==10?'background: #79bbff':''">10</el-button>
+      </el-form-item>
+      <el-form-item label="同步修改">
+        <el-switch v-model="sizeEdit.sync_edit"/>
+      </el-form-item>
       <el-form-item label="宽度">
-        <el-input-number v-model="sizeEdit.key_width"></el-input-number>
+        <el-input-number :min="1" :step="sizeEdit.add_step" v-model="sizeEdit.key_width"
+                         @change="()=>{if(sizeEdit.sync_edit)sizeEdit.key_height=sizeEdit.key_width}"
+        ></el-input-number>
       </el-form-item>
       <el-form-item label="高度">
-        <el-input-number v-model="sizeEdit.key_height"></el-input-number>
+        <el-input-number :min="1" :step="sizeEdit.add_step" v-model="sizeEdit.key_height"
+                         @change="()=>{if(sizeEdit.sync_edit)sizeEdit.key_width=sizeEdit.key_height}"
+        ></el-input-number>
       </el-form-item>
     </el-form>
     <template #footer>
       <div class="works-dialog-footer">
         <el-button @click="isEditSize = false">取消</el-button>
+        <el-button style="background: #79bbff"
+                   @click="ClickUpdateSizeSubBtn(false)">
+          应用
+        </el-button>
         <el-button type="primary"
-                   @click="ClickUpdateSizeSubBtn()">
+                   @click="ClickUpdateSizeSubBtn(true)">
           确认
         </el-button>
       </div>
@@ -258,7 +277,8 @@
 
           </div>
         </el-form-item>
-        <div style="display: flex;flex-grow: 1;margin-left: 5px;flex-wrap: wrap"  v-if="editItem.detail_show_type==ShowType.Color">
+        <div style="display: flex;flex-grow: 1;margin-left: 5px;flex-wrap: wrap"
+             v-if="editItem.detail_show_type==ShowType.Color">
           <el-button style="margin: 1px" :style="{background:item}" size="small"
                      v-for="item in predefineColorListAuto" @click="editItem.detail_color=item"></el-button>
         </div>
@@ -408,7 +428,7 @@ const runStateLight = (item: ControlDetail) => {
   return sty
 }
 
-const sizeEdit = ref({key_height: 0, key_width: 0})
+const sizeEdit = ref({sync_edit: true, add_step: 1, key_height: 0, key_width: 0})
 
 const controlInfo = ref(NewControlClass())
 const detailList = ref(NewControlDetailList())
@@ -523,9 +543,9 @@ const GetColorByRGB = (r: number, g: number, b: number) => {
 }
 const GetAutoColor = (num: number) => {
   let color = []
-  for(let i = 0; i < 10; i++) {
-    var c = 256/10*i
-    color.push(GetColorByRGB(c,c,c))
+  for (let i = 0; i < 10; i++) {
+    var c = 256 / 10 * i
+    color.push(GetColorByRGB(c, c, c))
   }
 
   const colorSpace = Math.floor(256 / (num / 6) + 1)
@@ -672,7 +692,7 @@ const normalKeyUpdate = (list: ControlDetailKey[]) => {
   editItem.value.detail_key = newList
 }
 
-const ClickUpdateSizeSubBtn = () => {
+const ClickUpdateSizeSubBtn = (close:boolean) => {
   controlInfo.value.key_width = sizeEdit.value.key_width.toString()
   controlInfo.value.key_height = sizeEdit.value.key_height.toString()
   EditControlClass(controlInfo.value).then(
@@ -681,7 +701,9 @@ const ClickUpdateSizeSubBtn = () => {
         } else {
           GetControlInfo(controlInfo.value.control_id)
         }
-        isEditSize.value = false
+        if (close){
+          isEditSize.value = false
+        }
       },
   )
 }
