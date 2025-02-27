@@ -169,9 +169,6 @@
         <el-button @click="sizeEdit.add_step=5" :style="sizeEdit.add_step==5?'background: #79bbff':''">5</el-button>
         <el-button @click="sizeEdit.add_step=10" :style="sizeEdit.add_step==10?'background: #79bbff':''">10</el-button>
       </el-form-item>
-      <el-form-item label="同步修改">
-        <el-switch v-model="sizeEdit.sync_edit"/>
-      </el-form-item>
       <el-form-item label="宽度">
         <el-input-number :min="1" :step="sizeEdit.add_step" v-model="sizeEdit.key_width"
                          @change="()=>{if(sizeEdit.sync_edit)sizeEdit.key_height=sizeEdit.key_width}"
@@ -180,6 +177,16 @@
       <el-form-item label="高度">
         <el-input-number :min="1" :step="sizeEdit.add_step" v-model="sizeEdit.key_height"
                          @change="()=>{if(sizeEdit.sync_edit)sizeEdit.key_width=sizeEdit.key_height}"
+        ></el-input-number>
+      </el-form-item>
+
+      <el-text>鼠标偏移</el-text>
+      <el-form-item label="X">
+        <el-input-number :min="0"  v-model="sizeEdit.offset_x"
+        ></el-input-number>
+      </el-form-item>
+      <el-form-item label="Y">
+        <el-input-number :min="0"  v-model="sizeEdit.offset_y"
         ></el-input-number>
       </el-form-item>
     </el-form>
@@ -254,12 +261,6 @@
         <el-form-item label="是否显示名称">
           <el-switch
               v-model="editItem.detail_show_name"
-              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-          />
-        </el-form-item>
-        <el-form-item v-if="editItem.control_type=ControlType.Script" label="鼠标是否回原点">
-          <el-switch
-              v-model="editItem.mouse_back_to_origin"
               style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
           />
         </el-form-item>
@@ -428,7 +429,7 @@ const runStateLight = (item: ControlDetail) => {
   return sty
 }
 
-const sizeEdit = ref({sync_edit: true, add_step: 1, key_height: 0, key_width: 0})
+const sizeEdit = ref({sync_edit: true, add_step: 1, key_height: 0, key_width: 0,offset_x:0,offset_y:0})
 
 const controlInfo = ref(NewControlClass())
 const detailList = ref(NewControlDetailList())
@@ -622,6 +623,8 @@ const GetKeyWidth = (): number => {
 const ClickEditSizeBtn = () => {
   sizeEdit.value.key_height = parseInt(controlInfo.value.key_height)
   sizeEdit.value.key_width = parseInt(controlInfo.value.key_width)
+  sizeEdit.value.offset_x = parseInt(controlInfo.value.mouse_off_set_x)
+  sizeEdit.value.offset_y = parseInt(controlInfo.value.mouse_off_set_y)
   isEditSize.value = true
 }
 const audio = new Audio('/touch_001.mp3?ts=' + nowTs); // 替换成你音频文件的路径
@@ -692,16 +695,18 @@ const normalKeyUpdate = (list: ControlDetailKey[]) => {
   editItem.value.detail_key = newList
 }
 
-const ClickUpdateSizeSubBtn = (close:boolean) => {
+const ClickUpdateSizeSubBtn = (close: boolean) => {
   controlInfo.value.key_width = sizeEdit.value.key_width.toString()
   controlInfo.value.key_height = sizeEdit.value.key_height.toString()
+  controlInfo.value.mouse_off_set_x = sizeEdit.value.offset_x
+  controlInfo.value.mouse_off_set_y = sizeEdit.value.offset_y
   EditControlClass(controlInfo.value).then(
       res => {
         if (res.state !== 0) {
         } else {
           GetControlInfo(controlInfo.value.control_id)
         }
-        if (close){
+        if (close) {
           isEditSize.value = false
         }
       },

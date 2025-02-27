@@ -24,8 +24,13 @@ export const KeyType = {
     Text: 2,// 文本
     ShortcutKey: 3,// 快捷键
     Mouse: 4, // 鼠标按键
-    MouseMove: 5, // 鼠标移动
-    MouseScroll: 6, // 鼠标移动
+    MouseMove: 5, // 鼠标定位
+    MouseScroll: 6, // 鼠标滚轮
+    MouseMoveStartPos: 8, // 鼠标定位-原点
+
+    MouseMoveSmooth: 9, // 鼠标移动
+    MouseMoveSmoothStartPos: 10, // 鼠标移动-原点
+
     Delay: 99,// 延迟
 }
 
@@ -73,6 +78,7 @@ export interface ControlKeyList extends ControlDetailKey {
     point_y: number
     scroll: number
     scroll_dir: number
+    remark:string
 }
 
 export interface ControlDetailKey {
@@ -138,6 +144,7 @@ export function CopyControlKeyList(item: ControlKeyList): ControlKeyList {
     tmp.point_y = item.point_y
     tmp.scroll = item.scroll
     tmp.scroll_dir = item.scroll_dir
+    tmp.remark = item.remark
     return tmp
 }
 
@@ -177,25 +184,27 @@ export function NewControlDetailKey(): ControlDetailKey {
 
 export function NewControlKeyList(): ControlKeyList {
     return {
+        remark: "",
         id: 0, key: "",
         key_type: 0,
         key_press: 0,
         input: '',
         key_list: [] as ControlDetailKey[],
         delay: 0,
-        point_x: 0, point_y: 0, scroll: 0, scroll_dir: 0,
+        point_x: 0, point_y: 0, scroll: 0, scroll_dir: 0
     }
 }
 
 export function NewControlKeyListNormal(): ControlKeyList {
     return {
+        remark: "",
         id: 0, key: "",
         key_type: KeyType.Default,
         key_press: PressType.Click,
         input: '',
         key_list: [] as ControlDetailKey[],
         delay: 0,
-        point_x: 0, point_y: 0, scroll: 0, scroll_dir: 0,
+        point_x: 0, point_y: 0, scroll: 0, scroll_dir: 0
     }
 
 }
@@ -323,4 +332,18 @@ export async function GetNowMousePosition() {
 export interface GetNowMousePositionResp {
     x: number
     y: number
+}
+
+export function GetShowKeyTouchType(key:number){
+    switch (key) {
+        case PressType.Click:
+            return "单击"
+        case PressType.DoubleClick:
+            return "双击"
+        case PressType.PressDown:
+            return "按下"
+        case PressType.PressUp:
+            return "抬起"
+    }
+    return ""
 }

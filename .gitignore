@@ -12,3 +12,7 @@
 release.zip
 /server/icon
 ui/node_modules.zip
+server/server.exe~
+server/server.exe
+server/go_build_server.exe~
+server/go_build_server.exe

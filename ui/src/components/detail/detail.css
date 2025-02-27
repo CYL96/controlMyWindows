@@ -69,9 +69,11 @@
 
 .detail-list-item-view {
     /*height: 40px;*/
+    width: 80%;
+    height: 40px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
     margin-top: 2px;
     /*background: #97d562;*/

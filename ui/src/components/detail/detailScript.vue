@@ -1,112 +1,109 @@
 <template>
   <div>
     <div style="display: flex;flex-direction: column;align-items: center;justify-content: center;width: 100%">
-      <VueDraggable
-          v-model="showList"
-          :animation="150"
-          @update="OnKeyListOrderUpdate"
-          handle=".sort_detail_script_list"
-          id="LabelList"
-          class="detail-list-script-view"
-      >
+
         <div :id="item.id" v-for="(item, index) in showList" :key="item.id"
              class="detail-list-item-view"
         >
-          <div style="display: flex;height: 40px">
-            <div style="height: 100%;display: flex">
-              <div class="sort_detail_script_list"
-                   style="width: 40px;height: 100%;display: flex;border-radius: 2px;align-content: center;justify-content: center;background: #13ce66">
-                <el-icon size="16" style="height: 100%;width: 100%">
-                  <Sort/>
-                </el-icon>
-              </div>
+          <div style="display: flex;height: 100%">
+            <div style="height: 100%;display: flex;">
 
               <el-button @click="ClickItemAddBtn(item,index)" size="small"
-                         style="background: #b2caf5; width:40px;height: 100%;margin-left: 3px">
+                         style="background: #b2caf5; width:40px;height: 100%;">
                 <el-icon>
                   <plus/>
                 </el-icon>
               </el-button>
             </div>
-            <div :style="GetKeyListBackground(item.key_type)" class="detail-item-desc-view sort_my_key_list">
-              <div class="detail-item-icon-view" style="margin-right: 5px">
-                <el-icon>
-                  <Keyboard v-show="item.key_type===KeyType.Default"/>
-                  <KeyboardOne v-show="item.key_type===KeyType.ShortcutKey"/>
-                  <Document v-show="item.key_type===KeyType.Text"/>
-                  <Timer v-show="item.key_type===KeyType.Delay"/>
-                  <Click v-show="item.key_type===KeyType.Mouse"/>
-                  <MoveInOne v-show="item.key_type===KeyType.MouseMove"/>
-                  <Mouse v-show="item.key_type===KeyType.MouseScroll"/>
-                </el-icon>
-              </div>
-              <el-text v-show="item.key_type===KeyType.Text" style="width: 80%" truncated>
-                {{ item.input }}
-              </el-text>
-              <el-text v-show="item.key_type===KeyType.Delay" truncated>
-                {{ item.delay }}
-              </el-text>
-              <div v-show="item.key_type==KeyType.Default || item.key_type==KeyType.Mouse"
-                   style="display: flex;align-items: center;justify-content: center;">
-                <el-text v-if="item.key_type==KeyType.Default">
-                  {{ GetShowComponents(item.key) }}
+            <div :style="GetKeyListBackground(item.key_type)" style="flex-grow: 1" class="detail-item-desc-view sort_my_key_list">
+              <div  style="display: flex;justify-content: center;height: 100%;width: 60%">
+                <el-text v-show="item.key_type===KeyType.Text" style="width: 80%" truncated>
+                  文本：{{ item.input }}
                 </el-text>
-                <el-text v-if="item.key_type==KeyType.Mouse">
-                  {{ item.key }}
+                <el-text v-show="item.key_type===KeyType.Delay" truncated>
+                  延时: {{ item.delay }} ms
                 </el-text>
-                <el-icon :size="24" style="margin-left: 10px; background: #a0b3c7">
-                  <ClickTap v-show="item.key_press===PressType.Click"/>
-                  <ClickTapTwo v-show="item.key_press===PressType.DoubleClick "/>
-
-                  <Download v-show="item.key_press===PressType.PressDown"/>
-                  <Upload v-show="item.key_press===PressType.PressUp"/>
-                </el-icon>
-              </div>
-              <div v-show="item.key_type==KeyType.ShortcutKey" style="display: flex;height: 100%">
-                <div v-for="kkeeyy in item.key_list" class="detail-list-item-ShortcutKey-view">
-                  <el-text>
-                    {{ kkeeyy.key }}
+                <div v-show="item.key_type==KeyType.Default || item.key_type==KeyType.Mouse"
+                     style="display: flex;align-items: center;justify-content: center;">
+                  <el-text v-if="item.key_type==KeyType.Default">
+                   按键({{GetShowKeyTouchType(item.key_type)}}}): {{ GetShowComponents(item.key) }}
+                  </el-text>
+                  <el-text v-if="item.key_type==KeyType.Mouse">
+                   鼠标按键({{GetShowKeyTouchType(item.key_type)}}})： {{ item.key }}
                   </el-text>
                 </div>
-              </div>
+                <div v-show="item.key_type==KeyType.ShortcutKey" style="display: flex;height: 100%">
+                <div  style="display: flex;align-items: center;justify-content: center;">
+                 组合键：
+                </div>
+                    <div v-for="kkeeyy in item.key_list" class="detail-list-item-ShortcutKey-view">
+                    <el-text>
+                     {{ kkeeyy.key }}
+                    </el-text>
+                  </div>
+                </div>
 
-              <div v-show="item.key_type==KeyType.MouseMove" style="display: flex;height: 100%">
-                <el-text>
-                  {{ item.point_x }},{{ item.point_y }}
-                </el-text>
-              </div>
+                <div v-show="item.key_type==KeyType.MouseMove" style="display: flex;height: 100%;">
+                  <el-text>
+                   鼠标定位:  X: {{ item.point_x }}   Y: {{ item.point_y }}
+                  </el-text>
+                </div>
 
-              <div v-show="item.key_type == KeyType.MouseScroll" style="display: flex;height: 100%">
-                <el-text>
-                  {{ item.scroll }}
-                </el-text>
-                <div style="margin-left: 5px">
-                  <ArrowUp v-if="item.scroll_dir == MouseScrollDirection.Up"/>
-                  <ArrowDown v-if="item.scroll_dir == MouseScrollDirection.Down"/>
-                  <ArrowLeft v-if="item.scroll_dir == MouseScrollDirection.Left"/>
-                  <ArrowRight v-if="item.scroll_dir == MouseScrollDirection.Right"/>
+                <div v-show="item.key_type==KeyType.MouseMoveStartPos" style="display: flex;height: 100%">
+                  <el-text>
+                    鼠标定位始起点
+                  </el-text>
+                </div>
+
+                <div v-show="item.key_type==KeyType.MouseMoveSmooth" style="display: flex;height: 100%;">
+                  <el-text>
+                    鼠标移动:  X: {{ item.point_x }}   Y: {{ item.point_y }}
+                  </el-text>
+                </div>
+
+                <div v-show="item.key_type==KeyType.MouseMoveSmoothStartPos" style="display: flex;height: 100%">
+                  <el-text>
+                    鼠标移动始起点
+                  </el-text>
+                </div>
+
+                <div v-show="item.key_type == KeyType.MouseScroll" style="display: flex;height: 100%">
+                  <el-text>
+                    {{ item.scroll }}
+                  </el-text>
+                  <div style="margin-left: 5px">
+                    <ArrowUp v-if="item.scroll_dir == MouseScrollDirection.Up"/>
+                    <ArrowDown v-if="item.scroll_dir == MouseScrollDirection.Down"/>
+                    <ArrowLeft v-if="item.scroll_dir == MouseScrollDirection.Left"/>
+                    <ArrowRight v-if="item.scroll_dir == MouseScrollDirection.Right"/>
+                  </div>
                 </div>
               </div>
-
+              <div  style="display: flex;height: 100%;width: 30%">
+                <el-text>
+                    {{item.remark}}
+                </el-text>
+              </div>
             </div>
+
+            <div style="height: 100%;">
+              <el-button @click="ClickItemEditBtn(item)"
+                         class="detail-list-item-ctrl-btn-view" style="background: #ce885a;" size="small">
+                <el-icon>
+                  <Edit/>
+                </el-icon>
+              </el-button>
+              <el-button @click="ClickItemDeleteBtn(item)"
+                         class="detail-list-item-ctrl-btn-view" style="background: #e56565;" size="small">
+                <el-icon>
+                  <Close/>
+                </el-icon>
+              </el-button>
+            </div>
+
           </div>
 
-          <div style="width: 100%;height: 25px;display: flex;justify-content: center">
-            <el-button @click="ClickItemEditBtn(item)"
-                       class="detail-list-item-ctrl-btn-view" style="background: #ce885a;" size="small">
-              <el-icon>
-                <Edit/>
-              </el-icon>
-            </el-button>
-            <el-button @click="ClickItemDeleteBtn(item)"
-                       class="detail-list-item-ctrl-btn-view" style="background: #e56565;" size="small">
-              <el-icon>
-                <Close/>
-              </el-icon>
-            </el-button>
-          </div>
         </div>
-      </VueDraggable>
       <div style="margin-top: 4px;width: 80%">
         <el-button style="width: 100%;background: #409eff"
                    @click="SelectEditVisible = true;AddItemPosition=-1">
@@ -142,11 +139,25 @@
       <el-button @click="SelectEditMod=KeyType.Mouse"
                  :style="SelectEditMod==KeyType.Mouse? {background:'aquamarine'}:{}">鼠标按键
       </el-button>
-      <el-button @click="SelectEditMod=KeyType.MouseMove"
-                 :style="SelectEditMod==KeyType.MouseMove? {background:'aquamarine'}:{}">鼠标移动
-      </el-button>
       <el-button @click="SelectEditMod=KeyType.MouseScroll"
                  :style="SelectEditMod==KeyType.MouseScroll? {background:'aquamarine'}:{}">鼠标滚轮
+      </el-button>
+    </div>
+    <div style="margin-top: 10px">
+
+      <el-button @click="SelectEditMod=KeyType.MouseMove"
+                 :style="SelectEditMod==KeyType.MouseMove? {background:'aquamarine'}:{}">鼠标定位
+      </el-button>
+      <el-button @click="SelectEditMod=KeyType.MouseMoveStartPos"
+                 :style="SelectEditMod==KeyType.MouseMoveStartPos? {background:'aquamarine'}:{}">鼠标定位起点
+      </el-button>
+    </div>
+    <div style="margin-top: 10px">
+      <el-button @click="SelectEditMod=KeyType.MouseMoveSmooth"
+                 :style="SelectEditMod==KeyType.MouseMoveSmooth? {background:'aquamarine'}:{}">鼠标移动
+      </el-button>
+      <el-button @click="SelectEditMod=KeyType.MouseMoveSmoothStartPos"
+                 :style="SelectEditMod==KeyType.MouseMoveSmoothStartPos? {background:'aquamarine'}:{}">鼠标移动回起点
       </el-button>
     </div>
     <div style="margin-top: 10px">
@@ -212,7 +223,7 @@
 
       </div>
       <!-- 鼠标移动 -->
-      <div v-if="EditItemInfo.key_type==KeyType.MouseMove"
+      <div v-if="EditItemInfo.key_type==KeyType.MouseMove||EditItemInfo.key_type==KeyType.MouseMoveSmooth"
            style="display: flex;align-items: center;width: 100%;justify-content: center;margin-top: 10px;flex-direction: column">
         <el-form label-width="auto">
           <el-form-item label="X">
@@ -222,7 +233,13 @@
             <el-input-number v-model="EditItemInfo.point_y"/>
           </el-form-item>
         </el-form>
-        <el-button @click="ClickSetToNowMousePosition">获取当前鼠标坐标</el-button>
+        <el-button @click="ClickSetToNowMousePosition(0)">获取当前鼠标坐标</el-button>
+        <el-button @click="ClickSetToNowMousePosition(2000)" style="margin-top: 5px">获取当前鼠标坐标（延时2秒）</el-button>
+      </div>
+      <!-- 鼠标移动 -->
+      <div v-if="EditItemInfo.key_type==KeyType.MouseMoveStartPos||EditItemInfo.key_type==KeyType.MouseMoveSmoothStartPos"
+           style="display: flex;align-items: center;width: 100%;justify-content: center;margin-top: 10px;flex-direction: column">
+        <el-text>鼠标将回到开始起点</el-text>
       </div>
       <!-- 鼠标滚轮 -->
       <div v-if="EditItemInfo.key_type==KeyType.MouseScroll"
@@ -268,6 +285,13 @@
         </el-form>
 
       </div>
+
+      <div style="margin-top: 10px">
+        <el-form-item label="备注" style="display: flex;align-items: center;">
+          <el-input v-model="EditItemInfo.remark"></el-input>
+        </el-form-item>
+
+      </div>
     </div>
 
     <template #footer>
@@ -291,7 +315,7 @@ import {
   CopyControlDetailKeyList,
   CopyControlKeyList,
   CopyControlKeyListList,
-  GetNowMousePosition, GetNowMousePositionResp,
+  GetNowMousePosition, GetNowMousePositionResp, GetShowKeyTouchType,
   KeyType,
   NewControlDetailKey,
   NewControlDetailKeyList,
@@ -387,16 +411,17 @@ const ClickAddDefaultKeyBtn = () => {
 
 }
 
-const ClickSetToNowMousePosition = () => {
-  GetNowMousePosition().then((res) => {
-    if (res.state != 0) {
-    } else {
-      const data = res.data as GetNowMousePositionResp
-      EditItemInfo.value.point_x = data.x
-      EditItemInfo.value.point_y = data.y
-    }
-  })
-
+const ClickSetToNowMousePosition = (tm) => {
+  setTimeout(() => {
+    GetNowMousePosition().then((res) => {
+      if (res.state != 0) {
+      } else {
+        const data = res.data as GetNowMousePositionResp
+        EditItemInfo.value.point_x = data.x
+        EditItemInfo.value.point_y = data.y
+      }
+    })
+  }, tm); // 3000毫秒 = 3秒
 }
 const ClickAddKeyBtn = () => {
   SelectEditVisible.value = false
@@ -442,11 +467,20 @@ const GetKeyListBackground = (keytype: number) => {
     case KeyType.MouseMove:
       sty.background = '#e1f3d8'
       break
+    case KeyType.MouseMoveSmooth:
+      sty.background = '#d4efc7'
+      break
     case KeyType.MouseScroll:
       sty.background = '#d1edc4'
       break
     case KeyType.Delay:
       sty.background = '#fcd3d3'
+      break
+    case KeyType.MouseMoveStartPos:
+      sty.background = '#c9c7c7'
+      break
+    case KeyType.MouseMoveSmoothStartPos:
+      sty.background = '#cabfbf'
       break
   }
   return sty
@@ -482,6 +516,18 @@ const ClickItemAddBtn = (item: ControlKeyList, index: number) => {
   AddItemPosition.value = index
   SelectEditVisible.value = true
 
+}
+
+const EditItemRemark = (item: ControlKeyList) => {
+  // 变化了
+  showList.value.forEach(
+      (res, index) => {
+        if (res.id == item.id) {
+          showList.value[index].remark = item.remark
+          return
+        }
+      }
+  )
 }
 
 const ClickItemEditBtn = (item: ControlKeyList) => {

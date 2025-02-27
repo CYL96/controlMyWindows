@@ -12,6 +12,8 @@ export interface ControlClass extends ControlClassId {
     control_name: string
     key_width: string
     key_height: string
+    mouse_off_set_x: number
+    mouse_off_set_y: number
 }
 
 export interface ControlClassId {
@@ -26,6 +28,7 @@ export function NewControlClassId(): ControlClassId {
 
 export function NewControlClass(): ControlClass {
     return {
+        mouse_off_set_x: 0, mouse_off_set_y: 0,
         key_height: "", key_width: "",
         control_name: '',
         control_id: 0

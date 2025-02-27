@@ -11,6 +11,9 @@ import (
 	"encoding/json"
 	"errors"
 	"os"
+	"sort"
+	"strconv"
+	"strings"
 	"sync"
 
 	"server/src/runCtx"
@@ -47,6 +50,9 @@ type (
 		ControlName  string `json:"control_name" default:"" example:""`    //
 		ControlOrder int    `json:"control_order" default:"0" example:"0"` //
 
+		MouseOffSetX int `json:"mouse_off_set_x" default:"0" example:"0"`
+		MouseOffSetY int `json:"mouse_off_set_y" default:"0" example:"0"`
+
 		KeyWidth  string `json:"key_width"`  //
 		KeyHeight string `json:"key_height"` //
 	}
@@ -64,10 +70,12 @@ type (
 		DetailId int64 `json:"detail_id" default:"0" example:"0"` //
 	}
 	ControlT struct {
-		ControlType       ControlType      `json:"control_type" default:"0" example:"0"` // 1:快捷键，2：脚本 3：打开文件夹目录  4:打开网页
-		MouseBackToOrigin bool             `json:"mouse_back_to_origin"`                 // 在脚本中，如果鼠标移动，是否返回原点
-		Path              string           `json:"path" default:"" example:""`           // 目录或网页
-		DetailKey         []ControlKeyList `json:"detail_key"`
+		ControlType ControlType          `json:"control_type" default:"0" example:"0"` // 1:快捷键，2：脚本 3：打开文件夹目录  4:打开网页
+		Path        string               `json:"path" default:"" example:""`           // 目录或网页
+		MouseOffSet ControlKeyPosition   `json:"mouse_off_set"`                        // 屏幕偏移
+		DetailKey   []ControlKeyList     `json:"detail_key"`
+		Position    []ControlKeyPosition `json:"position_index"` // 索引
+		StartPos    ControlKeyPosition   `json:"start_pos"`
 	}
 )
 
@@ -88,11 +96,17 @@ const (
 	KeyTypeDefault KeyType = 1 // 单键
 	KeyTypeText    KeyType = 2 // 文本
 
-	KeyTypeShortcutKey KeyType = 3  // 快捷键
-	KeyTypeMouse       KeyType = 4  // 鼠标点击
-	KeyTypeMouseMove   KeyType = 5  // 鼠标移动
-	KeyTypeMouseScroll KeyType = 6  // 鼠标滚轮
-	KeyTypeDelay       KeyType = 99 // 延迟
+	KeyTypeShortcutKey            KeyType = 3 // 快捷键
+	KeyTypeMouse                  KeyType = 4 // 鼠标点击
+	KeyTypeMouseMove              KeyType = 5 // 鼠标定位
+	KeyTypeMouseScroll            KeyType = 6 // 鼠标滚轮
+	KeyTypeMouseMoveMap           KeyType = 7 // 鼠标移动-索引
+	KeyTypeMouseMoveStartingPoint KeyType = 8 // 鼠标定位初始位置
+
+	KeyTypeMouseMoveSmooth              KeyType = 9  // 鼠标移动
+	KeyTypeMouseMoveSmoothStartingPoint KeyType = 10 // 鼠标回初始位置
+
+	KeyTypeDelay KeyType = 99 // 延迟
 
 	PressTypeClick       PressType = 1 // 单击
 	PressTypeDoubleClick PressType = 2 // 双击
@@ -108,13 +122,18 @@ type (
 		Input    string     `json:"input" default:"" example:""`       // 当KeyType == 2时 输入文本
 		KeyList  []KeyListT `json:"key_list"`                          // 当KeyType == 3时
 		ControlKeyMouse
-		Delay int `json:"delay" default:"0" example:"0"` // 当KeyType == 99时 使用 ms
+		Delay  int    `json:"delay" default:"0" example:"0"` // 当KeyType == 99时 使用 ms
+		Remark string `json:"remark" default:"" example:""`  // 备注
 	}
 	ControlKeyMouse struct {
-		PointX    int             `json:"point_x" default:"0" example:"0"` // 当KeyType == 5时 使用 X
-		PointY    int             `json:"point_y" default:"0" example:"0"` // 当KeyType == 5时 使用 Y
-		Scroll    int             `json:"scroll" default:"0" example:"0"`  //
+		ControlKeyPosition
+		Scroll    int             `json:"scroll" default:"0" example:"0"` //
 		ScrollDir KMouseScrollDir `json:"scroll_dir" default:"0" example:"0"`
+	}
+	ControlKeyPosition struct {
+		PointX int    `json:"point_x" default:"0" example:"0"` // 当KeyType == 5时 使用 X
+		PointY int    `json:"point_y" default:"0" example:"0"` // 当KeyType == 5时 使用 Y
+		Name   string `json:"Name" default:"" example:""`      // 找寻索引
 	}
 	KeyListT struct {
 		Id  int  `json:"id" default:"0" example:"0"` //
@@ -126,16 +145,33 @@ var controlList []ControlListExt
 var controlLk sync.RWMutex
 
 func ReadControlConfig(ctx *runCtx.RunCtx) (err error) {
-	file, err := os.ReadFile("./config/control.json")
+	dir, err := os.ReadDir("./config/control/")
 	if err != nil {
-		ctx.Warn(err)
-		err = nil
-		return
+		return err
 	}
-	err = json.Unmarshal(file, &controlList)
-	if err != nil {
-		return
+	for _, entry := range dir {
+		if entry.IsDir() {
+			continue
+		}
+		data, err2 := os.ReadFile("./config/control/" + entry.Name())
+		if err2 != nil {
+			ctx.Error(err2)
+			continue
+		}
+		tmp := ControlListExt{}
+		err = json.Unmarshal(data, &tmp)
+		if err != nil {
+			return
+		}
+		controlList = append(controlList, tmp)
 	}
+	sort.Slice(controlList, func(i, j int) bool {
+		if controlList[i].ControlOrder == controlList[j].ControlOrder {
+			return controlList[i].ControlId < controlList[j].ControlId
+		}
+		return controlList[i].ControlOrder < controlList[j].ControlOrder
+	})
+
 	for i := range controlList {
 		for i2 := range controlList[i].DetailList {
 			controlList[i].DetailList[i2].RunState = RunStateFree
@@ -171,12 +207,34 @@ func SaveControlConfig222() (err error) {
 	return
 }
 
-func SaveControlConfig(config []ControlListExt) (err error) {
-	file, err := json.Marshal(config)
+func SaveControlConfigList(config []ControlListExt) (err error) {
+	// file, err := json.Marshal(config)
+	// if err != nil {
+	// 	return
+	// }
+	// err = os.WriteFile("./config/control.json", file, 0666)
+	// if err != nil {
+	// 	return
+	// }
+	list := []string{}
+	for _, ext := range config {
+		err = ext.SaveControlConfig()
+		if err != nil {
+			list = append(list, ext.ControlName+":"+strconv.FormatInt(ext.ControlId, 10))
+		}
+	}
+	if list != nil {
+		err = errors.New(strings.Join(list, "\n"))
+	}
+	return
+}
+
+func (c *ControlListExt) SaveControlConfig() (err error) {
+	file, err := json.Marshal(c)
 	if err != nil {
 		return
 	}
-	err = os.WriteFile("./config/control.json", file, 0666)
+	err = os.WriteFile("./config/control/"+strconv.FormatInt(c.ControlId, 10), file, 0666)
 	if err != nil {
 		return
 	}
@@ -192,8 +250,7 @@ func AddControl(para ControlListExt) (err error) {
 	para.ControlOrder = len(newList)
 
 	newList[len(newList)-1] = para
-
-	err = SaveControlConfig(newList)
+	err = para.SaveControlConfig()
 	if err != nil {
 		return err
 	}
@@ -211,7 +268,7 @@ func UpdateControl(para ControlListExt) (err error) {
 			break
 		}
 	}
-	err = SaveControlConfig(newList)
+	err = para.SaveControlConfig()
 	if err != nil {
 		return err
 	}
@@ -228,7 +285,7 @@ func DeleteControl(id ControlListIdT) (err error) {
 			newList[len(newList)-1].ControlOrder = len(newList)
 		}
 	}
-	err = SaveControlConfig(newList)
+	err = os.RemoveAll("./config/control/" + strconv.FormatInt(id.ControlId, 10))
 	if err != nil {
 		return err
 	}
@@ -291,7 +348,7 @@ func UpdateControlOrder(para []ControlListIdT) (err error) {
 		}
 	}
 
-	err = SaveControlConfig(newList)
+	err = SaveControlConfigList(newList)
 	if err != nil {
 		return err
 	}

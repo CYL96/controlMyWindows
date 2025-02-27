@@ -1,3 +1,5 @@
+import {PressType} from "@/components/api/detail.js";
+
 export const KeyDefine = {
     KeyA: "a",
     KeyB: "b",
@@ -374,6 +376,8 @@ export function GetShowComponents(key: string) {
     }
     return key
 }
+
+
 
 export const MouseDefine = {
     MouseLeft: "left",

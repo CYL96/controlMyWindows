@@ -19,23 +19,11 @@ type (
 
 func NewRobotGo(isScale bool) *RobotGo {
 	robotgo.Scale = isScale
-	CheckZero()
 	return &RobotGo{}
 }
 func ReUpdateRobotGo(isScale bool) {
 	robotgo.Scale = isScale
-	CheckZero()
 	return
-}
-
-var ZeroX, ZeroY = 0, 0
-
-func CheckZero() {
-	nowX, NowY := robotgo.Location()
-	robotgo.Move(0, 0)
-	ZeroX, ZeroY = robotgo.Location()
-
-	robotgo.Move(nowX-ZeroX, NowY-ZeroY)
 }
 
 func (r *RobotGo) MouseScroll(num int, direction config.KMouseScrollDir) (err error) {
@@ -108,7 +96,11 @@ func (r *RobotGo) MouseClick(key config.KKey) (err error) {
 }
 
 func (r *RobotGo) MouseMove(x int, y int) (err error) {
-	robotgo.MoveSmooth(x-ZeroX, y-ZeroY, 0.01, 0.01)
+	robotgo.Move(x, y)
+	return
+}
+func (r *RobotGo) MouseMoveSmooth(x int, y int) (err error) {
+	robotgo.MoveSmooth(x, y, 0.01, 0.01)
 	return
 }
 

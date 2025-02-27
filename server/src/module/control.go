@@ -34,6 +34,7 @@ type ControlIntf interface {
 	MouseUp(key KKey) (err error)                               // 鼠标抬起
 	MouseDown(key KKey) (err error)                             // 鼠标按下
 	MouseMove(x int, y int) (err error)                         // 鼠标移动
+	MouseMoveSmooth(x int, y int) (err error)                   // 鼠标移动
 	MouseScroll(num int, direction KMouseScrollDir) (err error) // direction 1：向上 2：向下 3:向左 4：向右
 	GetNowMousePosition() (x int, y int)
 }
@@ -56,7 +57,7 @@ func TouchKey(ctx *runCtx.RunCtx, script ControlT) (err error) {
 		return control.TouchCombinationKey(keyList)
 	case ControlTypeScript:
 		// 脚本
-		return ExecScript(ctx, script.MouseBackToOrigin, script.DetailKey)
+		return ExecScript(ctx, script)
 	case ControlTypeExplorer:
 		// 打开文件夹目录
 		OpenExplorer(ctx, script.Path)

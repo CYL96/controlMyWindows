@@ -52,6 +52,8 @@ func UpdateControlClass(ctx *runCtx.RunCtx, para UpdateControlClassPara) (err er
 	info.ControlName = para.ControlName
 	info.KeyWidth = para.KeyWidth
 	info.KeyHeight = para.KeyHeight
+	info.MouseOffSetX = para.MouseOffSetX
+	info.MouseOffSetY = para.MouseOffSetY
 	err = config.UpdateControl(info)
 	if err != nil {
 		ctx.Error(err)

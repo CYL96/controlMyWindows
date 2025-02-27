@@ -181,6 +181,7 @@ func ExecControlDetail(ctx *runCtx.RunCtx, para ExecControlDetailPara) (err erro
 		ctx.Error(err)
 		return err
 	}
+
 	for _, detail := range info.DetailList {
 		if detail.DetailId == para.DetailId {
 			if detail.RunState == config.RunStateRunning {
@@ -200,6 +201,8 @@ func ExecControlDetail(ctx *runCtx.RunCtx, para ExecControlDetailPara) (err erro
 						DeleteControlRunner(strconv.FormatInt(detail.DetailId, 10))
 					}
 				}()
+				detail.MouseOffSet.PointX = info.MouseOffSetX
+				detail.MouseOffSet.PointY = info.MouseOffSetY
 				err = module.TouchKey(cctx, detail.ControlT)
 			}()
 			break
