@@ -16,3 +16,4 @@ server/server.exe~
 server/server.exe
 server/go_build_server.exe~
 server/go_build_server.exe
+/server/config/control

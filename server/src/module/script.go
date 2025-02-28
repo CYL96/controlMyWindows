@@ -28,10 +28,12 @@ func ExecScript(ctx *runCtx.RunCtx, script ControlT) (err error) {
 				key.KeyType == KeyTypeMouseMoveStartingPoint ||
 				key.KeyType == KeyTypeMouseMoveSmooth ||
 				key.KeyType == KeyTypeMouseMoveSmoothStartingPoint {
-				if key.KeyType == KeyTypeMouseMoveStartingPoint {
+
+				if key.KeyType == KeyTypeMouseMoveStartingPoint || key.KeyType == KeyTypeMouseMoveSmoothStartingPoint {
 					key.PointX = x
 					key.PointY = y
 				}
+
 				key.PointX += script.MouseOffSet.PointX
 				key.PointY += script.MouseOffSet.PointY
 			}

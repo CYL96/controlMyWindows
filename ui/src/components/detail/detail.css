@@ -69,15 +69,15 @@
 
 .detail-list-item-view {
     /*height: 40px;*/
-    width: 80%;
-    height: 40px;
+    width: 100%;
+    /*height: 30px;*/
     display: flex;
     flex-direction: column;
     align-items: stretch;
     justify-content: space-between;
-    margin-top: 2px;
+    margin-top: 3px;
     /*background: #97d562;*/
-    border: #b4b4b4 solid 1px;
+    border: #535353 solid  1px;
     margin-left: 10px;
 }
 
@@ -94,7 +94,7 @@
 .detail-item-desc-view {
     display: flex;
     flex-grow: 1;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100%;

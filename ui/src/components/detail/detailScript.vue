@@ -5,18 +5,18 @@
         <div :id="item.id" v-for="(item, index) in showList" :key="item.id"
              class="detail-list-item-view"
         >
-          <div style="display: flex;height: 100%">
-            <div style="height: 100%;display: flex;">
+          <div style="display: flex;">
+            <div style="display: flex;">
 
               <el-button @click="ClickItemAddBtn(item,index)" size="small"
-                         style="background: #b2caf5; width:40px;height: 100%;">
+                         style="background: #b2caf5; width:40px;height: auto">
                 <el-icon>
                   <plus/>
                 </el-icon>
               </el-button>
             </div>
             <div :style="GetKeyListBackground(item.key_type)" style="flex-grow: 1" class="detail-item-desc-view sort_my_key_list">
-              <div  style="display: flex;justify-content: center;height: 100%;width: 60%">
+              <div  style="display: flex;justify-content: center;height: 30px;">
                 <el-text v-show="item.key_type===KeyType.Text" style="width: 80%" truncated>
                   文本：{{ item.input }}
                 </el-text>
@@ -26,10 +26,10 @@
                 <div v-show="item.key_type==KeyType.Default || item.key_type==KeyType.Mouse"
                      style="display: flex;align-items: center;justify-content: center;">
                   <el-text v-if="item.key_type==KeyType.Default">
-                   按键({{GetShowKeyTouchType(item.key_type)}}}): {{ GetShowComponents(item.key) }}
+                   按键({{GetShowKeyTouchType(item.key_type)}}): {{ GetShowComponents(item.key) }}
                   </el-text>
                   <el-text v-if="item.key_type==KeyType.Mouse">
-                   鼠标按键({{GetShowKeyTouchType(item.key_type)}}})： {{ item.key }}
+                   鼠标按键({{GetShowKeyTouchType(item.key_type)}})： {{ item.key }}
                   </el-text>
                 </div>
                 <div v-show="item.key_type==KeyType.ShortcutKey" style="display: flex;height: 100%">
@@ -45,25 +45,25 @@
 
                 <div v-show="item.key_type==KeyType.MouseMove" style="display: flex;height: 100%;">
                   <el-text>
-                   鼠标定位:  X: {{ item.point_x }}   Y: {{ item.point_y }}
+                   鼠标定位: ({{ item.point_x }},{{ item.point_y }})
                   </el-text>
                 </div>
 
                 <div v-show="item.key_type==KeyType.MouseMoveStartPos" style="display: flex;height: 100%">
                   <el-text>
-                    鼠标定位始起点
+                    鼠标定位起点
                   </el-text>
                 </div>
 
                 <div v-show="item.key_type==KeyType.MouseMoveSmooth" style="display: flex;height: 100%;">
                   <el-text>
-                    鼠标移动:  X: {{ item.point_x }}   Y: {{ item.point_y }}
+                    鼠标移动: ({{ item.point_x }},{{ item.point_y }})
                   </el-text>
                 </div>
 
                 <div v-show="item.key_type==KeyType.MouseMoveSmoothStartPos" style="display: flex;height: 100%">
                   <el-text>
-                    鼠标移动始起点
+                    鼠标移动起点
                   </el-text>
                 </div>
 
@@ -79,14 +79,14 @@
                   </div>
                 </div>
               </div>
-              <div  style="display: flex;height: 100%;width: 30%">
+              <div v-if="item.remark!=''"  style="display: flex;height: 20px;">
                 <el-text>
                     {{item.remark}}
                 </el-text>
               </div>
             </div>
 
-            <div style="height: 100%;">
+            <div style="">
               <el-button @click="ClickItemEditBtn(item)"
                          class="detail-list-item-ctrl-btn-view" style="background: #ce885a;" size="small">
                 <el-icon>
