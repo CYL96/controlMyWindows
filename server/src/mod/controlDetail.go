@@ -31,6 +31,12 @@ func AddControlDetail(ctx *runCtx.RunCtx, para AddControlDetailPara) (err error)
 		ctx.Error(err)
 		return
 	}
+	if para.Detail.ControlType == config.ControlTypeScript {
+		go func() {
+			HookCenter.StopHook()
+			HookCenter.StartHook(para.ControlListIdT)
+		}()
+	}
 	return
 }
 
@@ -64,6 +70,12 @@ func UpdateControlDetail(ctx *runCtx.RunCtx, para UpdateControlDetailPara) (err 
 		ctx.Error(err)
 		return
 	}
+	if para.Detail.ControlType == config.ControlTypeScript {
+		go func() {
+			HookCenter.StopHook()
+			HookCenter.StartHook(para.ControlListIdT)
+		}()
+	}
 	return
 }
 
@@ -94,6 +106,10 @@ func DeleteControlDetail(ctx *runCtx.RunCtx, para DeleteControlDetailPara) (err 
 		ctx.Error(err)
 		return
 	}
+	go func() {
+		HookCenter.StopHook()
+		HookCenter.StartHook(para.ControlListIdT)
+	}()
 	return
 }
 
@@ -156,7 +172,9 @@ func GetControlDetailList(ctx *runCtx.RunCtx, para GetControlDetailListPara) (re
 	}
 
 	result.Detail = make([]config.ControlDetailExt, len(info.DetailList))
-
+	go func() {
+		HookCenter.Activate()
+	}()
 	copy(result.Detail, info.DetailList)
 	return
 }

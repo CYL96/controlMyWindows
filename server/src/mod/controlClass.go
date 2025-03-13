@@ -116,6 +116,10 @@ func GetControlClassInfo(ctx *runCtx.RunCtx, para GetControlClassInfoPara) (resu
 	for _, ext := range list {
 		if ext.ControlId == para.ControlId {
 			result.ControlListBase = ext.ControlListBase
+			go func() {
+				HookCenter.StopHook()
+				HookCenter.StartHook(ext.ControlListIdT)
+			}()
 			return
 		}
 	}

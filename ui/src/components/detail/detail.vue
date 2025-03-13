@@ -264,6 +264,18 @@
               style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
           />
         </el-form-item>
+        <el-form-item label="绑定快捷键">
+          <el-button @click="bindNormalKey = editItem.combination_key;bindNormalKeyVisible=true">
+            <div v-for="kkeeyy in editItem.combination_key" class="detail-list-item-bind-view">
+            <el-text>
+              {{ kkeeyy.key }}
+            </el-text>
+          </div>
+          </el-button>
+
+
+         <el-button @click="editItem.combination_key=[]" style="background: #c45656">X</el-button>
+        </el-form-item>
         <el-form-item label="显示样式" style="display: flex;align-items: center;">
           <el-radio-group v-model="editItem.detail_show_type" class="ml-4">
             <el-radio :value="1" size="large">背景色</el-radio>
@@ -346,6 +358,28 @@
       </div>
     </template>
   </el-dialog>
+
+  <!-- 绑定快捷键 -->
+  <el-dialog
+      v-model="bindNormalKeyVisible"
+      align-center
+      width="auto">
+    <div>
+      <DetailEdit :set-list="bindNormalKey" :onlyOne="false"
+                  :update-list="list =>{bindNormalKey = list}"></DetailEdit>
+    </div>
+
+    <template #footer>
+      <div class="works-dialog-footer">
+        <el-button @click="bindNormalKeyVisible = false">取消</el-button>
+        <el-button type="primary"
+                   @click="bindNormalKeyVisible = false;editItem.combination_key=bindNormalKey">
+          确认
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
+
 </template>
 
 <script lang="ts" setup>
@@ -389,7 +423,7 @@ import {
   ControlDetailKey,
   ControlKeyList,
   NewControlKeyListNormal,
-  RunState, ExecStopControlDetail, NewStopControlDetailReq, ShowType
+  RunState, ExecStopControlDetail, NewStopControlDetailReq, ShowType, KeyType, PressType
 } from "@/components/api/detail";
 import DetailEdit from "@/components/detail/detailEdit.vue";
 import {onMounted, ref} from "vue";
@@ -402,6 +436,7 @@ import {MessageErr} from "@/components/mod/msg";
 import {GetNewId} from "@/components/common/id";
 import DetailIcon from "@/components/detail/detailIcon.vue";
 import {GetIconSrc} from "@/components/api/sys";
+import {MouseDefine, MouseScrollDirection} from "@/components/api/keyDefine";
 
 const detailListContainer = ref(null)
 
@@ -450,6 +485,9 @@ const editDialogVisible = ref(false)
 const editItem = ref(NewControlDetail())
 
 const isControlInfoGet = ref(false)
+
+const bindNormalKeyVisible = ref(false)
+const bindNormalKey  = ref([])
 
 const tk = ref(0)
 const lastColor = ref('')

@@ -12,6 +12,7 @@ import (
 
 	"server/src/config"
 	"server/src/hd"
+	"server/src/mod"
 	"server/src/module"
 	"server/src/runCtx"
 	"server/src/systray"
@@ -26,7 +27,8 @@ func main() {
 
 	ctx.Info("初始化控制器...")
 	module.InitControl(ctx)
-
+	//
+	mod.InitHookCenter(ctx)
 	if err != nil {
 		return
 	}

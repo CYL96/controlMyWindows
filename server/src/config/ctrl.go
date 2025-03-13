@@ -70,12 +70,13 @@ type (
 		DetailId int64 `json:"detail_id" default:"0" example:"0"` //
 	}
 	ControlT struct {
-		ControlType ControlType          `json:"control_type" default:"0" example:"0"` // 1:快捷键，2：脚本 3：打开文件夹目录  4:打开网页
-		Path        string               `json:"path" default:"" example:""`           // 目录或网页
-		MouseOffSet ControlKeyPosition   `json:"mouse_off_set"`                        // 屏幕偏移
-		DetailKey   []ControlKeyList     `json:"detail_key"`
-		Position    []ControlKeyPosition `json:"position_index"` // 索引
-		StartPos    ControlKeyPosition   `json:"start_pos"`
+		ControlType    ControlType          `json:"control_type" default:"0" example:"0"` // 1:快捷键，2：脚本 3：打开文件夹目录  4:打开网页
+		Path           string               `json:"path" default:"" example:""`           // 目录或网页
+		MouseOffSet    ControlKeyPosition   `json:"mouse_off_set"`                        // 屏幕偏移
+		CombinationKey []KeyListT           `json:"combination_key"`                      // 绑定组合键
+		DetailKey      []ControlKeyList     `json:"detail_key"`
+		Position       []ControlKeyPosition `json:"position_index"` // 索引
+		StartPos       ControlKeyPosition   `json:"start_pos"`
 	}
 )
 

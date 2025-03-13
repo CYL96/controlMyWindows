@@ -122,6 +122,17 @@
     width: 50%;
     /*height: 24px;*/
 }
+.detail-list-item-bind-view {
+    width:50px;
+
+    height:20px;
+    margin-left: 3px;
+    border-radius: 2px;
+    background: #409eff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .detail-list-item-ShortcutKey-view {
     min-width: 32px;
