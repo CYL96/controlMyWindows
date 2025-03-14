@@ -17,7 +17,8 @@
     "element-plus": "^2.6.2",
     "vue": "^3.4.15",
     "vue-draggable-plus": "^0.4.0",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.3",

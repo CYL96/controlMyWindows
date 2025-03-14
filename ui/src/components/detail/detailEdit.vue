@@ -268,9 +268,9 @@
           </el-button>
         </div>
         <div style="margin-top: 1px">
-          <el-button size="small" :class="CheckKeyHas(KeyDefine.Lshift)" @click="ClickKey(KeyDefine.Lshift)"
+          <el-button size="small" :class="CheckKeyHas(KeyDefine.Shift)" @click="ClickKey(KeyDefine.Shift)"
                      style="margin-left: 1px;width: 60px"
-                     :style="{ width: 5*baseKeySize + 'px' }">{{ GetShowComponents(KeyDefine.Lshift) }}
+                     :style="{ width: 5*baseKeySize + 'px' }">{{ GetShowComponents(KeyDefine.Shift) }}
           </el-button>
           <el-button size="small" :class="CheckKeyHas(KeyDefine.KeyZ)" @click="ClickKey(KeyDefine.KeyZ)"
                      style="margin-left: 1px;width: 24px"
@@ -295,17 +295,17 @@
 
         </div>
         <div style="margin-top: 1px">
-          <el-button size="small" :class="CheckKeyHas(KeyDefine.Lctrl)" @click="ClickKey(KeyDefine.Lctrl)"
+          <el-button size="small" :class="CheckKeyHas(KeyDefine.Ctrl)" @click="ClickKey(KeyDefine.Ctrl)"
                      style="margin-left: 1px;width: 36px"
-                     :style="{ width: 3*baseKeySize + 'px' }">{{ GetShowComponents(KeyDefine.Lctrl) }}
+                     :style="{ width: 3*baseKeySize + 'px' }">{{ GetShowComponents(KeyDefine.Ctrl) }}
           </el-button>
           <el-button size="small" :class="CheckKeyHas(KeyDefine.Lcmd)" @click="ClickKey(KeyDefine.Lcmd)"
                      style="margin-left: 1px;width: 36px"
                      :style="{ width: 3*baseKeySize + 'px' }">{{ GetShowComponents(KeyDefine.Lcmd) }}
           </el-button>
-          <el-button size="small" :class="CheckKeyHas(KeyDefine.Lalt)" @click="ClickKey(KeyDefine.Lalt)"
+          <el-button size="small" :class="CheckKeyHas(KeyDefine.Alt)" @click="ClickKey(KeyDefine.Alt)"
                      style="margin-left: 1px;width: 36px"
-                     :style="{ width: 3*baseKeySize + 'px' }">{{ GetShowComponents(KeyDefine.Lalt) }}
+                     :style="{ width: 3*baseKeySize + 'px' }">{{ GetShowComponents(KeyDefine.Alt) }}
           </el-button>
           <el-button size="small" :class="CheckKeyHas(KeyDefine.Space)" @click="ClickKey(KeyDefine.Space)"
                      style="margin-left: 1px;width: 90px"
@@ -628,6 +628,7 @@ import {Delete} from "@element-plus/icons-vue";
 interface Prop {
   setList: ControlDetailKey[],
   onlyOne?: boolean,
+  CombinationsKey?:boolean,
   updateList: Function,
   baseKeySize?: number,
 }
@@ -635,15 +636,18 @@ interface Prop {
 
 const showList = ref([])
 const OneKey = ref(false)
+const CombinationsKey = ref(false)
 
 const props = withDefaults(defineProps<Prop>(), {
   baseKeySize: 18,
   onlyOne: false,
+  CombinationsKey:false,
   updateList: (showList) => {
   },
 })
 
 OneKey.value = props.onlyOne
+CombinationsKey.value = props.CombinationsKey
 showList.value = CopyControlDetailKeyList(props.setList)
 
 watch(() => props.setList, (value: ControlDetailKey[]) => {
@@ -655,6 +659,13 @@ watch(() => props.onlyOne, (value: boolean) => {
     OneKey.value = true
   } else {
     OneKey.value = false
+  }
+})
+watch(() => props.CombinationsKey, (value: boolean) => {
+  if (value) {
+    CombinationsKey.value = true
+  } else {
+    CombinationsKey.value = false
   }
 })
 const CheckKeyHas = (key: string) => {
@@ -698,6 +709,7 @@ const ClickDelKey = (item :ControlDetailKey)=>{
       showList.value.splice(index, 1)
     }
   })
+  OnUpdate()
 }
 const OnUpdate = () => {
   props.updateList(showList.value)

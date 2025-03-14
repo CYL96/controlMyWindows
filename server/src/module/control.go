@@ -42,11 +42,13 @@ type ControlIntf interface {
 var control ControlIntf
 
 func TouchKey(ctx *runCtx.RunCtx, script ControlT) (err error) {
+	defer func() {
+		ctx.Info("执行完毕")
+	}()
 	if control == nil {
 		err = errors.New("control not init")
 		return
 	}
-
 	switch script.ControlType {
 	case ControlTypeNormal:
 		// 快捷键
@@ -54,23 +56,28 @@ func TouchKey(ctx *runCtx.RunCtx, script ControlT) (err error) {
 		for _, key := range script.DetailKey {
 			keyList = append(keyList, key.Key)
 		}
+		ctx.Info("执行快捷键:", keyList)
 		return control.TouchCombinationKey(keyList)
 	case ControlTypeScript:
 		// 脚本
+		ctx.Info("执行脚本")
 		return ExecScript(ctx, script)
 	case ControlTypeExplorer:
 		// 打开文件夹目录
+		ctx.Info("打开文件夹目录:", script.Path)
 		OpenExplorer(ctx, script.Path)
 	case ControlTypeWebsite:
 		// 打开网页
+		ctx.Info("打开网页:", script.Path)
 		OpenUrl(ctx, script.Path)
 	case ControlTypeRunExe:
 		// 打开程序
+		ctx.Info("打开程序:", script.Path)
 		RunExe(ctx, script.Path)
 	case ControlTypeRunCmd:
 		// 执行命令
+		ctx.Info("执行命令:", script.Path)
 		RunCmd(ctx, script.Path)
-
 	}
 	return
 }

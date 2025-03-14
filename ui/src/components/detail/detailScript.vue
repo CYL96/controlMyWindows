@@ -407,7 +407,7 @@ const ClickAddDefaultKeyBtn = () => {
 
   EditItemVisible.value = false
   OnUpdate()
-  console.log(showList.value)
+  // console.log(showList.value)
 
 }
 

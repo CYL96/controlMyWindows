@@ -9,7 +9,9 @@ package mod
 
 import (
 	"strconv"
+	"sync"
 
+	hook "github.com/robotn/gohook"
 	"server/src/common"
 	"server/src/config"
 	"server/src/module"
@@ -17,6 +19,14 @@ import (
 )
 
 func AddControlDetail(ctx *runCtx.RunCtx, para AddControlDetailPara) (err error) {
+	for _, t := range para.Detail.CombinationKey {
+		key := t.Key.Str()
+		if _, ok := hook.Keycode[key]; !ok {
+			err = ctx.ErrorNew("快捷键绑定失败，无法绑定：", key)
+			return
+		}
+	}
+
 	var info config.ControlListExt
 	info, err = config.GetControlInfo(para.ControlListIdT)
 	if err != nil {
@@ -48,6 +58,14 @@ type (
 )
 
 func UpdateControlDetail(ctx *runCtx.RunCtx, para UpdateControlDetailPara) (err error) {
+	for _, t := range para.Detail.CombinationKey {
+		key := t.Key.Str()
+		if _, ok := hook.Keycode[key]; !ok {
+			err = ctx.ErrorNew("快捷键绑定失败，无法绑定：", key)
+			return
+		}
+	}
+
 	var info config.ControlListExt
 	info, err = config.GetControlInfo(para.ControlListIdT)
 	if err != nil {
@@ -175,6 +193,11 @@ func GetControlDetailList(ctx *runCtx.RunCtx, para GetControlDetailListPara) (re
 	go func() {
 		HookCenter.Activate()
 	}()
+	for i := range info.DetailList {
+		if info.DetailList[i].CombinationKey == nil {
+			info.DetailList[i].CombinationKey = []config.KeyListT{}
+		}
+	}
 	copy(result.Detail, info.DetailList)
 	return
 }
@@ -187,6 +210,8 @@ type (
 		Detail []config.ControlDetailExt `json:"detail"`
 	}
 )
+
+var execLk sync.RWMutex
 
 func ExecControlDetail(ctx *runCtx.RunCtx, para ExecControlDetailPara) (err error) {
 
@@ -202,26 +227,27 @@ func ExecControlDetail(ctx *runCtx.RunCtx, para ExecControlDetailPara) (err erro
 
 	for _, detail := range info.DetailList {
 		if detail.DetailId == para.DetailId {
+			execLk.Lock()
+			defer execLk.Unlock()
 			if detail.RunState == config.RunStateRunning {
 				err = ctx.ErrorNew("control is running")
 				return
 			}
-			config.SetControlDetailState(config.RunStateRunning, para.ControlId, para.DetailId)
-
 			cctx, cancel := runCtx.WithCancel(ctx)
-
+			config.SetControlDetailState(config.RunStateRunning, para.ControlId, para.DetailId)
 			AddControlRunner(strconv.FormatInt(detail.DetailId, 10), cancel)
 			go func() {
 				var err error
 				defer func() {
 					config.SetControlDetailState(config.RunStateFree, para.ControlId, para.DetailId)
-					if err != nil {
-						DeleteControlRunner(strconv.FormatInt(detail.DetailId, 10))
-					}
+					DeleteControlRunner(strconv.FormatInt(detail.DetailId, 10))
 				}()
 				detail.MouseOffSet.PointX = info.MouseOffSetX
 				detail.MouseOffSet.PointY = info.MouseOffSetY
 				err = module.TouchKey(cctx, detail.ControlT)
+				if err != nil {
+					ctx.Error(err)
+				}
 			}()
 			break
 		}

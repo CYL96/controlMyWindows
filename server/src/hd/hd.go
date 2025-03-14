@@ -8,9 +8,13 @@ author CYL96 创建 2024/3/26
 package hd
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"server/src/mod"
 	"server/src/module"
+	"server/src/msg"
 	"server/src/runCtx"
 )
 
@@ -309,6 +313,7 @@ func UpdateControlDetail(c *gin.Context) {
 		return
 	}
 	err = mod.UpdateControlDetail(ctx, req.UpdateControlDetailPara)
+
 	return
 }
 
@@ -433,6 +438,45 @@ type (
 		mod.GetControlDetailListResult
 	}
 )
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
+// GetMsgWS
+// @Summary         建立消息推送长连接
+// @Accept          json
+// @Produce         json
+// @Description	    建立消息推送长连接
+// @Tags            长链接
+// @param   request body    GetMsgWSRequest   true    "请求"
+// @success 200 {object}    models.GinResponse{data=GetMsgWSResponse}    "desc"
+// @Router  /runMsg    [get]
+func GetMsgWS(c *gin.Context) {
+	var err error
+	ctx := runCtx.FromContext(c)
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	ctx.Info("设备推送WS："+conn.RemoteAddr().String(), conn.RemoteAddr().Network())
+	defer conn.Close()
+	msg.MsgCenter.AddDevicePusher(conn)
+
+	for {
+		_, _, err := conn.ReadMessage()
+		if err != nil {
+			ctx.Error(err.Error())
+			return
+		}
+		mod.HookCenter.Activate()
+	}
+}
 
 // ExecControlDetail
 // @Summary	执行key

@@ -87,6 +87,7 @@ func FromContext(ctx context.Context) *RunCtx {
 
 func WithCancel(ctx *RunCtx) (newCtx *RunCtx, cancelFunc context.CancelFunc) {
 	newCtx = &RunCtx{}
+	newCtx.sid = ctx.sid
 	newCtx.Context, cancelFunc = context.WithCancel(ctx.Context)
 	return
 }

@@ -15,7 +15,9 @@ import (
 )
 
 func TestHook(t *testing.T) {
-	hook.Register(hook.KeyDown, []string{"q", "lctrl", "lshift"}, func(e hook.Event) {
+	hook.Register(hook.KeyDown, []string{"d", "ctrl", "shift"}, func(e hook.Event) {
+
+		fmt.Println(e)
 		fmt.Println(111)
 	})
 	start := hook.Start()

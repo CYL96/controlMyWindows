@@ -13,6 +13,7 @@ import (
 )
 
 func ExecKey(ctx *runCtx.RunCtx, key ControlKeyList) (err error) {
+	log(ctx, key)
 	switch key.KeyType {
 	case KeyTypeDefault:
 		// 单键
@@ -35,7 +36,8 @@ func ExecKey(ctx *runCtx.RunCtx, key ControlKeyList) (err error) {
 		err = control.Input(key.Input)
 	case KeyTypeShortcutKey:
 		// 快捷键
-		err = control.TouchCombinationKey(KeyListToKKeyList(key.KeyList))
+		keys := KeyListToKKeyList(key.KeyList)
+		err = control.TouchCombinationKey(keys)
 	case KeyTypeMouse:
 		// 鼠标点击
 		switch key.KeyPress {
@@ -65,7 +67,10 @@ func ExecKey(ctx *runCtx.RunCtx, key ControlKeyList) (err error) {
 	case KeyTypeDelay:
 		// 延迟
 		delay := key.Delay
-		interval := 100
+		interval := 10
+		if delay > 100 {
+			interval = 100
+		}
 		for delay > 0 {
 			select {
 			case <-ctx.Done():
@@ -84,4 +89,66 @@ func ExecKey(ctx *runCtx.RunCtx, key ControlKeyList) (err error) {
 		ctx.Error(err)
 	}
 	return
+}
+
+func log(ctx *runCtx.RunCtx, key ControlKeyList) {
+	info := func(msg ...any) {
+		if key.Remark != "" {
+			msg = append(msg, "     ---------", key.Remark)
+		}
+		ctx.Info(msg...)
+	}
+	switch key.KeyType {
+	case KeyTypeDefault:
+		// 单键
+		switch key.KeyPress {
+		case PressTypeClick:
+			// 单击
+			info("单击:", key.Key)
+		case PressTypeDoubleClick:
+			// 双击
+			info("双击:", key.Key)
+		case PressTypePressDown:
+			// 按下
+			info("按下:", key.Key)
+		case PressTypePressUp:
+			// 抬起
+			info("抬起:", key.Key)
+		}
+	case KeyTypeText:
+		// 文本
+		info("文本:", key.Input)
+	case KeyTypeShortcutKey:
+		// 快捷键
+		keys := KeyListToKKeyList(key.KeyList)
+		info("快捷键:", keys)
+	case KeyTypeMouse:
+		// 鼠标点击
+		switch key.KeyPress {
+		case PressTypeClick:
+			// 单击
+			info("鼠标单击:", key.Key)
+		case PressTypeDoubleClick:
+			// 双击
+			info("鼠标双击:", key.Key)
+		case PressTypePressDown:
+			// 按下
+			info("鼠标按下:", key.Key)
+		case PressTypePressUp:
+			// 抬起
+			info("鼠标抬起:", key.Key)
+		}
+	case KeyTypeMouseMove, KeyTypeMouseMoveStartingPoint:
+		// 鼠标移动
+		info("鼠标定位:", key.PointX, key.PointY)
+	case KeyTypeMouseMoveSmooth, KeyTypeMouseMoveSmoothStartingPoint:
+		// 鼠标移动
+		info("鼠标移动:", key.PointX, key.PointY)
+	case KeyTypeMouseScroll:
+		// 鼠标移动
+		info("鼠标滚轮:", key.ScrollDir, key.Scroll)
+	case KeyTypeDelay:
+		// 延迟
+		info("等待:", key.Delay, "ms")
+	}
 }

@@ -16,6 +16,7 @@ import (
 	"strings"
 	"sync"
 
+	"server/src/msg"
 	"server/src/runCtx"
 )
 
@@ -313,6 +314,7 @@ func SetControlDetailState(state RunState, id int64, detailId int64) {
 			for i, _ := range controlList[idx].DetailList {
 				if controlList[idx].DetailList[i].DetailId == detailId {
 					controlList[idx].DetailList[i].RunState = state
+					msg.MsgCenter.PushData(msg.NewMsgApiScriptStateChangeMsg(id, detailId, int(state)))
 					break
 				}
 			}

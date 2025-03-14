@@ -14,6 +14,7 @@ import (
 	"server/src/hd"
 	"server/src/mod"
 	"server/src/module"
+	"server/src/msg"
 	"server/src/runCtx"
 	"server/src/systray"
 )
@@ -29,6 +30,8 @@ func main() {
 	module.InitControl(ctx)
 	//
 	mod.InitHookCenter(ctx)
+	//
+	msg.InitDeviceStatePushService(ctx)
 	if err != nil {
 		return
 	}

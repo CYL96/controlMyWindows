@@ -182,11 +182,11 @@
 
       <el-text>鼠标偏移</el-text>
       <el-form-item label="X">
-        <el-input-number :min="0"  v-model="sizeEdit.offset_x"
+        <el-input-number :min="0" v-model="sizeEdit.offset_x"
         ></el-input-number>
       </el-form-item>
       <el-form-item label="Y">
-        <el-input-number :min="0"  v-model="sizeEdit.offset_y"
+        <el-input-number :min="0" v-model="sizeEdit.offset_y"
         ></el-input-number>
       </el-form-item>
     </el-form>
@@ -267,14 +267,14 @@
         <el-form-item label="绑定快捷键">
           <el-button @click="bindNormalKey = editItem.combination_key;bindNormalKeyVisible=true">
             <div v-for="kkeeyy in editItem.combination_key" class="detail-list-item-bind-view">
-            <el-text>
-              {{ kkeeyy.key }}
-            </el-text>
-          </div>
+              <el-text>
+                {{ kkeeyy.key }}
+              </el-text>
+            </div>
           </el-button>
 
 
-         <el-button @click="editItem.combination_key=[]" style="background: #c45656">X</el-button>
+          <el-button @click="editItem.combination_key=[]" style="background: #c45656">X</el-button>
         </el-form-item>
         <el-form-item label="显示样式" style="display: flex;align-items: center;">
           <el-radio-group v-model="editItem.detail_show_type" class="ml-4">
@@ -366,14 +366,14 @@
       width="auto">
     <div>
       <DetailEdit :set-list="bindNormalKey" :onlyOne="false"
-                  :update-list="list =>{bindNormalKey = list}"></DetailEdit>
+                  :update-list="list =>{bindNormalKey = list;console.log(bindNormalKey)}"></DetailEdit>
     </div>
 
     <template #footer>
       <div class="works-dialog-footer">
         <el-button @click="bindNormalKeyVisible = false">取消</el-button>
         <el-button type="primary"
-                   @click="bindNormalKeyVisible = false;editItem.combination_key=bindNormalKey">
+                   @click="confirmBindShortcutKey()">
           确认
         </el-button>
       </div>
@@ -437,6 +437,7 @@ import {GetNewId} from "@/components/common/id";
 import DetailIcon from "@/components/detail/detailIcon.vue";
 import {GetIconSrc} from "@/components/api/sys";
 import {MouseDefine, MouseScrollDirection} from "@/components/api/keyDefine";
+import {runConfig} from "@/components/mod/config";
 
 const detailListContainer = ref(null)
 
@@ -464,7 +465,7 @@ const runStateLight = (item: ControlDetail) => {
   return sty
 }
 
-const sizeEdit = ref({sync_edit: true, add_step: 1, key_height: 0, key_width: 0,offset_x:0,offset_y:0})
+const sizeEdit = ref({sync_edit: true, add_step: 1, key_height: 0, key_width: 0, offset_x: 0, offset_y: 0})
 
 const controlInfo = ref(NewControlClass())
 const detailList = ref(NewControlDetailList())
@@ -472,6 +473,8 @@ const detailList = ref(NewControlDetailList())
 const isEditMod = ref(false)
 
 const isEditSize = ref(false)
+
+let socket = ref(null)
 
 const delDialogVisible = ref(false)
 const delId = ref(0)
@@ -487,7 +490,7 @@ const editItem = ref(NewControlDetail())
 const isControlInfoGet = ref(false)
 
 const bindNormalKeyVisible = ref(false)
-const bindNormalKey  = ref([])
+const bindNormalKey = ref([])
 
 const tk = ref(0)
 const lastColor = ref('')
@@ -544,8 +547,8 @@ onMounted(() => {
           nowSystemConfig.value = res.data as SystemSetting
         }
       })
-
   GetControlInfo(parseInt(<string>query.control_id))
+  connectWebSocket()
 })
 onUpdated(
     () => {
@@ -554,6 +557,9 @@ onUpdated(
 )
 onUnmounted(
     () => {
+      if (socket.value) {
+        socket.value.close()
+      }
       if (tk.value != 0) {
         clearInterval(tk.value)
         tk.value = 0
@@ -567,6 +573,44 @@ const ClickSubPicSelectBtn = () => {
   selectIconVisible.value = false
 }
 
+const connectWebSocket = () => {
+  // 连接到 WebSocket 服务器
+  let sc = new WebSocket('ws://' + runConfig.host + "/api/GetMsgWS");
+  socket.value = sc
+
+  // 监听消息
+  socket.value.addEventListener('message', (event) => {
+    // console.log(event.data)
+    let msg = JSON.parse(event.data);
+    if (msg.api == "scriptStateChange") {
+      if (msg.Data.control_id != controlInfo.value.control_id) {
+        return
+      }
+      detailList.value.forEach((item, index) => {
+        if (item.detail_id == msg.Data.detail_id) {
+          detailList.value[index].run_state = msg.Data.state
+        }
+      })
+
+    }
+  });
+
+  // 监听连接关闭
+  socket.value.addEventListener('close', () => {
+    console.log('WebSocket connection closed');
+  });
+
+  // 监听错误
+  socket.value.addEventListener('error', (error) => {
+    console.error('WebSocket error:', error);
+  });
+}
+
+const sendMessage = () => {
+  if (socket.value && socket.value.readyState === WebSocket.OPEN) {
+    socket.value.send(Date.now())
+  }
+}
 const GetColorByInt = (num: number) => {
   let b = Math.floor(num % 256)
   num = num / 256
@@ -678,7 +722,7 @@ const ExecDetail = (item: ControlDetail) => {
     audio.currentTime = 0
     audio.play();
   }
-  if (item.control_type != ControlType.Normal) {
+  if (item.control_type == ControlType.Script) {
     item.run_state = RunState.Running
   } else {
     item.run_state = RunState.Free
@@ -687,11 +731,6 @@ const ExecDetail = (item: ControlDetail) => {
   req.detail_id = item.detail_id
   req.control_id = controlInfo.value.control_id
   ExecControlDetail(req).then(resp => {
-    if (resp.state != 0) {
-
-    }
-    item.run_state = RunState.Free
-
   })
 }
 const ClickStopDetailBtn = (item: ControlDetail) => {
@@ -788,10 +827,10 @@ const GetControlInfo = (id: number) => {
           isControlInfoGet.value = true
           controlInfo.value = resp.data as ControlClass
           // SetDetailListContainerSize(controlInfo.value.key_width)
+          GetDetailList()
           if (tk.value == 0) {
-            GetDetailList()
             tk.value = setInterval(() => {
-              GetDetailList()
+              sendMessage()
             }, 1000)
           }
 
@@ -840,11 +879,18 @@ const ClickEditSubBtn = () => {
 
   EditControlDetail(req).then(resp => {
     if (resp.state != 0) {
+      MessageErr(resp.msg)
     } else {
       GetDetailList()
+      editDialogVisible.value = false
     }
-    editDialogVisible.value = false
   })
+}
+
+const confirmBindShortcutKey = () => {
+  bindNormalKeyVisible.value = false
+  editItem.value.combination_key = bindNormalKey.value
+
 }
 
 </script>

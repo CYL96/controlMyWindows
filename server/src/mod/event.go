@@ -8,7 +8,6 @@ author CYL96 创建 2025/3/13
 package mod
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
@@ -32,13 +31,36 @@ func InitHookCenter(ctx *runCtx.RunCtx) {
 	go HookCenter.monitor()
 }
 
+func RestartHookCenter() {
+	HookCenter.StopHook()
+	go InitHookCenter(HookCenter.ctx)
+}
+
 func (t *HookCenterT) StopHook() {
 	t.lk.Lock()
 	defer t.lk.Unlock()
+	t.stopHook()
+}
+
+func (t *HookCenterT) stopHook() {
+	t.ctx.Info("停止Hook")
 	if !t.isHook {
 		return
 	}
+	t.isHook = false
 	hook.End()
+	count := 100
+	for {
+		time.Sleep(100 * time.Millisecond)
+		if !t.isHook {
+			break
+		}
+		count--
+		if count <= 0 {
+			break
+		}
+	}
+	t.ctx.Info("停止Hook结束")
 }
 
 func (t *HookCenterT) Activate() {
@@ -57,11 +79,10 @@ func (t *HookCenterT) StartHook(id config.ControlListIdT) {
 		if t.id.ControlId == id.ControlId {
 			return
 		} else {
-			hook.End()
+			t.stopHook()
 		}
 	}
 	t.id = id
-	time.Sleep(3 * time.Second)
 	t.isHook = true
 	go func() {
 		t.hook()
@@ -70,14 +91,14 @@ func (t *HookCenterT) StartHook(id config.ControlListIdT) {
 
 func (t *HookCenterT) monitor() {
 	for {
-		time.Sleep(10 * time.Second)
+		time.Sleep(1 * time.Second)
 		now := time.Now().Unix()
 		if !t.isHook {
 			continue
 		}
 		if now-t.now > 30 {
 			t.ctx.Warn("长时间未注册，停止")
-			hook.End()
+			t.StopHook()
 		}
 	}
 }
@@ -88,32 +109,46 @@ func (t *HookCenterT) hook() {
 		defer t.lk.Unlock()
 		t.isHook = false
 	}()
-	fmt.Println("注册后台监控服务")
+	t.ctx.Info("注册后台监控服务")
 	result, err := config.GetControlInfo(t.id)
 	if err != nil {
 		t.ctx.Error(err)
 		return
 	}
-	for _, ext := range result.DetailList {
+	for i := range result.DetailList {
+		ext := result.DetailList[i]
 		if ext.ControlType != config.ControlTypeScript {
 			continue
 		}
 		if len(ext.CombinationKey) > 0 {
 			keys := make([]string, len(ext.CombinationKey))
 			for i := range keys {
-				keys[i] = ext.CombinationKey[i].Key.Str()
+				kk := ext.CombinationKey[i].Key.Str()
+
+				keys[i] = kk
 			}
-			t.ctx.Info("注册：", keys, "  执行脚本:", ext.DetailName)
-			hook.Register(hook.KeyDown, keys, func(e hook.Event) {
-				t.ctx.Info("检测到：", keys, "  执行脚本:", ext.DetailName)
-				err2 := ExecControlDetail(t.ctx, ExecControlDetailPara{
-					ControlListIdT:     t.id,
-					ControlDetailIdExt: ext.ControlDetailIdExt,
-				})
-				if err2 != nil {
-					t.ctx.Error(err2)
+			match := true
+			for _, key := range keys {
+				if _, ok := hook.Keycode[key]; !ok {
+					t.ctx.Error("注册 失败 未识别的key：", key)
+					match = false
 				}
-			})
+			}
+			if match {
+				t.ctx.Info("注册：", keys, "  执行脚本:", ext.DetailName)
+				// id := common.GetUniqueKey()
+				hook.Register(hook.KeyDown, keys, func(e hook.Event) {
+					ctx := runCtx.DefaultContext()
+					ctx.Info("检测到：", keys, "  执行脚本:", ext.DetailName)
+					err2 := ExecControlDetail(ctx, ExecControlDetailPara{
+						ControlListIdT:     t.id,
+						ControlDetailIdExt: ext.ControlDetailIdExt,
+					})
+					if err2 != nil {
+						t.ctx.Error(err2)
+					}
+				})
+			}
 		}
 	}
 	start := hook.Start()

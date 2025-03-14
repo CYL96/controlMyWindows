@@ -105,6 +105,9 @@ export function NewControlDetail(): ControlDetail {
 }
 
 export function CopyControlDetail(item: ControlDetail): ControlDetail {
+    if (item.combination_key == undefined || item.combination_key.length==0){
+        item.combination_key = []
+    }
     return {
         combination_key: item.combination_key,
         mouse_back_to_origin: item.mouse_back_to_origin,
