@@ -26,6 +26,10 @@ func GinRouter(e *gin.Engine) {
 	api.POST("/GetControlClassList", GetControlClassList)
 	api.POST("/GetControlClassInfo", GetControlClassInfo)
 
+	api.POST("/ActivateControlClassCombinationKey", ActivateControlClassCombinationKey)
+	api.POST("/StopCombinationKey", StopCombinationKey)
+	api.POST("/GetNowCombinationState", GetNowCombinationState)
+
 	api.POST("/AddControlDetail", AddControlDetail)
 	api.POST("/UpdateControlDetail", UpdateControlDetail)
 	api.POST("/DeleteControlDetail", DeleteControlDetail)

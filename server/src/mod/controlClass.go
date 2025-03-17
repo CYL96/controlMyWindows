@@ -116,10 +116,6 @@ func GetControlClassInfo(ctx *runCtx.RunCtx, para GetControlClassInfoPara) (resu
 	for _, ext := range list {
 		if ext.ControlId == para.ControlId {
 			result.ControlListBase = ext.ControlListBase
-			go func() {
-				HookCenter.StopHook()
-				HookCenter.StartHook(ext.ControlListIdT)
-			}()
 			return
 		}
 	}
@@ -133,5 +129,44 @@ type (
 	}
 	GetControlClassInfoResult struct {
 		config.ControlListBase
+	}
+)
+
+func ActivateControlClassCombinationKey(ctx *runCtx.RunCtx, para ActivateControlClassCombinationKeyPara) (err error) {
+	HookCenter.StopHook()
+	HookCenter.StartHook(para.ControlListIdT)
+	return
+}
+
+type (
+	ActivateControlClassCombinationKeyPara struct {
+		config.ControlListIdT
+	}
+	ActivateControlClassCombinationKeyResult struct {
+	}
+)
+
+func StopCombinationKey(ctx *runCtx.RunCtx, para StopCombinationKeyPara) (err error) {
+	HookCenter.StopHook()
+	return
+}
+
+type (
+	StopCombinationKeyPara struct {
+	}
+	StopClassCombinationKeyResult struct {
+	}
+)
+
+func GetNowCombinationState(ctx *runCtx.RunCtx, para GetNowCombinationStatePara) (result GetNowCombinationStateResult, err error) {
+	result.Running = HookCenter.isHook
+	return
+}
+
+type (
+	GetNowCombinationStatePara struct {
+	}
+	GetNowCombinationStateResult struct {
+		Running bool `json:"running"`
 	}
 )

@@ -21,14 +21,12 @@ type HookCenterT struct {
 	id     config.ControlListIdT
 	isHook bool
 	lk     sync.RWMutex
-	now    int64
 }
 
 var HookCenter = HookCenterT{}
 
 func InitHookCenter(ctx *runCtx.RunCtx) {
 	HookCenter.ctx = ctx
-	go HookCenter.monitor()
 }
 
 func RestartHookCenter() {
@@ -40,6 +38,11 @@ func (t *HookCenterT) StopHook() {
 	t.lk.Lock()
 	defer t.lk.Unlock()
 	t.stopHook()
+}
+func (t *HookCenterT) IsHook() bool {
+	t.lk.Lock()
+	defer t.lk.Unlock()
+	return t.isHook
 }
 
 func (t *HookCenterT) stopHook() {
@@ -63,15 +66,6 @@ func (t *HookCenterT) stopHook() {
 	t.ctx.Info("停止Hook结束")
 }
 
-func (t *HookCenterT) Activate() {
-	t.lk.Lock()
-	defer t.lk.Unlock()
-	if !t.isHook {
-		return
-	}
-	t.now = time.Now().Unix()
-}
-
 func (t *HookCenterT) StartHook(id config.ControlListIdT) {
 	t.lk.Lock()
 	defer t.lk.Unlock()
@@ -87,20 +81,6 @@ func (t *HookCenterT) StartHook(id config.ControlListIdT) {
 	go func() {
 		t.hook()
 	}()
-}
-
-func (t *HookCenterT) monitor() {
-	for {
-		time.Sleep(1 * time.Second)
-		now := time.Now().Unix()
-		if !t.isHook {
-			continue
-		}
-		if now-t.now > 30 {
-			t.ctx.Warn("长时间未注册，停止")
-			t.StopHook()
-		}
-	}
 }
 
 func (t *HookCenterT) hook() {

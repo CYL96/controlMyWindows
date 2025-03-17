@@ -5,6 +5,8 @@ export const ApiAddControlDetail = "/api/AddControlDetail"
 export const ApiUpdateControlDetail = "/api/UpdateControlDetail"
 export const ApiDeleteControlDetail = "/api/DeleteControlDetail"
 export const ApiUpdateControlDetailOrder = "/api/UpdateControlDetailOrder"
+export const ApiStopCombinationKey = "/api/StopCombinationKey"
+export const ApiActivateControlClassCombinationKey = "/api/ActivateControlClassCombinationKey"
 export const ApiGetControlDetailList = "/api/GetControlDetailList"
 export const ApiExecControlDetail = "/api/ExecControlDetail"
 export const ApiStopControlDetail = "/api/StopControlDetail"
@@ -278,8 +280,26 @@ export function NewUpdateControlDetailOrderReq(): UpdateControlDetailOrderReq {
         control_id: 0,
         detail: []
     }
-
 }
+
+export async function StopCombinationKey() {
+    return httpPostReq(ApiStopCombinationKey, {})
+}
+
+
+export async function ActivateControlClassCombinationKey(req :ActivateControlClassCombinationKeyReq) {
+    return httpPostReq(ApiActivateControlClassCombinationKey, req)
+}
+
+export interface ActivateControlClassCombinationKeyReq extends ControlClassId {
+}
+
+export function NewActivateControlClassCombinationKeyReq(): ActivateControlClassCombinationKeyReq {
+    return {
+        control_id: 0,
+    }
+}
+
 
 // 获取详情
 export async function GetControlDetailList(req: GetControlDetailListReq) {

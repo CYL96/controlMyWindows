@@ -48,6 +48,7 @@ type (
 	}
 	ControlListBase struct {
 		ControlListIdT
+
 		ControlName  string `json:"control_name" default:"" example:""`    //
 		ControlOrder int    `json:"control_order" default:"0" example:"0"` //
 

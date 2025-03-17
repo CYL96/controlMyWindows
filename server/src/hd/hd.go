@@ -248,6 +248,121 @@ type (
 	}
 )
 
+// ActivateControlClassCombinationKey
+// @Summary	启用当前控制模块组合键
+// @Accept        json
+// @Produce       json
+// @Description	启用当前控制模块组合键
+// @Tags			Control
+// @Param body body ActivateControlClassCombinationKeyReq true "请求"
+// @success 200 {object} GinResponse{data=ActivateControlClassCombinationKeyResp} "desc"
+// @Router			/api/ActivateControlClassCombinationKey [post]
+func ActivateControlClassCombinationKey(c *gin.Context) {
+	var err error
+	var result ActivateControlClassCombinationKeyResp
+	ctx := runCtx.FromContext(c)
+	defer func() {
+		if err != nil {
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
+		} else {
+			GinResponseOk(c, result)
+		}
+	}()
+	var req ActivateControlClassCombinationKeyReq
+	err = c.BindJSON(&req)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	err = mod.ActivateControlClassCombinationKey(ctx, req.ActivateControlClassCombinationKeyPara)
+	return
+}
+
+type (
+	ActivateControlClassCombinationKeyReq struct {
+		mod.ActivateControlClassCombinationKeyPara
+	}
+	ActivateControlClassCombinationKeyResp struct {
+	}
+)
+
+// StopCombinationKey
+// @Summary	启用当前控制模块组合键
+// @Accept        json
+// @Produce       json
+// @Description	启用当前控制模块组合键
+// @Tags			Control
+// @Param body body StopCombinationKeyReq true "请求"
+// @success 200 {object} GinResponse{data=StopCombinationKeyResp} "desc"
+// @Router			/api/StopCombinationKey [post]
+func StopCombinationKey(c *gin.Context) {
+	var err error
+	var result StopCombinationKeyResp
+	ctx := runCtx.FromContext(c)
+	defer func() {
+		if err != nil {
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
+		} else {
+			GinResponseOk(c, result)
+		}
+	}()
+	var req StopCombinationKeyReq
+	err = c.BindJSON(&req)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	err = mod.StopCombinationKey(ctx, req.StopCombinationKeyPara)
+	return
+}
+
+type (
+	StopCombinationKeyReq struct {
+		mod.StopCombinationKeyPara
+	}
+	StopCombinationKeyResp struct {
+	}
+)
+
+// GetNowCombinationState
+// @Summary	获取控制模块详情
+// @Accept        json
+// @Produce       json
+// @Description	获取控制模块详情
+// @Tags			Control
+// @Param body body GetNowCombinationStateReq true "请求"
+// @success 200 {object} GinResponse{data=GetNowCombinationStateResp} "desc"
+// @Router			/api/GetNowCombinationState [post]
+func GetNowCombinationState(c *gin.Context) {
+	var err error
+	var result GetNowCombinationStateResp
+	ctx := runCtx.FromContext(c)
+	defer func() {
+		if err != nil {
+			GinResponseWithStateAndMsg(c, StateFailed, err.Error())
+		} else {
+			GinResponseOk(c, result)
+		}
+	}()
+	var req GetNowCombinationStateReq
+	err = c.BindJSON(&req)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	result.GetNowCombinationStateResult, err = mod.GetNowCombinationState(ctx, req.GetNowCombinationStatePara)
+	return
+}
+
+type (
+	GetNowCombinationStateReq struct {
+		mod.GetNowCombinationStatePara
+	}
+	GetNowCombinationStateResp struct {
+		mod.GetNowCombinationStateResult
+	}
+)
+
 // AddControlDetail
 // @Summary	添加一个控制模块-键
 // @Accept        json
@@ -474,7 +589,6 @@ func GetMsgWS(c *gin.Context) {
 			ctx.Error(err.Error())
 			return
 		}
-		mod.HookCenter.Activate()
 	}
 }
 

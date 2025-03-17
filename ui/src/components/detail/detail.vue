@@ -9,13 +9,27 @@
         </el-button>
 
 
-        <el-button @click="GetDetailList" style="width: 30%">
+        <el-button @click="GetDetailList" style="width: 20%">
           <el-icon>
             <Refresh/>
           </el-icon>
         </el-button>
 
-        <div style="width: 45%;margin-left: 12px;display: flex;align-items: center;justify-content: center">
+        <el-button :disabled="isEditMod" @click="setBindNormalKeyVisibleVisible = true;setBindNormalKeyVisibleState=1"
+                   style="width: 8%;background:#00ffd4">
+          <el-icon>
+            <Link/>
+          </el-icon>
+        </el-button>
+
+        <el-button @click="setBindNormalKeyVisibleVisible = true;setBindNormalKeyVisibleState=2"
+                   style="width: 8%;background:#e72222">
+          <el-icon>
+            <Link/>
+          </el-icon>
+        </el-button>
+
+        <div style="width: 45%;margin-left: 10px;display: flex;align-items: center;justify-content: center">
           <el-button v-show="!isEditMod" @click="isEditMod= true" style="width: 100%">
             <el-icon>
               <Edit/>
@@ -23,7 +37,7 @@
           </el-button>
 
           <el-button v-show="isEditMod" @click="selectDialogVisible=true;"
-                     style="width: 40%;background:deepskyblue">
+                     style="width: 20%;background:deepskyblue">
             <el-icon>
               <CirclePlus/>
             </el-icon>
@@ -380,6 +394,27 @@
     </template>
   </el-dialog>
 
+  <!-- 启动快捷键弹框 -->
+  <el-dialog
+      v-model="setBindNormalKeyVisibleVisible"
+      align-center
+      width="auto">
+    <div>
+      <el-text v-show="setBindNormalKeyVisibleState==1">是否绑定当前控制快捷键？</el-text>
+      <el-text v-show="setBindNormalKeyVisibleState==2">是否解除绑定控制快捷键？</el-text>
+    </div>
+
+    <template #footer>
+      <div class="works-dialog-footer">
+        <el-button @click="setBindNormalKeyVisibleVisible = false;setBindNormalKeyVisibleState=0">取消</el-button>
+        <el-button type="primary"
+                   @click="confirmSetBindNormalKey()">
+          确认
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
+
 </template>
 
 <script lang="ts" setup>
@@ -423,7 +458,14 @@ import {
   ControlDetailKey,
   ControlKeyList,
   NewControlKeyListNormal,
-  RunState, ExecStopControlDetail, NewStopControlDetailReq, ShowType, KeyType, PressType
+  RunState,
+  ExecStopControlDetail,
+  NewStopControlDetailReq,
+  ShowType,
+  KeyType,
+  PressType,
+  StopCombinationKey,
+  ActivateControlClassCombinationKey, ActivateControlClassCombinationKeyReq, NewActivateControlClassCombinationKeyReq
 } from "@/components/api/detail";
 import DetailEdit from "@/components/detail/detailEdit.vue";
 import {onMounted, ref} from "vue";
@@ -500,6 +542,9 @@ const selectIcon = ref('')
 
 
 const predefineColors = ref([])
+
+const setBindNormalKeyVisibleVisible = ref(false)
+const setBindNormalKeyVisibleState = ref(0)
 
 
 const GetControlTypeStyle = (tp: number) => {
@@ -731,6 +776,9 @@ const ExecDetail = (item: ControlDetail) => {
   req.detail_id = item.detail_id
   req.control_id = controlInfo.value.control_id
   ExecControlDetail(req).then(resp => {
+    if (resp.state != 0) {
+      MessageErr(resp.msg)
+    }
   })
 }
 const ClickStopDetailBtn = (item: ControlDetail) => {
@@ -739,6 +787,7 @@ const ClickStopDetailBtn = (item: ControlDetail) => {
   req.control_id = controlInfo.value.control_id
   ExecStopControlDetail(req).then(resp => {
     if (resp.state != 0) {
+      MessageErr(resp.msg)
     }
   })
 }
@@ -780,6 +829,7 @@ const ClickUpdateSizeSubBtn = (close: boolean) => {
   EditControlClass(controlInfo.value).then(
       res => {
         if (res.state !== 0) {
+          MessageErr(res.msg)
         } else {
           GetControlInfo(controlInfo.value.control_id)
         }
@@ -849,10 +899,34 @@ const OnDetailListOrderChange = () => {
   })
   UpdateControlDetailOrder(req).then(resp => {
     if (resp.state != 0) {
+      MessageErr(resp.msg)
     }
   })
 }
 
+const confirmSetBindNormalKey = () => {
+
+  if (setBindNormalKeyVisibleState.value == 1) {
+    let req = NewActivateControlClassCombinationKeyReq()
+    req.control_id = controlInfo.value.control_id
+
+    ActivateControlClassCombinationKey(req).then(resp => {
+      if (resp.state != 0) {
+        MessageErr(resp.msg)
+      }
+    })
+  } else if (setBindNormalKeyVisibleState.value == 2) {
+    StopCombinationKey().then(resp => {
+      if (resp.state != 0) {
+        MessageErr(resp.msg)
+      }
+    })
+  }
+
+  setBindNormalKeyVisibleVisible.value = false
+  setBindNormalKeyVisibleState.value = 0
+
+}
 
 const ClickAddKeyBtn = () => {
   selectDialogVisible.value = false

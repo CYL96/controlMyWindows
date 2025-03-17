@@ -26,10 +26,10 @@
                 <div v-show="item.key_type==KeyType.Default || item.key_type==KeyType.Mouse"
                      style="display: flex;align-items: center;justify-content: center;">
                   <el-text v-if="item.key_type==KeyType.Default">
-                   按键({{GetShowKeyTouchType(item.key_type)}}): {{ GetShowComponents(item.key) }}
+                   按键({{GetShowKeyTouchType(item.key_press)}}): {{ GetShowComponents(item.key) }}
                   </el-text>
                   <el-text v-if="item.key_type==KeyType.Mouse">
-                   鼠标按键({{GetShowKeyTouchType(item.key_type)}})： {{ item.key }}
+                   鼠标按键({{GetShowKeyTouchType(item.key_press)}})： {{ item.key }}
                   </el-text>
                 </div>
                 <div v-show="item.key_type==KeyType.ShortcutKey" style="display: flex;height: 100%">
