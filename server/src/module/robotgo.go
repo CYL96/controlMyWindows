@@ -99,11 +99,18 @@ func (r *RobotGo) MouseMove(x int, y int) (err error) {
 	robotgo.Move(x, y)
 	return
 }
+func (r *RobotGo) MouseMoveRelative(x int, y int) (err error) {
+	robotgo.MoveRelative(x, y)
+	return
+}
 func (r *RobotGo) MouseMoveSmooth(x int, y int) (err error) {
 	robotgo.MoveSmooth(x, y, 0.01, 0.01)
 	return
 }
-
+func (r *RobotGo) MouseMoveSmoothRelative(x int, y int) (err error) {
+	robotgo.MoveSmoothRelative(x, y)
+	return
+}
 func (r *RobotGo) MouseDoubleClick(key config.KKey) (err error) {
 	robotgo.Click(key.Str(), true)
 	return nil

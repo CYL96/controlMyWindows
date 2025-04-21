@@ -109,6 +109,9 @@ const (
 	KeyTypeMouseMoveSmooth              KeyType = 9  // 鼠标移动
 	KeyTypeMouseMoveSmoothStartingPoint KeyType = 10 // 鼠标回初始位置
 
+	KeyTypeMouseMoveRelative       KeyType = 11 // 鼠标定位 相对
+	KeyTypeMouseMoveSmoothRelative KeyType = 12 // 鼠标移动 绝对
+
 	KeyTypeDelay KeyType = 99 // 延迟
 
 	PressTypeClick       PressType = 1 // 单击

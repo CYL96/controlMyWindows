@@ -34,7 +34,9 @@ type ControlIntf interface {
 	MouseUp(key KKey) (err error)                               // 鼠标抬起
 	MouseDown(key KKey) (err error)                             // 鼠标按下
 	MouseMove(x int, y int) (err error)                         // 鼠标移动
+	MouseMoveRelative(x int, y int) (err error)                 // 鼠标移动-相对
 	MouseMoveSmooth(x int, y int) (err error)                   // 鼠标移动
+	MouseMoveSmoothRelative(x int, y int) (err error)           // 鼠标移动-相对
 	MouseScroll(num int, direction KMouseScrollDir) (err error) // direction 1：向上 2：向下 3:向左 4：向右
 	GetNowMousePosition() (x int, y int)
 }

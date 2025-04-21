@@ -32,6 +32,8 @@ export const KeyType = {
 
     MouseMoveSmooth: 9, // 鼠标移动
     MouseMoveSmoothStartPos: 10, // 鼠标移动-原点
+    MouseMoveRelative:11,//鼠标定位-相对
+    MouseMoveSmoothRelative:12,// 鼠标移动-相对
 
     Delay: 99,// 延迟
 }

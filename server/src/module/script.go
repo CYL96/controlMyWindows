@@ -23,7 +23,6 @@ func ExecScript(ctx *runCtx.RunCtx, script ControlT) (err error) {
 		case <-ctx.Done():
 			return
 		default:
-
 			if key.KeyType == KeyTypeMouseMove ||
 				key.KeyType == KeyTypeMouseMoveStartingPoint ||
 				key.KeyType == KeyTypeMouseMoveSmooth ||
@@ -33,9 +32,15 @@ func ExecScript(ctx *runCtx.RunCtx, script ControlT) (err error) {
 					key.PointX = x
 					key.PointY = y
 				}
-
 				key.PointX += script.MouseOffSet.PointX
 				key.PointY += script.MouseOffSet.PointY
+			}
+			if key.KeyType == KeyTypeMouseMoveRelative ||
+				key.KeyType == KeyTypeMouseMoveSmoothRelative {
+				var x, y = control.GetNowMousePosition()
+				
+				key.PointX += x + script.MouseOffSet.PointX
+				key.PointY += y + script.MouseOffSet.PointY
 			}
 
 			ExecKey(ctx, key)

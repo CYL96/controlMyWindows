@@ -60,6 +60,15 @@ func ExecKey(ctx *runCtx.RunCtx, key ControlKeyList) (err error) {
 	case KeyTypeMouseMoveSmooth, KeyTypeMouseMoveSmoothStartingPoint:
 		// 鼠标移动
 		err = control.MouseMoveSmooth(key.PointX, key.PointY)
+
+	case KeyTypeMouseMoveRelative:
+		// 鼠标移动
+		err = control.MouseMove(key.PointX, key.PointY)
+
+	case KeyTypeMouseMoveSmoothRelative:
+		// 鼠标移动
+		err = control.MouseMoveSmooth(key.PointX, key.PointY)
+
 	case KeyTypeMouseScroll:
 		// 鼠标移动
 		err = control.MouseScroll(key.Scroll, key.ScrollDir)
@@ -144,6 +153,15 @@ func log(ctx *runCtx.RunCtx, key ControlKeyList) {
 	case KeyTypeMouseMoveSmooth, KeyTypeMouseMoveSmoothStartingPoint:
 		// 鼠标移动
 		info("鼠标移动:", key.PointX, key.PointY)
+
+	case KeyTypeMouseMoveRelative:
+		// 鼠标移动
+		info("鼠标相对定位:", key.PointX, key.PointY)
+
+	case KeyTypeMouseMoveSmoothRelative:
+		// 鼠标移动
+		info("鼠标相对移动:", key.PointX, key.PointY)
+
 	case KeyTypeMouseScroll:
 		// 鼠标移动
 		info("鼠标滚轮:", key.ScrollDir, key.Scroll)
