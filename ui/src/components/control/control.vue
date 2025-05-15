@@ -1,29 +1,34 @@
 <template>
   <div id="control_div" style="width: 100%;height: 100%;display: flex;flex-direction: column;">
     <header id="control_header_div" style="padding: 1% 0 1% 0;height: 5%;min-height: 30px;width: 100%">
-      <div style="display: flex;align-items: center;justify-content: center;height: 100%">
-        <el-button @click="GetControlClassListFromServer" style="width: 30%;background: #d1edc4">
-          <el-icon>
-            <Refresh/>
-          </el-icon>
-        </el-button>
-        <el-button @click="ClickAddClassBtn" style="width: 30%;background: #79bbff">
-          <el-icon>
-            <CirclePlus/>
-          </el-icon>
-        </el-button>
-        <el-button @click="ClickEditSystemBtn" style="width: 10%;background: #c8c9cc">
-          <Icon.SettingConfig/>
-        </el-button>
-
-        <el-button @click="exitDialogVisible=true" style="width: 10%;background: #e72222">
-          <el-icon>
-            <Icon.Power/>
-          </el-icon>
-        </el-button>
-
-
-      </div>
+      <el-row :gutter="5" style="padding: 5px;width: 98%">
+        <el-col :span="8">
+          <el-button @click="GetControlClassListFromServer" style="width: 100%;background: #d1edc4">
+            <el-icon>
+              <Refresh/>
+            </el-icon>
+          </el-button>
+        </el-col>
+        <el-col :span="8">
+          <el-button @click="ClickAddClassBtn" style="width: 100%;background: #79bbff">
+            <el-icon>
+              <CirclePlus/>
+            </el-icon>
+          </el-button>
+        </el-col>
+        <el-col :span="4">
+          <el-button @click="ClickEditSystemBtn" style="width: 100%;background: #c8c9cc">
+            <Icon.SettingConfig/>
+          </el-button>
+        </el-col>
+        <el-col :span="4">
+          <el-button @click="exitDialogVisible=true" style="width: 100%;background: #e72222">
+            <el-icon>
+              <Icon.Power/>
+            </el-icon>
+          </el-button>
+        </el-col>
+      </el-row>
     </header>
     <main id="control_main_div" style="display: flex;height: 95%;width: 100%">
       <!-- 左边的列表 -->

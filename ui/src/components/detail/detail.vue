@@ -1,63 +1,70 @@
 <template>
   <div style="display: flex;flex-direction: column;height: 100%;width: 100%">
     <header style="height: 5%;padding: 1% 0 1% 0;min-height: 30px;width: 100%">
-      <div style="display: flex;align-items: center;justify-content: center;height: 100%">
-        <el-button @click="GotoHome" style="width: 10%">
-          <el-icon>
-            <Back/>
-          </el-icon>
-        </el-button>
+      <el-row :gutter="5" style="padding: 5px;width: 98%">
+        <el-col :span="6">
+          <el-button @click="GotoHome" style="width: 100%">
+            <el-icon>
+              <Back/>
+            </el-icon>
+          </el-button>
+        </el-col>
+        <el-col :span="4">
+          <el-button @click="GetDetailList" style="width: 100%">
+            <el-icon>
+              <Refresh/>
+            </el-icon>
+          </el-button>
+        </el-col>
 
+        <el-col v-show="!isEditMod" :span="4">
+          <el-button :disabled="isEditMod" @click="setBindNormalKeyVisibleVisible = true;setBindNormalKeyVisibleState=1"
+                     style="width: 100%;background:#00ffd4">
+            <el-icon>
+              <Link/>
+            </el-icon>
+          </el-button>
+        </el-col>
 
-        <el-button @click="GetDetailList" style="width: 20%">
-          <el-icon>
-            <Refresh/>
-          </el-icon>
-        </el-button>
-
-        <el-button :disabled="isEditMod" @click="setBindNormalKeyVisibleVisible = true;setBindNormalKeyVisibleState=1"
-                   style="width: 8%;background:#00ffd4">
-          <el-icon>
-            <Link/>
-          </el-icon>
-        </el-button>
-
-        <el-button @click="setBindNormalKeyVisibleVisible = true;setBindNormalKeyVisibleState=2"
-                   style="width: 8%;background:#e72222">
-          <el-icon>
-            <Link/>
-          </el-icon>
-        </el-button>
-
-        <div style="width: 45%;margin-left: 10px;display: flex;align-items: center;justify-content: center">
-          <el-button v-show="!isEditMod" @click="isEditMod= true" style="width: 100%">
+        <el-col v-show="!isEditMod" :span="4">
+          <el-button @click="setBindNormalKeyVisibleVisible = true;setBindNormalKeyVisibleState=2"
+                     style="width: 100%;background:#e72222">
+            <el-icon>
+              <Link/>
+            </el-icon>
+          </el-button>
+        </el-col>
+        <!--        编辑按钮-->
+        <el-col v-show="!isEditMod" :span="6">
+          <el-button @click="isEditMod= true" style="width: 100%">
             <el-icon>
               <Edit/>
             </el-icon>
           </el-button>
-
-          <el-button v-show="isEditMod" @click="selectDialogVisible=true;"
-                     style="width: 20%;background:deepskyblue">
+        </el-col>
+        <el-col v-show="isEditMod" :span="4">
+          <el-button  @click="selectDialogVisible=true;"
+                     style="width: 100%;background:deepskyblue">
             <el-icon>
               <CirclePlus/>
             </el-icon>
           </el-button>
-
-          <el-button v-show="isEditMod" @click="isEditMod=false" style="width: 40%;background: greenyellow">
-            <el-icon>
-              <Check/>
-            </el-icon>
-          </el-button>
-
-          <el-button v-show="isEditMod" @click="ClickEditSizeBtn" style="width: 10%;background: #ffce2f">
+        </el-col>
+        <el-col v-show="isEditMod" :span="4">
+          <el-button @click="ClickEditSizeBtn" style="width: 100%;background: #ffce2f">
             <el-icon>
               <FullScreen/>
             </el-icon>
           </el-button>
-        </div>
-
-
-      </div>
+        </el-col>
+        <el-col v-show="isEditMod" :span="6">
+          <el-button @click="isEditMod=false" style="width: 100%;background: greenyellow">
+            <el-icon>
+              <Check/>
+            </el-icon>
+          </el-button>
+        </el-col>
+      </el-row>
     </header>
     <main style="display: flex;overflow-y: scroll;height: 95%;width: 100%">
       <!-- 左边的列表 -->

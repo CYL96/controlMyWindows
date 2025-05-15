@@ -137,55 +137,112 @@
     <div style="width: 100%;display: flex;align-items: center;margin-bottom: 5px">
       <el-text style="width: 100%;text-align: center">类型选择</el-text>
     </div>
-    <div style="">
-      <el-button @click="SelectEditMod=KeyType.Default"
-                 :style="SelectEditMod==KeyType.Default? {background:'aquamarine'}:{}">单键
-      </el-button>
-      <el-button @click="SelectEditMod=KeyType.ShortcutKey"
-                 :style="SelectEditMod==KeyType.ShortcutKey? {background:'aquamarine'}:{}">组合键
-      </el-button>
-      <el-button @click="SelectEditMod=KeyType.Text"
-                 :style="SelectEditMod==KeyType.Text? {background:'aquamarine'}:{}">文本
-      </el-button>
-    </div>
-    <div style="margin-top: 10px">
-      <el-button @click="SelectEditMod=KeyType.Mouse"
-                 :style="SelectEditMod==KeyType.Mouse? {background:'aquamarine'}:{}">鼠标按键
-      </el-button>
-      <el-button @click="SelectEditMod=KeyType.MouseScroll"
-                 :style="SelectEditMod==KeyType.MouseScroll? {background:'aquamarine'}:{}">鼠标滚轮
-      </el-button>
-    </div>
-    <div style="margin-top: 10px">
+<!--    按键-->
+    <el-row :gutter="5">
+      <el-col :span="8">
+        <el-button @click="SelectEditMod=KeyType.Default" style="width: 100%;"
+                   :type="SelectEditMod==KeyType.Default?'primary':''">单键
+        </el-button>
+      </el-col>
+      <el-col :span="8">
+        <el-button @click="SelectEditMod=KeyType.ShortcutKey" style="width: 100%;"
+                   :type="SelectEditMod==KeyType.ShortcutKey?'primary':''">组合键
+        </el-button>
+      </el-col>
+      <el-col :span="8">
+        <el-button @click="SelectEditMod=KeyType.Text" style="width: 100%;"
+                   :type="SelectEditMod==KeyType.Text?'primary':''">文本
+        </el-button>
+      </el-col>
+    </el-row>
+<!--鼠标按键-->
+    <el-row :gutter="5" style="margin-top: 10px">
+      <el-col :span="12">
+        <el-button @click="SelectEditMod=KeyType.Mouse" style="width: 100%"
+                   :type="SelectEditMod==KeyType.Mouse?'primary':''">鼠标按键
+        </el-button>
+      </el-col>
+      <el-col :span="12">
+        <el-button @click="SelectEditMod=KeyType.MouseScroll" style="width: 100%"
+                   :type="SelectEditMod==KeyType.MouseScroll?'primary':''">鼠标滚轮
+        </el-button>
+      </el-col>
+    </el-row>
+<!--鼠标定位-->
+    <el-row :gutter="5" style="margin-top:10px;">
+      <el-col :span="8">
+        <el-button @click="SelectEditMod=KeyType.MouseMove" style="width: 100%"
+                   :type="SelectEditMod==KeyType.MouseMove?'primary':''">鼠标定位
+        </el-button>
+      </el-col>
+      <el-col :span="8">
+        <el-button @click="SelectEditMod=KeyType.MouseMoveRelative" style="width: 100%"
+                   :type="SelectEditMod==KeyType.MouseMoveRelative?'primary':''">鼠标相对定位
+        </el-button>
+      </el-col>
+      <el-col :span="8">
 
-      <el-button @click="SelectEditMod=KeyType.MouseMove"
-                 :style="SelectEditMod==KeyType.MouseMove? {background:'aquamarine'}:{}">鼠标定位
-      </el-button>
-      <el-button @click="SelectEditMod=KeyType.MouseMoveRelative"
-                 :style="SelectEditMod==KeyType.MouseMoveRelative? {background:'aquamarine'}:{}">鼠标相对定位
-      </el-button>
-      <el-button @click="SelectEditMod=KeyType.MouseMoveStartPos"
-                 :style="SelectEditMod==KeyType.MouseMoveStartPos? {background:'aquamarine'}:{}">鼠标定位起点
-      </el-button>
-    </div>
-    <div style="margin-top: 10px">
-      <el-button @click="SelectEditMod=KeyType.MouseMoveSmooth"
-                 :style="SelectEditMod==KeyType.MouseMoveSmooth? {background:'aquamarine'}:{}">鼠标移动
-      </el-button>
-      <el-button @click="SelectEditMod=KeyType.MouseMoveSmoothRelative"
-                 :style="SelectEditMod==KeyType.MouseMoveSmoothRelative? {background:'aquamarine'}:{}">鼠标相对移动
-      </el-button>
-      <el-button @click="SelectEditMod=KeyType.MouseMoveSmoothStartPos"
-                 :style="SelectEditMod==KeyType.MouseMoveSmoothStartPos? {background:'aquamarine'}:{}">鼠标移动回起点
-      </el-button>
-    </div>
-    <div style="margin-top: 10px">
-      <el-button @click="SelectEditMod=KeyType.Delay"
-                 :style="SelectEditMod==KeyType.Delay? {background:'aquamarine'}:{}">延时
+        <el-button @click="SelectEditMod=KeyType.MouseMoveStartPos" style="width: 100%"
+                   :type="SelectEditMod==KeyType.MouseMoveStartPos?'primary':''">鼠标定位起点
+        </el-button>
+      </el-col>
+    </el-row>
+<!--鼠标移动-->
+    <el-row :gutter="5" style="margin-top:10px;">
+      <el-col :span="8">
+        <el-button @click="SelectEditMod=KeyType.MouseMoveSmooth" style="width: 100%"
+                   :type="SelectEditMod==KeyType.MouseMoveSmooth?'primary':''">鼠标移动
+        </el-button>
+      </el-col>
+      <el-col :span="8">
+        <el-button @click="SelectEditMod=KeyType.MouseMoveSmoothRelative" style="width: 100%"
+                   :type="SelectEditMod==KeyType.MouseMoveSmoothRelative?'primary':''">鼠标相对移动
+        </el-button>
+      </el-col>
+      <el-col :span="8">
+        <el-button @click="SelectEditMod=KeyType.MouseMoveSmoothStartPos" style="width: 100%"
+                   :type="SelectEditMod==KeyType.MouseMoveSmoothStartPos?'primary':''">鼠标移动回起点
+        </el-button>
+      </el-col>
+    </el-row>
+<!--延时-->
+    <div style="margin-top: 10px;display: flex">
+      <el-button @click="SelectEditMod=KeyType.Delay" :type="SelectEditMod==KeyType.Delay?'primary':''"
+                 style="width: 100%">延时
       </el-button>
     </div>
     <div v-if="SelectEditMod!==KeyType.Delay" style="margin-top: 10px">
-      <el-switch v-model="isAddDelay" active-text="追加延时" inactive-text="取消追加延时"/>
+      <el-switch v-model="isAddDelay" active-text="追加延时(ms)" inactive-text="取消追加延时"/>
+      <div v-if="isAddDelay" >
+        <el-row :gutter="5" style="margin-top:10px;">
+          <el-col :span="4">
+            <el-button :type="AddDelay==50?'primary':''"  style="width: 100%"
+                       @click="AddDelay=50">50</el-button>
+          </el-col>
+          <el-col :span="4">
+            <el-button :type="AddDelay==100?'primary':''"  style="width: 100%"
+                       @click="AddDelay=100">100</el-button>
+          </el-col>
+          <el-col :span="4">
+            <el-button :type="AddDelay==150?'primary':''"  style="width: 100%"
+                       @click="AddDelay=150">150</el-button>
+          </el-col>
+          <el-col :span="4">
+            <el-button :type="AddDelay==200?'primary':''"  style="width: 100%"
+                       @click="AddDelay=200">200</el-button>
+          </el-col>
+          <el-col :span="4">
+            <el-button :type="AddDelay==300?'primary':''"  style="width: 100%"
+                       @click="AddDelay=300">300</el-button>
+          </el-col>
+          <el-col :span="4">
+            <el-button :type="AddDelay==500?'primary':''"  style="width: 100%"
+                       @click="AddDelay=500">500</el-button>
+          </el-col>
+        </el-row>
+        <el-input-number v-model="AddDelay" :step="50"
+                         style="width: 100%;margin-top: 10px"></el-input-number>
+      </div>
     </div>
     <template #footer>
       <div class="works-dialog-footer">
@@ -394,6 +451,8 @@ const EditItemVisible = ref(false)
 
 const AddItemPosition = ref(-1)
 const isAddDelay = ref(true)
+const AddDelay = ref(50)
+
 
 showList.value = CopyControlKeyListList(props.setList)
 
@@ -410,12 +469,12 @@ const ClickAddDefaultKeyBtn = () => {
       // 添加到最后
       showList.value.push(EditItemInfo.value)
       if (isAddDelay.value && EditItemInfo.value.key_type !== KeyType.Delay) {
-        showList.value.push(NewNormalDetail())
+        showList.value.push(NewNormalDetail(AddDelay.value))
       }
     } else {
       // 说明是中途插入
       if (isAddDelay.value && EditItemInfo.value.key_type !== KeyType.Delay) {
-        showList.value.splice(AddItemPosition.value, 0, EditItemInfo.value, NewNormalDetail())
+        showList.value.splice(AddItemPosition.value, 0, EditItemInfo.value, NewNormalDetail(AddDelay.value))
       } else {
         showList.value.splice(AddItemPosition.value, 0, EditItemInfo.value)
       }
@@ -536,11 +595,14 @@ const OnUpdate = () => {
   props.updateList(showList.value)
 }
 
-const NewNormalDetail = (): ControlKeyList => {
+const NewNormalDetail = (dur:number): ControlKeyList => {
+  if(dur<=0){
+    dur = 50
+  }
   let delay = NewControlKeyList()
   delay.key_type = KeyType.Delay
   delay.id = GetNewId()
-  delay.delay = 50
+  delay.delay = dur
   return delay
 }
 
